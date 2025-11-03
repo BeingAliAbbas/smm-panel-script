@@ -133,6 +133,8 @@ define("SUBSCRIBERS", "general_subscribers");
 define("PAYMENTS_METHOD", "payments");
 define("PAYMENTS_BONUSES", "payments_bonus");
 
+define("CURRENCY_RATES", "currency_rates");
+
 define("SCRIP_APP_ID", 23595718);
 if (!defined('CUSTOM_PAGE')) {
     define("CUSTOM_PAGE", "general_custom_page");

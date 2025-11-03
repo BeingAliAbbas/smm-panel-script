@@ -144,6 +144,10 @@ if (!function_exists('get_role')) {
             <div class="nav-item" class="sidenavContent"><i class="fe fe-list"></i><?=lang('Services')?></div>
           </a>
           
+          <a href="<?=cn('currency_converter')?>" class="nav-link <?=(segment(1) == 'currency_converter')?"active":""?>">
+            <div class="nav-item" class="sidenavContent"><i class="fe fe-dollar-sign"></i>Currency Converter</div>
+          </a>
+          
           <?php
             if (get_role("user")) {
           ?>
