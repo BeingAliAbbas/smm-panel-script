@@ -210,6 +210,15 @@
     display: block;
 }
 
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 @media (max-width: 768px) {
     .converter-card {
         padding: 20px;
@@ -428,7 +437,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 toAmount.value = data.result.toFixed(2);
                 resultAmount.textContent = data.to + ' ' + data.result.toFixed(2);
                 exchangeRate.textContent = '1 ' + data.from + ' = ' + data.rate.toFixed(4) + ' ' + data.to;
-                resultDetails.innerHTML = 'Exchange Rate: <strong id="exchangeRate">' + exchangeRate.textContent + '</strong>';
                 resultSection.classList.add('show');
             } else {
                 alert(data.message || 'Conversion failed. Please try again.');

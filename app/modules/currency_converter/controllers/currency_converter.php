@@ -21,7 +21,6 @@ class currency_converter extends MX_Controller {
         $amount = $this->input->post('amount');
 
         if(empty($from) || empty($to) || empty($amount)){
-            _validation('error', lang('Please_fill_in_all_fields'));
             echo json_encode(array('status' => 'error', 'message' => lang('Please_fill_in_all_fields')));
             return;
         }
