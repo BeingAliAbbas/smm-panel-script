@@ -42,7 +42,10 @@ if ($user_role !== 'admin') {
       $separator = '';
       break;
   }
-  $currency_symbol = get_option('currency_symbol',"$");
+  
+  // Get current currency
+  $current_currency = get_current_currency();
+  $currency_symbol = $current_currency ? $current_currency->symbol : get_option('currency_symbol',"$");
 ?>
 
 <?php if (get_option('dashboard_text','') != '') { ?>
@@ -62,7 +65,7 @@ if ($user_role !== 'admin') {
 $user_avatar_url = "path/to/avatar.jpg"; // Example avatar URL
 $user_balance = isset($data_log->user_balance) ? $data_log->user_balance : 0; // User's balance
 $low_balance_threshold = 100; // Low balance threshold
-$currency_symbol = get_option('currency_symbol', "PKR");
+// Currency symbol already set above
 ?>
 
 <!-- User Details Box -->
@@ -786,7 +789,7 @@ $mysqli->close();
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=get_option('currency_symbol',"$")?><?=(!empty($data_log->user_balance)) ? currency_format($data_log->user_balance, get_option('currency_decimal', 2), $decimalpoint, $separator) : 0?></h4>
+                <h4 class="m-0 text-right number"><?=$currency_symbol?><?=(!empty($data_log->user_balance)) ? currency_format(convert_currency($data_log->user_balance), get_option('currency_decimal', 2), $decimalpoint, $separator) : 0?></h4>
                 <small class="text-muted "><?=lang("your_balance")?></small>
               </div>
             </div>
@@ -803,7 +806,7 @@ $mysqli->close();
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=get_option('currency_symbol',"$")?><?=(!empty($data_log->total_spent_receive)) ? currency_format($data_log->total_spent_receive, get_option('currency_decimal', 2), $decimalpoint, $separator) : 0?></h4>
+                <h4 class="m-0 text-right number"><?=$currency_symbol?><?=(!empty($data_log->total_spent_receive)) ? currency_format(convert_currency($data_log->total_spent_receive), get_option('currency_decimal', 2), $decimalpoint, $separator) : 0?></h4>
                 <small class="text-muted ">
                   <?=(get_role("admin") ? lang("total_amount_recieved") : lang("total_amount_spent"))?>
                 </small>
@@ -858,7 +861,7 @@ $mysqli->close();
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format($data_log->users_balance, 2, '.', ','); ?></h4>
+                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format(convert_currency($data_log->users_balance), 2, '.', ','); ?></h4>
                 <small class="text-muted "><?php echo lang("total_users_balance"); ?> </small>
               </div>
             </div>
@@ -874,7 +877,7 @@ $mysqli->close();
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format($data_log->providers_balance, 2, '.', ','); ?></h4>
+                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format(convert_currency($data_log->providers_balance), 2, '.', ','); ?></h4>
                 <small class="text-muted "><?php echo lang("total_providers_balance"); ?> </small>
               </div>
             </div>
@@ -890,7 +893,7 @@ $mysqli->close();
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format($data_log->last_profit_30_days, 2, '.', ','); ?></h4>
+                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format(convert_currency($data_log->last_profit_30_days), 2, '.', ','); ?></h4>
                 <small class="text-muted "><?php echo lang("total_profit_30_days"); ?></small>
               </div>
             </div>
@@ -906,7 +909,7 @@ $mysqli->close();
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format($data_log->profit_today, 2, '.', ','); ?></h4>
+                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format(convert_currency($data_log->profit_today), 2, '.', ','); ?></h4>
                 <small class="text-muted "><?php echo lang("total_profit_today"); ?></small>
               </div>
             </div>

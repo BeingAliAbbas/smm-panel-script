@@ -375,6 +375,7 @@ $lang["parameter"] = "Parameter";
 $lang["multiple_orders_status"] = "Multiple orders status";
 $lang["services_lists"] = "Services Lists";
 $lang["Balance"] = "Balance";
+$lang["Currency"] = "Currency";
 $lang["your_api_key"] = "Your API key";
 $lang["service_id"] = "Service ID";
 $lang["link_to_page"] = "Link to page";
