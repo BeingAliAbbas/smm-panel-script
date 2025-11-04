@@ -129,13 +129,15 @@ converted_amount = original_amount × (target_rate ÷ default_rate)
 
 | Code | Name | Symbol | Rate | Status |
 |------|------|--------|------|--------|
-| USD | US Dollar | $ | 1.00 | Default |
-| EUR | Euro | € | 0.92 | Active |
-| GBP | British Pound | £ | 0.79 | Active |
-| INR | Indian Rupee | ₹ | 83.12 | Active |
-| PKR | Pakistani Rupee | Rs | 278.50 | Active |
-| AUD | Australian Dollar | A$ | 1.52 | Active |
-| CAD | Canadian Dollar | C$ | 1.36 | Active |
+| PKR | Pakistani Rupee | Rs | 1.00 | Default |
+| USD | US Dollar | $ | 0.00359066 | Active |
+| EUR | Euro | € | 0.00330341 | Active |
+| GBP | British Pound | £ | 0.00283632 | Active |
+| INR | Indian Rupee | ₹ | 0.29851434 | Active |
+| AUD | Australian Dollar | A$ | 0.00545740 | Active |
+| CAD | Canadian Dollar | C$ | 0.00488309 | Active |
+
+*Note: Exchange rates are relative to PKR (base currency) and should be updated to current market values.*
 
 *Note: Exchange rates are examples and should be updated to current values.*
 

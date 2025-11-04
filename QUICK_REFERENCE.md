@@ -40,13 +40,15 @@
 
 | Code | Name | Symbol | Default Rate |
 |------|------|--------|--------------|
-| USD | US Dollar | $ | 1.00 (Base) |
-| EUR | Euro | € | 0.92 |
-| GBP | British Pound | £ | 0.79 |
-| INR | Indian Rupee | ₹ | 83.12 |
-| PKR | Pakistani Rupee | Rs | 278.50 |
-| AUD | Australian Dollar | A$ | 1.52 |
-| CAD | Canadian Dollar | C$ | 1.36 |
+| PKR | Pakistani Rupee | Rs | 1.00 (Base) |
+| USD | US Dollar | $ | 0.00359066 |
+| EUR | Euro | € | 0.00330341 |
+| GBP | British Pound | £ | 0.00283632 |
+| INR | Indian Rupee | ₹ | 0.29851434 |
+| AUD | Australian Dollar | A$ | 0.00545740 |
+| CAD | Canadian Dollar | C$ | 0.00488309 |
+
+*Note: These are example rates relative to PKR. Update them to current market rates.*
 
 *Note: These are example rates. Update them to current market rates.*
 
@@ -104,9 +106,9 @@
 
 ### How It Works
 ```
-Original Amount: $100 USD (default)
-Target Currency: PKR (rate: 278.50)
-Converted: 100 × 278.50 = 27,850 PKR
+Original Amount: Rs 100 PKR (default)
+Target Currency: USD (rate: 0.00359066)
+Converted: 100 × 0.00359066 = $0.36 USD
 ```
 
 ### Formula
@@ -116,8 +118,8 @@ converted_amount = original_amount × (target_rate ÷ default_rate)
 
 ### Example with Different Default
 ```
-If EUR is default (rate: 1.00) and USD rate: 1.09
-€100 to USD = 100 × (1.09 ÷ 1.00) = $109
+If PKR is default (rate: 1.00) and USD rate: 0.00359066
+Rs 1000 to USD = 1000 × (0.00359066 ÷ 1.00) = $3.59
 ```
 
 ## 📝 API Integration (Optional)

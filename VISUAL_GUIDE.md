@@ -216,23 +216,23 @@ echo $symbol . currency_format(convert_currency($balance), 2);
 
 ## 🎯 Real-World Example
 
-**Scenario:** User in Pakistan wants to see amounts in PKR
+**Scenario:** User wants to see amounts in USD
 
-1. **Before Currency Switch:**
-   - Balance: $1,000
-   - Order Cost: $25
-   - Transaction: $50
+1. **Before Currency Switch (PKR - Default):**
+   - Balance: Rs 100,000
+   - Order Cost: Rs 2,500
+   - Transaction: Rs 5,000
 
-2. **After Selecting PKR (Rate: 278.50):**
-   - Balance: Rs 278,500
-   - Order Cost: Rs 6,962.50
-   - Transaction: Rs 13,925
+2. **After Selecting USD (Rate: 0.00359066):**
+   - Balance: $359.07
+   - Order Cost: $8.98
+   - Transaction: $17.95
 
 3. **Calculation:**
    ```
-   $1,000 × 278.50 = Rs 278,500
-   $25 × 278.50 = Rs 6,962.50
-   $50 × 278.50 = Rs 13,925
+   Rs 100,000 × 0.00359066 = $359.07
+   Rs 2,500 × 0.00359066 = $8.98
+   Rs 5,000 × 0.00359066 = $17.95
    ```
 
 ---
@@ -261,17 +261,17 @@ echo $symbol . currency_format(convert_currency($balance), 2);
 
 ## 🔄 Conversion Table
 
-**Example with $100 USD:**
+**Example with Rs 10,000 PKR:**
 
-| Currency | Rate    | Converted | Symbol |
-|----------|---------|-----------|--------|
-| USD      | 1.00    | $100.00   | $      |
-| EUR      | 0.92    | €92.00    | €      |
-| GBP      | 0.79    | £79.00    | £      |
-| INR      | 83.12   | ₹8,312.00 | ₹      |
-| PKR      | 278.50  | Rs27,850  | Rs     |
-| AUD      | 1.52    | A$152.00  | A$     |
-| CAD      | 1.36    | C$136.00  | C$     |
+| Currency | Rate       | Converted | Symbol |
+|----------|------------|-----------|--------|
+| PKR      | 1.00       | Rs10,000  | Rs     |
+| USD      | 0.00359066 | $35.91    | $      |
+| EUR      | 0.00330341 | €33.03    | €      |
+| GBP      | 0.00283632 | £28.36    | £      |
+| INR      | 0.29851434 | ₹2,985.14 | ₹      |
+| AUD      | 0.00545740 | A$54.57   | A$     |
+| CAD      | 0.00488309 | C$48.83   | C$     |
 
 ---
 
@@ -293,22 +293,22 @@ echo $symbol . currency_format(convert_currency($balance), 2);
 
 ### Dashboard Statistics
 
-**USD (Default):**
-```
-┌─────────────────────────────────┐
-│ Total Users Balance: $45,230.50 │
-│ Total Revenue: $123,456.78      │
-│ Today's Profit: $1,234.56       │
-└─────────────────────────────────┘
-```
-
-**PKR (After Switch):**
+**PKR (Default):**
 ```
 ┌──────────────────────────────────────┐
 │ Total Users Balance: Rs 12,597,704  │
 │ Total Revenue: Rs 34,382,612         │
 │ Today's Profit: Rs 343,814           │
 └──────────────────────────────────────┘
+```
+
+**USD (After Switch):**
+```
+┌─────────────────────────────────┐
+│ Total Users Balance: $45,230.50 │
+│ Total Revenue: $123,456.78      │
+│ Today's Profit: $1,234.56       │
+└─────────────────────────────────┘
 ```
 
 ---

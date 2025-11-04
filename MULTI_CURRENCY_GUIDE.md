@@ -26,8 +26,8 @@ Or manually execute the SQL via phpMyAdmin or your database management tool.
 ### 2. Verify Installation
 After running the migration, you should have:
 - A new `currencies` table in your database
-- 7 default currencies (USD, EUR, GBP, INR, PKR, AUD, CAD)
-- USD set as the default currency
+- 7 default currencies (PKR, USD, EUR, GBP, INR, AUD, CAD)
+- PKR set as the default currency
 
 ### 3. Configure Currencies
 1. Login as admin
