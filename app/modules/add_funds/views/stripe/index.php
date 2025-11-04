@@ -48,8 +48,9 @@
   $max_amount       = get_value($payment_params, 'max');
   $type             = get_value($payment_params, 'type');
   $tnx_fee          = get_value($option, 'tnx_fee');
-  $currency_code    = get_option("currency_code",'USD');
-  $currency_symbol  = get_option("currency_symbol",'$');
+  $current_currency = get_current_currency();
+  $currency_code    = $current_currency ? $current_currency->code : get_option("currency_code",'USD');
+  $currency_symbol  = $current_currency ? $current_currency->symbol : get_option("currency_symbol",'$');
 ?>
 
 <form class="creditCardForm actionAddFundsStripeCheckoutForm" action="#" method="post" id="payment-form">
