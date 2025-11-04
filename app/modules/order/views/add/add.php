@@ -230,7 +230,11 @@ $conn = null;
     <div class="ml-2 d-lg-block text-right">
         <?php if ($user_role === 'admin'): ?>
             <!-- Admin: Total Amount Received -->
-            <h4 class="m-0 text-right number"><?= get_option('currency_symbol', "$") ?><?= number_format($total_received, 4) ?></h4>
+            <h4 class="m-0 text-right number"><?php 
+                $current_currency = get_current_currency();
+                $symbol = $current_currency ? $current_currency->symbol : get_option('currency_symbol', "$");
+                echo $symbol . number_format(convert_currency($total_received), 4);
+            ?></h4>
             <small class="text-muted"><?= lang("total_received") ?></small>
         <?php else: ?>
             <!-- User: Account Balance -->
@@ -241,7 +245,11 @@ $conn = null;
                     <a href="<?= cn('add_funds') ?>" style="text-decoration:underline;" class="text-primary"><?= lang("add funds") ?></a>
                 </small>
             <?php else: ?>
-                <h4 class="m-0 text-right number"><?= get_option('currency_symbol', "$") ?><?= number_format($balance, 4) ?></h4>
+                <h4 class="m-0 text-right number"><?php 
+                    $current_currency = get_current_currency();
+                    $symbol = $current_currency ? $current_currency->symbol : get_option('currency_symbol', "$");
+                    echo $symbol . number_format(convert_currency($balance), 4);
+                ?></h4>
                 <small class="text-muted"><?= lang("account_balance") ?></small>
             <?php endif; ?>
         <?php endif; ?>
@@ -261,7 +269,11 @@ $conn = null;
             <small class="text-muted"><?= lang("total_users") ?></small>
         <?php else: ?>
             <!-- User: Spent Balance -->
-            <h4 class="m-0 text-right number"><?= get_option('currency_symbol', "$") ?><?= number_format($total_spent, 4) ?></h4>
+            <h4 class="m-0 text-right number"><?php 
+                $current_currency = get_current_currency();
+                $symbol = $current_currency ? $current_currency->symbol : get_option('currency_symbol', "$");
+                echo $symbol . number_format(convert_currency($total_spent), 4);
+            ?></h4>
             <small class="text-muted"><?= lang("spent_balance") ?></small>
         <?php endif; ?>
     </div>
@@ -583,9 +595,13 @@ $conn = null;
                   <?php }?>
                   <div class="form-group" id="result_total_charge">
                     <input type="hidden" name="total_charge" value="0.00">
-                    <input type="hidden" name="currency_symbol" value="<?=get_option("currency_symbol", "")?>">
+                    <?php 
+                      $current_currency = get_current_currency();
+                      $currency_symbol = $current_currency ? $current_currency->symbol : get_option("currency_symbol", "");
+                    ?>
+                    <input type="hidden" name="currency_symbol" value="<?=$currency_symbol?>">
                     <br>
-                    <center><p class="btn btn-info2 total_charge"><?=lang("total_charge")?> <span class="charge_number">PKR 0</span></p></center>
+                    <center><p class="btn btn-info2 total_charge"><?=lang("total_charge")?> <span class="charge_number"><?=$currency_symbol?> 0</span></p></center>
                     
                     <?php
                       $user = $this->model->get("balance, custom_rate", 'general_users', ['id' => session('uid')]);
@@ -837,7 +853,7 @@ label{
       <p><i class="fa fa-bell" style="color: #2ecc71; margin-right: 8px;"></i><strong>Service Name:</strong> <span style="color: #bdc3c7;">${shortServiceName}</span></p>
       <p><i class="fa fa-link" style="color: #2ecc71; margin-right: 8px;"></i><strong>Link:</strong> <span style="color: #bdc3c7;">${savedOrderData.link}</span></p>
       <p><i class="fa fa-long-arrow-up" aria-hidden="true" style="color: #2ecc71; margin-right: 8px;"></i><strong>Quantity:</strong> <span style="color: #bdc3c7;">${savedOrderData.quantity}</span></p>
-      <p><i class="fa fa-usd" style="color: #2ecc71; margin-right: 8px;"></i><strong>Total Charge:</strong> <span style="color: #bdc3c7;">${savedOrderData.total_charge} PKR</span></p>
+      <p><i class="fa fa-usd" style="color: #2ecc71; margin-right: 8px;"></i><strong>Total Charge:</strong> <span style="color: #bdc3c7;"><?=$currency_symbol?>${savedOrderData.total_charge}</span></p>
     </div>
   </div>
 
@@ -1030,6 +1046,9 @@ $vertical_image_modal_url = get_option('vertical_image_modal_url', 'https://i.ib
 
 <script>
 (function($){
+  /* ========= Currency Symbol Variable ========= */
+  var currencySymbol = '<?=$currency_symbol?>';
+  
   /* ========= Icon helper ========= */
 function pickPlatformIcon(text){
   if (!text) return '';
@@ -1116,7 +1135,7 @@ function pickPlatformIcon(text){
     var max  = $opt.data('max');
     var drip = ($opt.data('dripfeed') == 1);
     var meta = [];
-    if (rate) meta.push('PKR: ' + rate);
+    if (rate) meta.push(currencySymbol + ': ' + rate);
     if (min)  meta.push('Min: ' + min);
     if (max)  meta.push('Max: ' + max);
     if (drip) meta.push('Drip');

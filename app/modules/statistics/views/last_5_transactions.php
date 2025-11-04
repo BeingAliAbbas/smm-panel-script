@@ -61,7 +61,11 @@
           <td class="">
             <img class="payment" src="<?=BASE?>/assets/images/payments/<?=$row->type?>.png" alt="<?=$row->type?> icon">
           </td>
-          <td><?=get_option("currency_symbol", '')?><?=$row->amount?> </td>
+          <td><?php 
+            $current_currency = get_current_currency();
+            $symbol = $current_currency ? $current_currency->symbol : get_option("currency_symbol", '');
+            echo $symbol . currency_format(convert_currency($row->amount), get_option('currency_decimal', 2));
+          ?> </td>
           <td><?=convert_timezone($row->created, 'user')?></td>
 
           <td>

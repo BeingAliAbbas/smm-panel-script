@@ -24,7 +24,8 @@
           <tbody>
             <?php if (!empty($order_logs)) {
               $decimal_places = get_option('currency_decimal', 2);
-              $currency_symbol = get_option("currency_symbol","");
+              $current_currency = get_current_currency();
+              $currency_symbol = $current_currency ? $current_currency->symbol : get_option("currency_symbol","");
               switch (get_option('currency_decimal_separator', 'dot')) {
                 case 'dot':
                   $decimalpoint = '.';
@@ -88,11 +89,11 @@
                       <li><?=lang("Quantity")?>: <?=$row->quantity?></li>
                       <li><?=lang("Charge")?>: 
                         <?php 
-                          echo $currency_symbol.currency_format($row->charge, $decimal_places, $decimalpoint, $separator);
+                          echo $currency_symbol.currency_format(convert_currency($row->charge), $decimal_places, $decimalpoint, $separator);
                         ?>
                         <?php
                           if (get_role("admin") && $row->formal_charge != 0) {
-                            echo '('. $row->formal_charge. ' / <span class="text-info">'. $row->profit .'</span>)';
+                            echo '('. currency_format(convert_currency($row->formal_charge), $decimal_places, $decimalpoint, $separator) . ' / <span class="text-info">'. currency_format(convert_currency($row->profit), $decimal_places, $decimalpoint, $separator) .'</span>)';
                           }
                         ?>
                       </li>

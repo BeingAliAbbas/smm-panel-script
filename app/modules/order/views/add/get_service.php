@@ -62,8 +62,9 @@
   <div class="form-group">
     <?php
       $user_price = get_user_price(session('uid'), $service);
+      $converted_price = convert_currency($user_price);
     ?>
-    <input class="form-control223344 square" name="service_price" type="hidden" value="<?php echo $user_price; ?>">
-    <input class="form-control223344 square" type="text" name="service_price" value="<?=(!empty($service->price))?currency_format($service->price, get_option("currency_decimal")) :''?>" readonly>
+    <input class="form-control223344 square" name="service_price" type="hidden" value="<?php echo $converted_price; ?>">
+    <input class="form-control223344 square" type="text" name="service_price" value="<?=(!empty($service->price))?currency_format(convert_currency($service->price), get_option("currency_decimal")) :''?>" readonly>
   </div>
 </div>

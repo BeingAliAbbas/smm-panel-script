@@ -236,3 +236,110 @@ if (!function_exists("currency_format")) {
 	}
 
 }
+
+/**
+ * Get current selected currency
+ */
+if (!function_exists("get_current_currency")) {
+	function get_current_currency(){
+		$CI = &get_instance();
+		
+		// Load currencies module if not loaded
+		if (!isset($CI->currencies_model)) {
+			$CI->load->model('currencies/currencies_model');
+		}
+		
+		// Check session first
+		$selected = $CI->session->userdata('selected_currency');
+		
+		// If not in session, check cookie
+		if (!$selected) {
+			$selected = $CI->input->cookie('selected_currency', true);
+		}
+
+		// If found, verify it's valid
+		if ($selected) {
+			$currency = $CI->currencies_model->get_by_code($selected);
+			if ($currency) {
+				return $currency;
+			}
+		}
+
+		// Return default currency
+		return $CI->currencies_model->get_default_currency();
+	}
+}
+
+/**
+ * Convert amount to current selected currency
+ */
+if (!function_exists("convert_currency")) {
+	function convert_currency($amount, $from_code = null){
+		$CI = &get_instance();
+		
+		// Load currencies module if not loaded
+		if (!isset($CI->currencies_model)) {
+			$CI->load->model('currencies/currencies_model');
+		}
+		
+		$current_currency = get_current_currency();
+		
+		if (!$current_currency) {
+			return $amount;
+		}
+		
+		// If from_code is not specified, assume it's the default currency
+		if ($from_code === null) {
+			$default_currency = $CI->currencies_model->get_default_currency();
+			$from_code = $default_currency ? $default_currency->code : 'USD';
+		}
+		
+		// If already in target currency, no conversion needed
+		if ($from_code === $current_currency->code) {
+			return $amount;
+		}
+		
+		return $CI->currencies_model->convert($amount, $current_currency->code);
+	}
+}
+
+/**
+ * Format amount with current currency symbol
+ */
+if (!function_exists("format_currency")) {
+	function format_currency($amount, $convert = true, $number_decimal = "", $decimalpoint = "", $separator = ""){
+		$current_currency = get_current_currency();
+		
+		if (!$current_currency) {
+			// Fallback to old method
+			$symbol = get_option('currency_symbol', '$');
+			return $symbol . currency_format($amount, $number_decimal, $decimalpoint, $separator);
+		}
+		
+		// Convert if requested
+		if ($convert) {
+			$amount = convert_currency($amount);
+		}
+		
+		// Format the number
+		$formatted = currency_format($amount, $number_decimal, $decimalpoint, $separator);
+		
+		return $current_currency->symbol . $formatted;
+	}
+}
+
+/**
+ * Get all active currencies for display
+ */
+if (!function_exists("get_active_currencies")) {
+	function get_active_currencies(){
+		$CI = &get_instance();
+		
+		// Load currencies module if not loaded
+		if (!isset($CI->currencies_model)) {
+			$CI->load->model('currencies/currencies_model');
+		}
+		
+		return $CI->currencies_model->get_active_currencies();
+	}
+}
