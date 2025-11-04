@@ -81,4 +81,134 @@ class currencies extends MX_Controller {
 
 		return $this->model->get_default_currency();
 	}
+
+	/**
+	 * Update exchange rate
+	 */
+	public function update_rate(){
+		if ($this->input->method() !== 'post') {
+			ms([
+				'status'  => 'error',
+				'message' => 'Invalid method'
+			]);
+		}
+
+		$id = $this->input->post('id', true);
+		$exchange_rate = $this->input->post('exchange_rate', true);
+
+		if (!$id || !$exchange_rate) {
+			ms([
+				'status'  => 'error',
+				'message' => 'Missing required fields'
+			]);
+		}
+
+		$this->db->where('id', $id);
+		$this->db->update('currencies', ['exchange_rate' => $exchange_rate]);
+
+		ms([
+			'status'  => 'success',
+			'message' => 'Exchange rate updated successfully'
+		]);
+	}
+
+	/**
+	 * Set default currency
+	 */
+	public function set_default(){
+		if ($this->input->method() !== 'post') {
+			ms([
+				'status'  => 'error',
+				'message' => 'Invalid method'
+			]);
+		}
+
+		$id = $this->input->post('id', true);
+
+		if (!$id) {
+			ms([
+				'status'  => 'error',
+				'message' => 'Missing currency ID'
+			]);
+		}
+
+		// Unset all defaults
+		$this->db->update('currencies', ['is_default' => 0]);
+
+		// Set new default
+		$this->db->where('id', $id);
+		$this->db->update('currencies', ['is_default' => 1]);
+
+		ms([
+			'status'  => 'success',
+			'message' => 'Default currency updated successfully'
+		]);
+	}
+
+	/**
+	 * Toggle currency status
+	 */
+	public function toggle_status(){
+		if ($this->input->method() !== 'post') {
+			ms([
+				'status'  => 'error',
+				'message' => 'Invalid method'
+			]);
+		}
+
+		$id = $this->input->post('id', true);
+		$status = $this->input->post('status', true);
+
+		if (!$id) {
+			ms([
+				'status'  => 'error',
+				'message' => 'Missing currency ID'
+			]);
+		}
+
+		$this->db->where('id', $id);
+		$this->db->update('currencies', ['status' => $status]);
+
+		ms([
+			'status'  => 'success',
+			'message' => 'Currency status updated'
+		]);
+	}
+
+	/**
+	 * Add new currency
+	 */
+	public function add_currency(){
+		if ($this->input->method() !== 'post') {
+			ms([
+				'status'  => 'error',
+				'message' => 'Invalid method'
+			]);
+		}
+
+		$data = [
+			'code'          => strtoupper($this->input->post('code', true)),
+			'name'          => $this->input->post('name', true),
+			'symbol'        => $this->input->post('symbol', true),
+			'exchange_rate' => $this->input->post('exchange_rate', true),
+			'status'        => 1,
+			'is_default'    => 0
+		];
+
+		// Check if code already exists
+		$exists = $this->db->get_where('currencies', ['code' => $data['code']])->row();
+		if ($exists) {
+			ms([
+				'status'  => 'error',
+				'message' => 'Currency code already exists'
+			]);
+		}
+
+		$this->db->insert('currencies', $data);
+
+		ms([
+			'status'  => 'success',
+			'message' => 'Currency added successfully'
+		]);
+	}
 }
