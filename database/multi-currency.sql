@@ -14,11 +14,12 @@ CREATE TABLE IF NOT EXISTS `currencies` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Insert default currencies
+-- PKR is the default base currency, all rates are relative to PKR
 INSERT INTO `currencies` (`code`, `name`, `symbol`, `exchange_rate`, `is_default`, `status`) VALUES
-('USD', 'US Dollar', '$', 1.00000000, 1, 1),
-('EUR', 'Euro', '€', 0.92000000, 0, 1),
-('GBP', 'British Pound', '£', 0.79000000, 0, 1),
-('INR', 'Indian Rupee', '₹', 83.12000000, 0, 1),
-('PKR', 'Pakistani Rupee', 'Rs', 278.50000000, 0, 1),
-('AUD', 'Australian Dollar', 'A$', 1.52000000, 0, 1),
-('CAD', 'Canadian Dollar', 'C$', 1.36000000, 0, 1);
+('PKR', 'Pakistani Rupee', 'Rs', 1.00000000, 1, 1),
+('USD', 'US Dollar', '$', 0.00359066, 0, 1),
+('EUR', 'Euro', '€', 0.00330341, 0, 1),
+('GBP', 'British Pound', '£', 0.00283632, 0, 1),
+('INR', 'Indian Rupee', '₹', 0.29851434, 0, 1),
+('AUD', 'Australian Dollar', 'A$', 0.00545740, 0, 1),
+('CAD', 'Canadian Dollar', 'C$', 0.00488309, 0, 1);
