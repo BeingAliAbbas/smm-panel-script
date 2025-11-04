@@ -851,3 +851,14 @@ $lang["allowed"] = "Allowed";
 $lang["not_allowed"] = "Not Allowed";
 $lang["take_fee_from_user"] = "Take fee from user";
 
+/*----------  Multi-Currency  ----------*/
+$lang["Multi-Currency Management"] = "Multi-Currency Management";
+$lang["Code"] = "Code";
+$lang["Name"] = "Name";
+$lang["Symbol"] = "Symbol";
+$lang["Exchange Rate"] = "Exchange Rate";
+$lang["Default"] = "Default";
+$lang["Set as Default"] = "Set as Default";
+$lang["Update"] = "Update";
+$lang["Add"] = "Add";
+
