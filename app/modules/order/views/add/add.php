@@ -11,97 +11,18 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <?php
-session_start();
+// Extract dashboard data from controller
+$whatsapp_number_exists = isset($dashboard_data['whatsapp_number_exists']) ? $dashboard_data['whatsapp_number_exists'] : false;
+$balance = isset($dashboard_data['balance']) ? $dashboard_data['balance'] : 0.0000;
+$total_spent = isset($dashboard_data['total_spent']) ? $dashboard_data['total_spent'] : 0.0000;
+$total_orders = isset($dashboard_data['total_orders']) ? $dashboard_data['total_orders'] : 0;
+$user_role = isset($dashboard_data['user_role']) ? $dashboard_data['user_role'] : 'user';
 
-// Ensure the user is logged in
-if (!isset($_SESSION['uid'])) {
-    die('User not logged in');
+// Admin-specific data
+$total_users = isset($dashboard_data['total_users']) ? $dashboard_data['total_users'] : 0;
+$total_received = isset($dashboard_data['total_received']) ? $dashboard_data['total_received'] : 0.0000;
+$total_orders_all = isset($dashboard_data['total_orders_all']) ? $dashboard_data['total_orders_all'] : 0;
 }
-
-$user_id = $_SESSION['uid']; // Get the user ID from the session
-
-// Database credentials
-$host = 'localhost';
-$dbname = 'beastsmm_ali';
-$username = 'beastsmm_ali';
-$password = 'ra6efcTo[4z#';
-
-try {
-    // Create a new PDO connection
-    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // Query to check if the user has a WhatsApp number
-    $stmt = $conn->prepare("SELECT whatsapp_number FROM general_users WHERE id = :user_id");
-    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt->execute();
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // Check if WhatsApp number exists and is valid (not empty and not just '+92')
-    $whatsapp_number_exists = $user && !empty($user['whatsapp_number']) && $user['whatsapp_number'] !== '+92';
-
-    // Query to fetch balance and spent from the general_users table
-    $stmt = $conn->prepare("SELECT balance, spent FROM general_users WHERE id = :user_id");
-    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt->execute();
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    $balance = $user ? $user['balance'] : 0.0000;
-    $total_spent = $user ? $user['spent'] : 0.0000;
-
-    // Query to count total orders for the user
-    $stmt = $conn->prepare("SELECT COUNT(*) AS total_orders FROM orders WHERE uid = :user_id");
-    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt->execute();
-    $data_orders_log = $stmt->fetch(PDO::FETCH_ASSOC);
-    $total_orders = $data_orders_log ? $data_orders_log['total_orders'] : 0;
-
-    // Query to calculate total spent from general_transaction_logs
-    $stmt = $conn->prepare("SELECT SUM(amount) AS total_spent FROM general_transaction_logs WHERE uid = :user_id AND status = 1");
-    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt->execute();
-    $transaction_log = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    // If there's a result, update total_spent, otherwise keep it as 0
-    $total_spent = $transaction_log && $transaction_log['total_spent'] ? $transaction_log['total_spent'] : 0.0000;
-
-    // Check if the current user is an admin
-    $stmt = $conn->prepare("SELECT role FROM general_users WHERE id = :user_id");
-    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt->execute();
-    $user_role = $stmt->fetch(PDO::FETCH_ASSOC)['role'];
-
-    // If user is admin, get total users and total amount received
-    if ($user_role === 'admin') {
-        // Query to get total users
-        $stmt = $conn->prepare("SELECT COUNT(*) AS total_users FROM general_users");
-        $stmt->execute();
-        $total_users = $stmt->fetch(PDO::FETCH_ASSOC)['total_users'];
-
-        // Query to get total amount received (sum of transactions)
-        $stmt = $conn->prepare("SELECT SUM(amount) AS total_received FROM general_transaction_logs WHERE status = 1");
-        $stmt->execute();
-        $total_received = $stmt->fetch(PDO::FETCH_ASSOC)['total_received'];
-        
-        // Query to get total orders (all orders, not just the current user's orders)
-        $stmt = $conn->prepare("SELECT COUNT(*) AS total_orders_all FROM orders");
-        $stmt->execute();
-        $total_orders_all = $stmt->fetch(PDO::FETCH_ASSOC)['total_orders_all'];
-    }
-
-} catch (PDOException $e) {
-    // Handle connection errors
-    echo "Connection failed: " . $e->getMessage();
-    $balance = 0.0000;
-    $total_orders = 0;
-    $total_spent = 0.0000;
-    $total_users = 0;
-    $total_received = 0.0000;
-    $total_orders_all = 0;
-}
-
-// Close the connection
-$conn = null;
 ?>
 
 

@@ -103,12 +103,61 @@ class order extends MX_Controller {
 	public function add(){
 		$this->load->model("services/services_model", 'services_model');
 		$categories = $this->services_model->get_active_categories();
+		
+		// Get dashboard data from model
+		$dashboard_data = $this->get_dashboard_data();
+		
 		$data = array(
 			"module"       => get_class($this),
 			'categories'   => $categories,
 			'services'     => "",
+			'dashboard_data' => $dashboard_data,
 		);
 		$this->template->build('add/add', $data);
+	}
+	
+	/**
+	 * Get dashboard data for order/add page
+	 */
+	private function get_dashboard_data(){
+		$user_id = session('uid');
+		
+		// Check WhatsApp number
+		$user = $this->model->get('whatsapp_number, balance, spent, role', USERS, ['id' => $user_id]);
+		$whatsapp_number_exists = $user && !empty($user->whatsapp_number) && $user->whatsapp_number !== '+92';
+		
+		$balance = $user ? $user->balance : 0.0000;
+		$total_spent = $user ? $user->spent : 0.0000;
+		$user_role = $user ? $user->role : 'user';
+		
+		// Get total orders for user
+		$this->db->where('uid', $user_id);
+		$total_orders = $this->db->count_all_results(ORDERS);
+		
+		$data = [
+			'whatsapp_number_exists' => $whatsapp_number_exists,
+			'balance' => $balance,
+			'total_spent' => $total_spent,
+			'total_orders' => $total_orders,
+			'user_role' => $user_role,
+		];
+		
+		// If admin, get additional stats
+		if ($user_role === 'admin') {
+			// Total users
+			$data['total_users'] = $this->db->count_all(USERS);
+			
+			// Total amount received (sum of transactions)
+			$this->db->select_sum('amount');
+			$this->db->where('status', 1);
+			$result = $this->db->get(TRANSACTION_LOGS)->row();
+			$data['total_received'] = $result ? $result->amount : 0.0000;
+			
+			// Total orders (all)
+			$data['total_orders_all'] = $this->db->count_all(ORDERS);
+		}
+		
+		return $data;
 	}
 
 	// Get Services by cate ID
