@@ -785,8 +785,8 @@ body{
 	width: 120px;
 	height: 120px;
 	border: 16px solid #f3f3f3;
-	border-top: 16px solid #3498db;
-	border-bottom: 16px solid #3498db;
+	border-top: 16px solid #006d77;
+	border-bottom: 16px solid #006d77;
 	border-radius: 50%;
 	animation: spin 1s linear infinite, heart-beat 3s linear infinite;
 	background-color: #fff;
@@ -801,11 +801,11 @@ body{
   }
   
   @keyframes heart-beat {
-	  55% { background-color: #3498db; }
-	  60% { background-color: #3498db; }
+	  55% { background-color: #006d77; }
+	  60% { background-color: #006d77; }
 	  65% { background-color: blue; }
-	  70% { background-color: #3498db; }
-	  100% { background-color: #3498db; }
+	  70% { background-color: #006d77; }
+	  100% { background-color: #006d77; }
   }
   
   
