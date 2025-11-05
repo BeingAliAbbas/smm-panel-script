@@ -9,6 +9,24 @@
           <i class="fe fe-info"></i> Manage multiple currencies for your SMM panel. Users can switch between currencies in the sidebar. All amounts will be converted based on exchange rates.
         </div>
         
+        <div class="mb-3">
+          <button type="button" class="btn btn-success" id="fetchRatesBtn">
+            <i class="fe fe-download"></i> Fetch Latest Exchange Rates
+          </button>
+          <button type="button" class="btn btn-info" id="showCronUrl">
+            <i class="fe fe-link"></i> Show Cron URL
+          </button>
+        </div>
+        
+        <div class="alert alert-warning d-none" id="cronUrlBox">
+          <strong>Cron URL:</strong><br>
+          <code id="cronUrlText"></code>
+          <button type="button" class="btn btn-sm btn-primary ml-2" id="copyCronUrl">
+            <i class="fe fe-copy"></i> Copy
+          </button>
+          <br><small class="text-muted mt-2 d-block">Use this URL in your cron job to automatically update exchange rates daily.</small>
+        </div>
+        
         <div class="table-responsive">
           <table class="table table-hover table-bordered table-vcenter card-table">
             <thead>
@@ -183,6 +201,68 @@ $(document).ready(function() {
         }
       }
     });
+  });
+  
+  // Fetch latest exchange rates
+  $('#fetchRatesBtn').on('click', function() {
+    var btn = $(this);
+    btn.prop('disabled', true).html('<i class="fe fe-loader"></i> Fetching...');
+    
+    $.ajax({
+      url: '<?=cn("currencies/fetch_rates")?>',
+      type: 'POST',
+      data: {
+        <?=$this->security->get_csrf_token_name()?>: '<?=$this->security->get_csrf_hash()?>'
+      },
+      dataType: 'json',
+      success: function(response) {
+        btn.prop('disabled', false).html('<i class="fe fe-download"></i> Fetch Latest Exchange Rates');
+        
+        if (response.status == 'success') {
+          show_message(response.message, 'success');
+          // Reload page to show updated rates
+          setTimeout(function() {
+            location.reload();
+          }, 1500);
+        } else {
+          show_message(response.message, 'error');
+        }
+      },
+      error: function() {
+        btn.prop('disabled', false).html('<i class="fe fe-download"></i> Fetch Latest Exchange Rates');
+        show_message('Failed to fetch exchange rates', 'error');
+      }
+    });
+  });
+  
+  // Show cron URL
+  $('#showCronUrl').on('click', function() {
+    var cronBox = $('#cronUrlBox');
+    var baseUrl = '<?=base_url()?>';
+    var cronUrl = baseUrl + 'currencies/cron_fetch_rates';
+    
+    // Add token if available
+    var token = '<?=get_option("currency_cron_token", "")?>';
+    if (token) {
+      cronUrl += '?token=' + token;
+    }
+    
+    $('#cronUrlText').text(cronUrl);
+    cronBox.removeClass('d-none');
+  });
+  
+  // Copy cron URL
+  $('#copyCronUrl').on('click', function() {
+    var cronUrl = $('#cronUrlText').text();
+    
+    // Create temporary input to copy
+    var tempInput = $('<input>');
+    $('body').append(tempInput);
+    tempInput.val(cronUrl).select();
+    document.execCommand('copy');
+    tempInput.remove();
+    
+    show_message('Cron URL copied to clipboard!', 'success');
   });
 });
 

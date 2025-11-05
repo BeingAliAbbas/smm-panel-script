@@ -211,4 +211,114 @@ class currencies extends MX_Controller {
 			'message' => 'Currency added successfully'
 		]);
 	}
+
+	/**
+	 * Fetch latest exchange rates from API
+	 * Can be called via button click or cron job
+	 */
+	public function fetch_rates(){
+		// Get default currency
+		$default_currency = $this->model->get_default_currency();
+		
+		if (!$default_currency) {
+			ms([
+				'status'  => 'error',
+				'message' => 'No default currency set'
+			]);
+		}
+
+		$base_code = $default_currency->code;
+		
+		// Use exchangerate-api.com (free tier, no API key required for basic usage)
+		// Alternative: Use fixer.io, openexchangerates.org, etc.
+		$api_url = "https://api.exchangerate-api.com/v4/latest/{$base_code}";
+		
+		// Fetch exchange rates
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $api_url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		
+		$response = curl_exec($ch);
+		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+		
+		if ($http_code !== 200 || !$response) {
+			ms([
+				'status'  => 'error',
+				'message' => 'Failed to fetch exchange rates from API'
+			]);
+		}
+		
+		$data = json_decode($response, true);
+		
+		if (!isset($data['rates']) || empty($data['rates'])) {
+			ms([
+				'status'  => 'error',
+				'message' => 'Invalid API response'
+			]);
+		}
+		
+		$rates = $data['rates'];
+		$updated_count = 0;
+		
+		// Update exchange rates for all active currencies
+		$currencies = $this->model->get_active_currencies();
+		
+		foreach ($currencies as $currency) {
+			// Skip default currency (it stays at 1.0)
+			if ($currency->is_default) {
+				continue;
+			}
+			
+			// Check if we have a rate for this currency
+			if (isset($rates[$currency->code])) {
+				$new_rate = $rates[$currency->code];
+				
+				// Since API returns rates relative to base currency,
+				// we need to convert to "per base currency" format
+				// API gives: 1 BASE = X TARGET
+				// We store: 1 BASE = X TARGET (same format)
+				$this->db->where('id', $currency->id);
+				$this->db->update('currencies', [
+					'exchange_rate' => $new_rate,
+					'updated_at' => date('Y-m-d H:i:s')
+				]);
+				
+				$updated_count++;
+			}
+		}
+		
+		ms([
+			'status'  => 'success',
+			'message' => "Successfully updated {$updated_count} exchange rates",
+			'data' => [
+				'updated_count' => $updated_count,
+				'base_currency' => $base_code,
+				'timestamp' => date('Y-m-d H:i:s')
+			]
+		]);
+	}
+
+	/**
+	 * Cron-friendly endpoint to fetch rates
+	 * Access via: yoursite.com/currencies/cron_fetch_rates
+	 */
+	public function cron_fetch_rates(){
+		// Optional: Add authentication token for security
+		$token = $this->input->get('token', true);
+		$expected_token = get_option('currency_cron_token', '');
+		
+		if ($expected_token && $token !== $expected_token) {
+			echo json_encode([
+				'status' => 'error',
+				'message' => 'Invalid token'
+			]);
+			return;
+		}
+		
+		// Call the fetch_rates method
+		$this->fetch_rates();
+	}
 }
