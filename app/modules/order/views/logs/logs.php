@@ -55,7 +55,7 @@
   <!-- Total Sell Card -->
   <div id="total-sell-card" class="card summary-card">
     <h4><?=lang("Total Sell")?> <small style="font-size:1rem; color:#bfc9d1;">(100 orders)</small></h4>
-    <p id="total-sell-value" class="summary-value" style="color: #f39c12; font-size:2rem; font-weight:bold; margin:0;"></p>
+    <p id="total-sell-value" class="summary-value" style="color: #e29578; font-size:2rem; font-weight:bold; margin:0;"></p>
   </div>
 
   <!-- Profit Today Card -->

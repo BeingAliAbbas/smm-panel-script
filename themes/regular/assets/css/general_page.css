@@ -34,8 +34,8 @@ nav.header-top .link {
 }
 
 .btn-outline-primary.sign-up{
-  border-color: #ff6f61!important;
-  color: #ff6f61 !important;
+  border-color: #e29578!important;
+  color: #e29578 !important;
   z-index: 9999;
 }
 
@@ -73,12 +73,12 @@ nav.header-top .site-logo, nav.header-top .site-logo-white{
 }
 
 nav.header-top.shrink .btn-outline-primary.sign-up{
-  border-color: #ff6f61!important;
+  border-color: #e29578!important;
   color: #333357 !important;
 }
 
 nav.header-top a.btn-outline-primary.sign-up:hover{
-  background: #ff6f61!important;
+  background: #e29578!important;
   color: #fff!important;
 }
 

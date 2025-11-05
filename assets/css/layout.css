@@ -548,11 +548,11 @@ body{
 	}
   
   .theme-default .header.top{
-	background: #fa6d7e;
-	background: -webkit-linear-gradient(45deg, #fa6d7e, #f98c6b) !important;
-	background: -moz- oldlinear-gradient(45deg, #fa6d7e, #f98c6b) !important;
-	background: -o-linear-gradient(45deg, #fa6d7e, #f98c6b) !important;
-	background: linear-gradient(45deg, #fa6d7e, #f98c6b) !important; }
+	background: #006d77;
+	background: -webkit-linear-gradient(45deg, #006d77, #83c5be) !important;
+	background: -moz- oldlinear-gradient(45deg, #006d77, #83c5be) !important;
+	background: -o-linear-gradient(45deg, #006d77, #83c5be) !important;
+	background: linear-gradient(45deg, #006d77, #83c5be) !important; }
   
   .theme-purple .header.top{
 	background: #9a56ff; 

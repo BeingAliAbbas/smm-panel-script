@@ -16,11 +16,11 @@ Dashboard UI
     --purple: #a55eea;
     --pink: #f66d9b;
     --red: #e29578;
-    --orange: #fd9644;
+    --orange: #e29578;
     --yellow: #f1c40f;
     --green: #5eba00;
-    --teal: #2bcbba;
-    --cyan: #17a2b8;
+    --teal: #83c5be;
+    --cyan: #83c5be;
     --white: #fff;
     --gray: #868e96;
     --gray-dark: #343a40;
@@ -10080,12 +10080,12 @@ button.bg-dark:focus {
 }
 
 .text-primary {
-    color: #ff6f61 !important;
+    color: #e29578 !important;
 }
 
 a.text-primary:hover,
 a.text-primary:focus {
-    color: #ff6f61 !important;
+    color: #e29578 !important;
 }
 
 .text-secondary {
@@ -11928,7 +11928,7 @@ button.bg-red:focus {
 }
 
 .bg-orange {
-    background-color: #fd9644 !important;
+    background-color: #e29578 !important;
 }
 
 a.bg-orange:hover,
@@ -11939,7 +11939,7 @@ button.bg-orange:focus {
 }
 
 .text-orange {
-    color: #fd9644 !important;
+    color: #e29578 !important;
 }
 
 .bg-yellow {
@@ -11973,7 +11973,7 @@ button.bg-green:focus {
 }
 
 .bg-teal {
-    background-color: #2bcbba !important;
+    background-color: #83c5be !important;
 }
 
 a.bg-teal:hover,
@@ -11984,11 +11984,11 @@ button.bg-teal:focus {
 }
 
 .text-teal {
-    color: #2bcbba !important;
+    color: #83c5be !important;
 }
 
 .bg-cyan {
-    background-color: #17a2b8 !important;
+    background-color: #83c5be !important;
 }
 
 a.bg-cyan:hover,
@@ -11999,7 +11999,7 @@ button.bg-cyan:focus {
 }
 
 .text-cyan {
-    color: #17a2b8 !important;
+    color: #83c5be !important;
 }
 
 .bg-white {
@@ -12964,8 +12964,8 @@ a.icon:hover {
 
 .btn-orange {
     color: #fff;
-    background-color: #fd9644;
-    border-color: #fd9644;
+    background-color: #e29578;
+    border-color: #e29578;
 }
 
 .btn-orange:hover {
@@ -12982,8 +12982,8 @@ a.icon:hover {
 .btn-orange.disabled,
 .btn-orange:disabled {
     color: #fff;
-    background-color: #fd9644;
-    border-color: #fd9644;
+    background-color: #e29578;
+    border-color: #e29578;
 }
 
 .btn-orange:not(:disabled):not(.disabled):active,
@@ -13078,8 +13078,8 @@ a.icon:hover {
 
 .btn-teal {
     color: #fff;
-    background-color: #2bcbba;
-    border-color: #2bcbba;
+    background-color: #83c5be;
+    border-color: #83c5be;
 }
 
 .btn-teal:hover {
@@ -13096,8 +13096,8 @@ a.icon:hover {
 .btn-teal.disabled,
 .btn-teal:disabled {
     color: #fff;
-    background-color: #2bcbba;
-    border-color: #2bcbba;
+    background-color: #83c5be;
+    border-color: #83c5be;
 }
 
 .btn-teal:not(:disabled):not(.disabled):active,
@@ -13116,8 +13116,8 @@ a.icon:hover {
 
 .btn-cyan {
     color: #fff;
-    background-color: #17a2b8;
-    border-color: #17a2b8;
+    background-color: #83c5be;
+    border-color: #83c5be;
 }
 
 .btn-cyan:hover {
@@ -13134,8 +13134,8 @@ a.icon:hover {
 .btn-cyan.disabled,
 .btn-cyan:disabled {
     color: #fff;
-    background-color: #17a2b8;
-    border-color: #17a2b8;
+    background-color: #83c5be;
+    border-color: #83c5be;
 }
 
 .btn-cyan:not(:disabled):not(.disabled):active,
@@ -14328,7 +14328,7 @@ Card alert
 
 .avatar-orange {
     background-color: #fee0c7;
-    color: #fd9644;
+    color: #e29578;
 }
 
 .avatar-yellow {
@@ -14343,12 +14343,12 @@ Card alert
 
 .avatar-teal {
     background-color: #bfefea;
-    color: #2bcbba;
+    color: #83c5be;
 }
 
 .avatar-cyan {
     background-color: #b9e3ea;
-    color: #17a2b8;
+    color: #83c5be;
 }
 
 .avatar-white {
@@ -15291,7 +15291,7 @@ a.tag-addon:hover {
 }
 
 .tag-orange {
-    background-color: #fd9644;
+    background-color: #e29578;
     color: #fff;
 }
 
@@ -15306,12 +15306,12 @@ a.tag-addon:hover {
 }
 
 .tag-teal {
-    background-color: #2bcbba;
+    background-color: #83c5be;
     color: #fff;
 }
 
 .tag-cyan {
-    background-color: #17a2b8;
+    background-color: #83c5be;
     color: #fff;
 }
 

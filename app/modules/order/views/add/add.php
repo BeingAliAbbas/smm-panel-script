@@ -802,10 +802,10 @@ $currency_symbol = $current_currency ? $current_currency->symbol : get_option('c
       height: 5px;
       width: 250px;
       background: #eca28d;
-      background: -webkit-linear-gradient(45deg, #eca28d, #f98c6b) !important;
-      background: -moz- oldlinear-gradient(45deg, #eca28d, #f98c6b) !important;
-      background: -o-linear-gradient(45deg, #eca28d, #f98c6b) !important;
-      background: linear-gradient(45deg, #eca28d, #f98c6b) !important;
+      background: -webkit-linear-gradient(45deg, #eca28d, #83c5be) !important;
+      background: -moz- oldlinear-gradient(45deg, #eca28d, #83c5be) !important;
+      background: -o-linear-gradient(45deg, #eca28d, #83c5be) !important;
+      background: linear-gradient(45deg, #eca28d, #83c5be) !important;
       position: relative;
       border-radius: 30px; }
     .page-title .border-line::before {
@@ -816,7 +816,7 @@ $currency_symbol = $current_currency ? $current_currency->symbol : get_option('c
       height: 10px;
       width: 10px;
       border-radius: 50%;
-      background: #fa6d7e;
+      background: #006d77;
       -webkit-animation-duration: 6s;
       animation-duration: 6s;
       -webkit-animation-timing-function: linear;
