@@ -16,6 +16,8 @@
 
         <a href="<?php echo cn($module."/currency")?>" class="list-group-item list-group-item-action <?php echo (segment(2) == 'currency') ? 'active' : ''?>"><span class="icon mr-3"><i class="fe fe-dollar-sign"></i></span><?=lang("currency_setting")?></a>
 
+        <a href="<?php echo cn($module."/currencies")?>" class="list-group-item list-group-item-action <?php echo (segment(2) == 'all_currencies') ? 'active' : ''?>"><span class="icon mr-3"><i class="fe fe-dollar-sign"></i></span><?=lang("all_currencies")?></a>
+
         <a href="<?php echo cn($module."/child-panel")?>" class="list-group-item list-group-item-action <?php echo (segment(2) == 'child-panel') ? 'active' : ''?>"><span class="icon mr-3"> <i class="fa fa-child"></i></span><?=lang("child_panel")?></a>
 
         <a href="<?php echo cn($module."/affiliate")?>" class="list-group-item list-group-item-action <?php echo (segment(2) == 'affiliate') ? 'active' : ''?>"><span class="icon mr-3"> <i class="fa fa-users"></i></span><?=lang("Affiliate")?></a>

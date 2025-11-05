@@ -102,6 +102,11 @@ try {
 
 // Close the connection
 $conn = null;
+
+// ============== CURRENCY CONVERSION SUPPORT (FROM OLD FILE) ==============
+$current_currency = get_current_currency();
+$currency_symbol = $current_currency ? $current_currency->symbol : get_option('currency_symbol', "$");
+// =========================================================================
 ?>
 
 
@@ -131,6 +136,73 @@ $conn = null;
 
 <?php endif; ?>
 <style>
+.cat-icon-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 15px 0;
+  justify-content: flex-start;
+}
+
+/* Buttons auto-adjust width */
+.catf-btn {
+  flex: 1 1 180px;   /* grow/shrink but keep min width */
+  min-width: 140px;  /* ensures not too small */
+  max-width: 250px;  /* prevents oversized buttons */
+  box-sizing: border-box;
+
+  position: relative;
+  background: #ffffff08;
+  border: 1px solid #ffffff22;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 0.18s, border-color 0.18s, transform 0.15s;
+  white-space: nowrap;
+}
+
+.catf-btn i { font-size: 16px; line-height: 1; }
+
+.catf-btn:hover {
+  background: #005a9f33;   /* light blue hover */
+  border-color: #005a9f66;
+}
+
+.catf-btn.active {
+  background: #005a9f;
+  border-color: #0073cc;
+}
+
+.catf-btn.active:hover {
+  background: #0073cc;
+}
+
+.catf-btn span { pointer-events:none; }
+
+.catf-btn:focus {
+  outline: 2px solid #005a9f;
+  outline-offset: 2px;
+}
+
+/* Smaller text & padding on small screens */
+@media (max-width:600px){
+  .catf-btn {
+    flex: 1 1 120px;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 8px;
+  }
+  .catf-btn i { font-size: 14px; }
+}
+
   .announcement-container {
     margin: 20px auto !important;
     padding: 20px !important;
@@ -229,8 +301,8 @@ $conn = null;
     </span>
     <div class="ml-2 d-lg-block text-right">
         <?php if ($user_role === 'admin'): ?>
-            <!-- Admin: Total Amount Received -->
-            <h4 class="m-0 text-right number"><?= get_option('currency_symbol', "$") ?><?= number_format($total_received, 4) ?></h4>
+            <!-- Admin: Total Amount Received WITH CURRENCY CONVERSION -->
+            <h4 class="m-0 text-right number"><?= $currency_symbol . number_format(convert_currency($total_received), 4) ?></h4>
             <small class="text-muted"><?= lang("total_received") ?></small>
         <?php else: ?>
             <!-- User: Account Balance -->
@@ -241,7 +313,8 @@ $conn = null;
                     <a href="<?= cn('add_funds') ?>" style="text-decoration:underline;" class="text-primary"><?= lang("add funds") ?></a>
                 </small>
             <?php else: ?>
-                <h4 class="m-0 text-right number"><?= get_option('currency_symbol', "$") ?><?= number_format($balance, 4) ?></h4>
+                <!-- User: Account Balance WITH CURRENCY CONVERSION -->
+                <h4 class="m-0 text-right number"><?= $currency_symbol . number_format(convert_currency($balance), 4) ?></h4>
                 <small class="text-muted"><?= lang("account_balance") ?></small>
             <?php endif; ?>
         <?php endif; ?>
@@ -260,8 +333,8 @@ $conn = null;
             <h4 class="m-0 text-right number"><?= number_format($total_users) ?></h4>
             <small class="text-muted"><?= lang("total_users") ?></small>
         <?php else: ?>
-            <!-- User: Spent Balance -->
-            <h4 class="m-0 text-right number"><?= get_option('currency_symbol', "$") ?><?= number_format($total_spent, 4) ?></h4>
+            <!-- User: Spent Balance WITH CURRENCY CONVERSION -->
+            <h4 class="m-0 text-right number"><?= $currency_symbol . number_format(convert_currency($total_spent), 4) ?></h4>
             <small class="text-muted"><?= lang("spent_balance") ?></small>
         <?php endif; ?>
     </div>
@@ -306,6 +379,41 @@ $conn = null;
               <div class="row">
                 <div class="">
                 <div class="form-group">
+                    <div id="category-icon-filters" class="cat-icon-filter-bar">
+  <button type="button" class="catf-btn active" data-platform="all">
+    <i class="fa fa-bars"></i><span>All</span>
+  </button>
+  <button type="button" class="catf-btn" data-platform="tiktok">
+    <i class="fa-brands fa-tiktok"></i><span>TikTok</span>
+  </button>
+  <button type="button" class="catf-btn" data-platform="youtube">
+    <i class="fa-brands fa-youtube"></i><span>Youtube</span>
+  </button>
+  <button type="button" class="catf-btn" data-platform="instagram">
+    <i class="fa-brands fa-instagram"></i><span>Instagram</span>
+  </button>
+  <button type="button" class="catf-btn" data-platform="telegram">
+    <i class="fa-brands fa-telegram"></i><span>Telegram</span>
+  </button>
+  <button type="button" class="catf-btn" data-platform="facebook">
+    <i class="fa-brands fa-facebook"></i><span>Facebook</span>
+  </button>
+  <button type="button" class="catf-btn" data-platform="twitter">
+    <i class="fa-brands fa-x-twitter"></i><span>Twitter</span>
+  </button>
+  <button type="button" class="catf-btn" data-platform="whatsapp">
+    <i class="fa-brands fa-whatsapp"></i><span>Whatsapp</span>
+  </button>
+  <button type="button" class="catf-btn" data-platform="snapchat">
+    <i class="fa-brands fa-snapchat"></i><span>Snapchat</span>
+  </button>
+  <button type="button" class="catf-btn" data-platform="linkedin">
+    <i class="fa-brands fa-linkedin"></i><span>Linkedin</span>
+  </button>
+  <button type="button" class="catf-btn" data-platform="other">
+    <i class="fa fa-plus"></i><span>Other</span>
+  </button>
+</div>
 <div class="form-group category-select-wrapper">
   <label for="dropdowncategories"><?=lang("Category")?></label>
   <select id="dropdowncategories"
@@ -583,9 +691,9 @@ $conn = null;
                   <?php }?>
                   <div class="form-group" id="result_total_charge">
                     <input type="hidden" name="total_charge" value="0.00">
-                    <input type="hidden" name="currency_symbol" value="<?=get_option("currency_symbol", "")?>">
+                    <input type="hidden" name="currency_symbol" value="<?=$currency_symbol?>">
                     <br>
-                    <center><p class="btn btn-info2 total_charge"><?=lang("total_charge")?> <span class="charge_number">PKR 0</span></p></center>
+                    <center><p class="btn btn-info2 total_charge"><?=lang("total_charge")?> <span class="charge_number"><?=$currency_symbol?> 0</span></p></center>
                     
                     <?php
                       $user = $this->model->get("balance, custom_rate", 'general_users', ['id' => session('uid')]);
@@ -747,8 +855,6 @@ label{
 
 
 
-
-
 <script>
   $(function(){
     $('.datepicker').datepicker({
@@ -825,6 +931,9 @@ label{
         // Apply the shortening function
         var shortServiceName = getShortServiceName(savedOrderData.service_name);
         
+        // ============ WITH CURRENCY CONVERSION (FROM OLD FILE) ============
+        var currencySymbol = '<?=$currency_symbol?>';
+        // ================================================================
         
         // Create a summary content
         var summaryContent = `
@@ -837,7 +946,7 @@ label{
       <p><i class="fa fa-bell" style="color: #2ecc71; margin-right: 8px;"></i><strong>Service Name:</strong> <span style="color: #bdc3c7;">${shortServiceName}</span></p>
       <p><i class="fa fa-link" style="color: #2ecc71; margin-right: 8px;"></i><strong>Link:</strong> <span style="color: #bdc3c7;">${savedOrderData.link}</span></p>
       <p><i class="fa fa-long-arrow-up" aria-hidden="true" style="color: #2ecc71; margin-right: 8px;"></i><strong>Quantity:</strong> <span style="color: #bdc3c7;">${savedOrderData.quantity}</span></p>
-      <p><i class="fa fa-usd" style="color: #2ecc71; margin-right: 8px;"></i><strong>Total Charge:</strong> <span style="color: #bdc3c7;">${savedOrderData.total_charge} PKR</span></p>
+      <p><i class="fa fa-usd" style="color: #2ecc71; margin-right: 8px;"></i><strong>Total Charge:</strong> <span style="color: #bdc3c7;">${currencySymbol} ${savedOrderData.total_charge}</span></p>
     </div>
   </div>
 
@@ -1030,83 +1139,97 @@ $vertical_image_modal_url = get_option('vertical_image_modal_url', 'https://i.ib
 
 <script>
 (function($){
-  /* ========= Icon helper ========= */
-function pickPlatformIcon(text){
-  if (!text) return '';
-  var t = text.toLowerCase();
-  
-  // Popular Video Platforms
-  if (t.includes('tiktok'))    return 'fa-brands fa-tiktok';
-  if (t.includes('youtube'))   return 'fa-brands fa-youtube';
-  if (t.includes('twitch'))    return 'fa-brands fa-twitch';
-  if (t.includes('vimeo'))     return 'fa-brands fa-vimeo';
-  
-  // Social Networks
-  if (t.includes('instagram')) return 'fa-brands fa-instagram';
-  if (t.includes('facebook'))  return 'fa-brands fa-facebook-f';
-  if (t.includes('twitter') || t.match(/\bx\b/) ) return 'fa-brands fa-x-twitter';
-  if (t.includes('linkedin'))  return 'fa-brands fa-linkedin';
-  if (t.includes('snapchat'))  return 'fa-brands fa-snapchat';
-  if (t.includes('pinterest')) return 'fa-brands fa-pinterest';
-  if (t.includes('reddit'))    return 'fa-brands fa-reddit';
-  if (t.includes('tumblr'))    return 'fa-brands fa-tumblr';
-  if (t.includes('discord'))   return 'fa-brands fa-discord';
-  if (t.includes('telegram'))  return 'fa-brands fa-telegram';
-  
-  // Messaging Apps
-  if (t.includes('rental'))  return 'fa-solid fa-users-rectangle';
-  if (t.includes('rent'))  return 'fa-solid fa-users-rectangle';    
-  if (t.includes('whatsapp'))  return 'fa-brands fa-whatsapp';
-  if (t.includes('messenger')) return 'fa-brands fa-facebook-messenger';
-  if (t.includes('skype'))     return 'fa-brands fa-skype';
-  if (t.includes('viber'))     return 'fa-brands fa-viber';
-  if (t.includes('line'))      return 'fa-solid fa-comment'; // No specific Line icon
-  
-  // Professional & Business
-  if (t.includes('slack'))     return 'fa-brands fa-slack';
-  if (t.includes('teams'))     return 'fa-brands fa-microsoft';
-  if (t.includes('zoom'))      return 'fa-solid fa-video'; // No specific Zoom icon
-  
-  // Chinese Platforms
-  if (t.includes('wechat'))    return 'fa-brands fa-weixin';
-  if (t.includes('weibo'))     return 'fa-brands fa-weibo';
-  if (t.includes('qq'))        return 'fa-brands fa-qq';
-  
-  // Other Platforms
-  if (t.includes('spotify'))   return 'fa-brands fa-spotify';
-  if (t.includes('soundcloud')) return 'fa-brands fa-soundcloud';
-  if (t.includes('github'))    return 'fa-brands fa-github';
-  if (t.includes('behance'))   return 'fa-brands fa-behance';
-  if (t.includes('dribbble'))  return 'fa-brands fa-dribbble';
-  if (t.includes('medium'))    return 'fa-brands fa-medium';
-  if (t.includes('quora'))     return 'fa-brands fa-quora';
-  if (t.includes('flickr'))    return 'fa-brands fa-flickr';
-  if (t.includes('foursquare')) return 'fa-brands fa-foursquare';
-  
-  // Dating Apps (using generic icons)
-  if (t.includes('tinder'))    return 'fa-solid fa-heart';
-  if (t.includes('bumble'))    return 'fa-solid fa-heart';
-  
-  // Regional Platforms
-  if (t.includes('vk') || t.includes('vkontakte')) return 'fa-brands fa-vk';
-  if (t.includes('odnoklassniki')) return 'fa-brands fa-odnoklassniki';
-  if (t.includes('xing'))      return 'fa-brands fa-xing';
-  
-  // Generic fallbacks for common terms
-  if (t.includes('live') || t.includes('stream')) return 'fa-solid fa-broadcast-tower';
-  if (t.includes('video'))     return 'fa-solid fa-video';
-  if (t.includes('photo') || t.includes('image')) return 'fa-solid fa-image';
-  if (t.includes('music') || t.includes('audio')) return 'fa-solid fa-music';
-  if (t.includes('podcast'))   return 'fa-solid fa-podcast';
-  if (t.includes('blog'))      return 'fa-solid fa-blog';
-  if (t.includes('news'))      return 'fa-solid fa-newspaper';
-  if (t.includes('shopping') || t.includes('store')) return 'fa-solid fa-shopping-cart';
-  if (t.includes('game') || t.includes('gaming')) return 'fa-solid fa-gamepad';
-  
-  return '';
-}
+  /* =========================================================
+     PLATFORM ICON + SERVICE/ CATEGORY DISPLAY HELPERS
+  ========================================================== */
+  function pickPlatformIcon(text){
+    if (!text) return '';
+    var t = text.toLowerCase();
 
-  /* ========= Service templates (with icons) ========= */
+    // Image (gif/png) variants first
+    if (t.includes('facebook'))  return 'img:https://storage.perfectcdn.com/etopvh/xk5ab1173935x41z.gif';
+    if (t.includes('instagram')) return 'img:https://storage.perfectcdn.com/etopvh/r2726iff1gsgb78r.gif';
+    if (t.includes('whatsapp'))  return 'img:https://i.ibb.co/846d9Whj/372108180-WHATSAPP-ICON-400.gif';
+    if (t.includes('tiktok'))    return 'img:https://storage.perfectcdn.com/etopvh/p7pol1se08k6yc2x.gif';
+    if (t.includes('youtube'))   return 'img:https://storage.perfectcdn.com/etopvh/duea6r011zfl9fo8.gif';
+    if (t.includes('twitter') || t.match(/\bx\b/)) return 'img:https://storage.perfectcdn.com/etopvh/8d1btd44mgx8geie.gif';
+    if (t.includes('snack'))     return 'img:https://i.ibb.co/rRzSFYtC/unnamed.png';
+    if (t.includes('likee'))     return 'img:https://i.ibb.co/rRzSFYtC/unnamed.png';
+    if (t.includes('linkedin'))  return 'img:https://i.ibb.co/KcX4v9Fb/372102050-LINKEDIN-ICON-TRANSPARENT-1080.gif';
+    if (t.includes('snapchat'))  return 'img:https://i.ibb.co/23F0G4BY/images-7.jpg';
+
+    // FontAwesome fallbacks
+    if (t.includes('youtube'))   return 'fa-brands fa-youtube';
+    if (t.includes('tiktok'))    return 'fa-brands fa-tiktok';
+    if (t.includes('twitch'))    return 'fa-brands fa-twitch';
+    if (t.includes('vimeo'))     return 'fa-brands fa-vimeo';
+
+    if (t.includes('instagram')) return 'fa-brands fa-instagram';
+    if (t.includes('twitter') || t.match(/\bx\b/)) return 'fa-brands fa-x-twitter';
+    if (t.includes('linkedin'))  return 'fa-brands fa-linkedin';
+    if (t.includes('snapchat'))  return 'fa-brands fa-snapchat';
+    if (t.includes('pinterest')) return 'fa-brands fa-pinterest';
+    if (t.includes('reddit'))    return 'fa-brands fa-reddit';
+    if (t.includes('tumblr'))    return 'fa-brands fa-tumblr';
+    if (t.includes('discord'))   return 'fa-brands fa-discord';
+    if (t.includes('telegram'))  return 'fa-brands fa-telegram';
+
+    if (t.includes('rental') || t.includes('rent')) return 'fa-solid fa-users-rectangle';
+    if (t.includes('whatsapp')) return 'fa-brands fa-whatsapp';
+    if (t.includes('messenger')) return 'fa-brands fa-facebook-messenger';
+    if (t.includes('skype'))     return 'fa-brands fa-skype';
+    if (t.includes('viber'))     return 'fa-brands fa-viber';
+    if (t.includes('line'))      return 'fa-solid fa-comment';
+
+    if (t.includes('slack'))     return 'fa-brands fa-slack';
+    if (t.includes('teams'))     return 'fa-brands fa-microsoft';
+    if (t.includes('zoom'))      return 'fa-solid fa-video';
+
+    if (t.includes('wechat'))    return 'fa-brands fa-weixin';
+    if (t.includes('weibo'))     return 'fa-brands fa-weibo';
+    if (t.includes('qq'))        return 'fa-brands fa-qq';
+
+    if (t.includes('spotify'))   return 'fa-brands fa-spotify';
+    if (t.includes('soundcloud')) return 'fa-brands fa-soundcloud';
+    if (t.includes('github'))    return 'fa-brands fa-github';
+    if (t.includes('behance'))   return 'fa-brands fa-behance';
+    if (t.includes('dribbble'))  return 'fa-brands fa-dribbble';
+    if (t.includes('medium'))    return 'fa-brands fa-medium';
+    if (t.includes('quora'))     return 'fa-brands fa-quora';
+    if (t.includes('flickr'))    return 'fa-brands fa-flickr';
+    if (t.includes('foursquare')) return 'fa-brands fa-foursquare';
+
+    if (t.includes('tinder') || t.includes('bumble')) return 'fa-solid fa-heart';
+
+    if (t.includes('vk') || t.includes('vkontakte')) return 'fa-brands fa-vk';
+    if (t.includes('odnoklassniki')) return 'fa-brands fa-odnoklassniki';
+    if (t.includes('xing'))      return 'fa-brands fa-xing';
+
+    if (t.includes('live') || t.includes('stream')) return 'fa-solid fa-broadcast-tower';
+    if (t.includes('video'))     return 'fa-solid fa-video';
+    if (t.includes('photo') || t.includes('image')) return 'fa-solid fa-image';
+    if (t.includes('music') || t.includes('audio')) return 'fa-solid fa-music';
+    if (t.includes('podcast'))   return 'fa-solid fa-podcast';
+    if (t.includes('blog'))      return 'fa-solid fa-blog';
+    if (t.includes('news'))      return 'fa-solid fa-newspaper';
+    if (t.includes('shopping') || t.includes('store')) return 'fa-solid fa-shopping-cart';
+    if (t.includes('game') || t.includes('gaming')) return 'fa-solid fa-gamepad';
+
+    return '';
+  }
+
+  function renderIconHtml(iconToken){
+    if (!iconToken) return '';
+    if (iconToken.indexOf && iconToken.indexOf('img:') === 0) {
+      var url = iconToken.substring(4);
+      return '<img src="' + url + '" alt="platform" class="cat-icon-img" style="width:18px;height:18px;vertical-align:middle;margin-right:8px;border-radius:3px;">';
+    }
+    return '<i class="' + iconToken + '" aria-hidden="true" style="margin-right:8px;"></i>';
+  }
+
+  /* =========================================================
+     SELECT2 TEMPLATES
+  ========================================================== */
   function formatService(option) {
     if (!option.id) return option.text;
     var $opt = $(option.element);
@@ -1116,15 +1239,15 @@ function pickPlatformIcon(text){
     var max  = $opt.data('max');
     var drip = ($opt.data('dripfeed') == 1);
     var meta = [];
-    if (rate) meta.push('PKR: ' + rate);
+    if (rate) meta.push('<?=$currency_symbol?> ' + rate);
     if (min)  meta.push('Min: ' + min);
     if (max)  meta.push('Max: ' + max);
     if (drip) meta.push('Drip');
-
-    var icon = pickPlatformIcon(name);
+    var iconToken = pickPlatformIcon(name);
+    var iconHtml = renderIconHtml(iconToken);
     return $(
       '<div class="svc-item">'+
-        (icon ? '<i class="'+icon+' cat-icon" aria-hidden="true"></i> ' : '')+
+        iconHtml +
         '<strong>'+ $('<span>').text(name).html() +'</strong><br>'+
         '<span class="svc-meta">'+ meta.join(' | ') +'</span>'+
       '</div>'
@@ -1136,30 +1259,36 @@ function pickPlatformIcon(text){
     var $opt = $(option.element);
     var name = $opt.data('name') || option.text;
     var rate = $opt.data('rate');
-    var icon = pickPlatformIcon(name);
-    var label = rate ? name + ' (' + rate + ')' : name;
+    var iconToken = pickPlatformIcon(name);
+    var iconHtml = renderIconHtml(iconToken);
+    var label = rate ? name + ' (<?=$currency_symbol?>' + rate + ')' : name;
     return $(
       '<span class="svc-sel">'+
-        (icon ? '<i class="'+icon+' cat-icon" aria-hidden="true"></i> ' : '')+
+        iconHtml +
         $('<span>').text(label).html()+
       '</span>'
     );
   }
 
-  /* ========= Category templates (with icons) ========= */
+  /* =========================================================
+     CATEGORY TEMPLATES (KEEP AS IS FROM NEW FILE)
+  ========================================================== */
   function categoryTemplate(option){
     if (!option.id) return option.text;
     var txt = option.text || '';
-    var icon = pickPlatformIcon(txt);
+    var iconToken = pickPlatformIcon(txt);
+    var iconHtml = renderIconHtml(iconToken);
     return $(
       '<span class="cat-opt">'+
-        (icon ? '<i class="'+icon+' cat-icon" aria-hidden="true"></i> ' : '')+
+        iconHtml +
         $('<span>').text(txt).html()+
       '</span>'
     );
   }
 
-  /* ========= Init Category Select ========= */
+  /* =========================================================
+     INIT SELECT2
+  ========================================================== */
   function initCategorySelect() {
     var $cat = $('#dropdowncategories');
     if (!$cat.length) return;
@@ -1179,7 +1308,6 @@ function pickPlatformIcon(text){
     });
   }
 
-  /* ========= Init Service Select ========= */
   function initServiceSelect(ctx) {
     var $svc = (ctx) ? $(ctx).find('#dropdownservices') : $('#dropdownservices');
     if (!$svc.length) return;
@@ -1187,7 +1315,7 @@ function pickPlatformIcon(text){
 
     $svc.select2({
       width: '100%',
-      dropdownParent: $svc.closest('.service-select-wrapper').length ?
+      dropdownParent: $svc.closest('.service-select-wrapper').      length ?
                       $svc.closest('.service-select-wrapper') : $svc.parent(),
       placeholder: 'Choose a service',
       templateResult: formatService,
@@ -1206,7 +1334,9 @@ function pickPlatformIcon(text){
     });
   }
 
-  /* ========= Load Services by Category ========= */
+  /* =========================================================
+     AJAX LOAD SERVICES
+  ========================================================== */
   function loadServicesForCategory(categoryId){
     if (!categoryId) {
       $('#result_onChange').html(
@@ -1312,7 +1442,102 @@ function pickPlatformIcon(text){
     }
   }
 
-  /* ========= Boot ========= */
+  /* =========================================================
+     CATEGORY ICON FILTER BAR (NEW)
+  ========================================================== */
+  var originalCategoryOptions = [];
+  var categoryIndexed = false;
+
+  function detectPlatform(txt){
+    if(!txt) return 'other';
+    var t = txt.toLowerCase();
+    if (t.includes('tiktok')) return 'tiktok';
+    if (t.includes('youtube') || t.includes('yt ')) return 'youtube';
+    if (t.includes('insta')) return 'instagram';
+    if (t.includes('telegram') || t.includes('tg ')) return 'telegram';
+    if (t.includes('facebook') || t.includes('fb ')) return 'facebook';
+    if (t.includes('twitter') || t.includes(' x ') || /\bx\b/.test(t)) return 'twitter';
+    if (t.includes('whatsapp') || t.includes('wa ')) return 'whatsapp';
+    if (t.includes('snap')) return 'snapchat';
+    if (t.includes('linked')) return 'linkedin';
+    return 'other';
+  }
+
+  function indexCategories(){
+    if (categoryIndexed) return;
+    var $cat = $('#dropdowncategories');
+    originalCategoryOptions = [];
+    $cat.find('option').each(function(){
+      var $o = $(this);
+      var val = $o.attr('value');
+      if (!val) return; // skip placeholder
+      var label = $o.text();
+      originalCategoryOptions.push({
+        value: val,
+        text: label,
+        platform: detectPlatform(label)
+      });
+    });
+    categoryIndexed = true;
+  }
+
+  function rebuildCategorySelect(platform){
+    var $cat = $('#dropdowncategories');
+    var dataUrl = $cat.data('url'); // keep data-url
+    var placeholderText = '<?=lang("choose_a_category")?>';
+
+    // Keep current value to avoid flicker (optional)
+    var oldVal = $cat.val();
+
+    // Rebuild
+    $cat.empty();
+    $cat.append('<option value="" disabled selected hidden>'+placeholderText+'</option>');
+
+    var filtered = [];
+    if (platform === 'all') {
+      filtered = originalCategoryOptions;
+    } else if (platform === 'other') {
+      filtered = originalCategoryOptions.filter(o => o.platform === 'other');
+    } else {
+      filtered = originalCategoryOptions.filter(o => o.platform === platform);
+    }
+
+    filtered.forEach(function(o){
+      $cat.append('<option value="'+o.value+'">'+o.text+'</option>');
+    });
+
+    // Restore data-url
+    if (dataUrl) $cat.attr('data-url', dataUrl);
+
+    // Re-init
+    if ($cat.hasClass('select2-hidden-accessible')) {
+      $cat.select2('destroy');
+    }
+    initCategorySelect();
+
+    // Auto select first in filtered (remove if you don't want this)
+    if (filtered.length){
+      $cat.val(filtered[0].value).trigger('change');
+    }
+  }
+
+  function attachFilterButtons(){
+    var $bar = $('#category-icon-filters');
+    if (!$bar.length) return;
+    $bar.on('click', '.catf-btn', function(){
+      var $btn = $(this);
+      if ($btn.hasClass('active')) return;
+      $bar.find('.catf-btn').removeClass('active');
+      $btn.addClass('active');
+      indexCategories();
+      var plat = $btn.data('platform');
+      rebuildCategorySelect(plat);
+    });
+  }
+
+  /* =========================================================
+     BOOT
+  ========================================================== */
   $(function(){
     initCategorySelect();
     initServiceSelect();
@@ -1322,6 +1547,13 @@ function pickPlatformIcon(text){
     if (pre) {
       fetchServiceDetails(pre, $('#dropdownservices').data('url'), $('#dropdownservices'));
     }
+
+    // Delay indexing to allow initial Select2 setup
+    setTimeout(function(){
+      indexCategories();
+      attachFilterButtons();
+    }, 150);
   });
+
 })(jQuery);
 </script>

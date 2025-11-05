@@ -30,7 +30,8 @@
           <tbody>
             <?php if (!empty($transactions)) {
               $i = 0;
-              $currency_symbol = get_option("currency_symbol", '$');
+              $current_currency = get_current_currency();
+              $currency_symbol = $current_currency ? $current_currency->symbol : get_option("currency_symbol", '$');
               foreach ($transactions as $key => $row) {
               $i++;
             ?>
@@ -76,7 +77,7 @@
               </td>
               <td>
                 <?php
-                  echo $currency_symbol.$row->amount;
+                  echo $currency_symbol . currency_format(convert_currency($row->amount), get_option('currency_decimal', 2));
                 ?>
               </td>
               

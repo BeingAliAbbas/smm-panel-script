@@ -6,15 +6,108 @@
     border-radius: 0px;
     border: 1px solid #fff;
   }
+/* ===== Header Currency Switcher ===== */
+.currency-switcher-header {
+  position: absolute;
+  right: 25px;
+  top: 18px;
+  display: flex;
+  align-items: center;
+  /* background: rgba(255,255,255,0.1); */
+  /* border: 1px solid rgba(255,255,255,0.2); */
+  /* border-radius: 8px; */
+  padding: 4px 10px;
+  z-index: 5000;
+  color: #fff;
+  font-size: 13px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.currency-switcher-header label {
+  margin-right: 8px;
+  font-weight: 500;
+  color: #fff;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.currency-switcher-header select {
+  background-color: rgba(255,255,255,0.15);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 25px 5px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  min-width: 120px;
+}
+.currency-switcher-header select option {
+  color: #000; /* ensure options readable */
+}
+.currency-switcher-header .select-wrap {
+  position: relative;
+}
+.currency-switcher-header .select-wrap::after {
+  content: "";
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #fff;
+  pointer-events: none;
+}
+@media (max-width: 768px) {
+  .currency-switcher-header {
+    top: 12px;
+    right: 12px;
+    padding: 4px 8px;
+  }
+  .currency-switcher-header label {
+    display: none;
+  }
+  .currency-switcher-header select {
+    min-width: 100px;
+  }
+}
+
 </style>
  <!--Not Sidenav-->
     
 <div class="top-header">
   <div class="show-btn" onclick="openNav()" style="font-size: 45px; margin: 20px 0 0 20px; cursor: pointer; display: inline-block; position: absolute; color: #fff; z-index: 100">
     <span class="header-toggler-icon"></span>
+    
   </div>
   
-  
+  <!-- Header currency switcher (moved from sidenav) -->
+<div class="currency-switcher-header" id="currencySwitcherHeader" role="region" aria-label="<?=lang('Currency_switcher')?>">
+  <span class="label"><?=lang("Currency")?>:</span>
+  <div class="select-wrap">
+    <select id="currencySelectorHeader" class="form-control form-control-sm" aria-label="<?=lang('Select_currency')?>">
+      <?php
+        $current_currency = get_current_currency();
+        $currencies = get_active_currencies();
+        if (!empty($currencies)) {
+          foreach ($currencies as $currency) {
+      ?>
+      <option value="<?=$currency->code?>" <?=($current_currency && $current_currency->code == $currency->code) ? 'selected' : ''?>>
+        <?=$currency->code?> - <?=$currency->symbol?>
+      </option>
+      <?php
+          }
+        }
+      ?>
+    </select>
+  </div>
+</div>
+
         <?php
           if (session('uid_tmp')) {
         ?>
@@ -78,14 +171,39 @@
                     if (empty($balance) || $balance == 0) {
                       $balance = 0.0000;
                     }else{
+                      // Convert balance to selected currency
+                      $balance = convert_currency($balance);
                       $balance = currency_format($balance,  get_option('currency_decimal', 2), $decimalpoint, $separator);
                     }
+                    
+                    $current_currency = get_current_currency();
+                    $currency_symbol = $current_currency ? $current_currency->symbol : get_option('currency_symbol',"$");
                 ?>
-                <?=lang("Balance")?>: <?=get_option('currency_symbol',"$")?><?=$balance?>
+                <?=lang("Balance")?>: <span id="balanceDisplay"><?=$currency_symbol?><?=$balance?></span>
                 <?php }else{?> 
                   <?=lang("Admin_account")?>
                 <?php }?> 
               </h6>
+              
+              <!-- Currency Switcher -->
+              <div class="currency-switcher" style="margin-top: 10px;">
+                <label style="font-size: 12px; margin-bottom: 5px; display: block;"><?=lang("Currency")?></label>
+                <select id="currencySelector" class="form-control form-control-sm" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2);">
+                  <?php
+                    $current_currency = get_current_currency();
+                    $currencies = get_active_currencies();
+                    if (!empty($currencies)) {
+                      foreach ($currencies as $currency) {
+                  ?>
+                  <option value="<?=$currency->code?>" <?=($current_currency && $current_currency->code == $currency->code) ? 'selected' : ''?>>
+                    <?=$currency->code?> - <?=$currency->symbol?>
+                  </option>
+                  <?php 
+                      }
+                    }
+                  ?>
+                </select>
+              </div>
         </div>
       <!--Below SideNavHeader-->
       <div id="main-container">
@@ -324,6 +442,75 @@ if (get_option("enable_news_announcement") == 1) {
     </div>
   </a>
 <?php }?>
+
+<script>
+  // Header currency switcher handler
+$(document).ready(function() {
+  $('#currencySelectorHeader').on('change', function() {
+    var selectedCurrency = $(this).val();
+
+    // Show loading overlay (if you have #page-overlay)
+    $('#page-overlay').addClass('visible incoming');
+
+    $.ajax({
+      url: '<?=cn("currencies/set_currency")?>',
+      type: 'POST',
+      data: {
+        currency_code: selectedCurrency,
+        <?=$this->security->get_csrf_token_name()?>: '<?=$this->security->get_csrf_hash()?>'
+      },
+      dataType: 'json',
+      success: function(response) {
+        if (response.status == 'success') {
+          // Optionally give a subtle animation before reload
+          setTimeout(function(){ location.reload(); }, 120);
+        } else {
+          alert(response.message || 'Failed to change currency');
+          $('#page-overlay').removeClass('visible incoming');
+        }
+      },
+      error: function() {
+        alert('An error occurred while changing currency');
+        $('#page-overlay').removeClass('visible incoming');
+      }
+    });
+  });
+});
+
+// Currency switcher handler
+$(document).ready(function() {
+  $('#currencySelector').on('change', function() {
+    var selectedCurrency = $(this).val();
+    
+    // Show loading overlay
+    $('#page-overlay').addClass('visible incoming');
+    
+    // Send AJAX request to update currency
+    $.ajax({
+      url: '<?=cn("currencies/set_currency")?>',
+      type: 'POST',
+      data: {
+        currency_code: selectedCurrency,
+        <?=$this->security->get_csrf_token_name()?>: '<?=$this->security->get_csrf_hash()?>'
+      },
+      dataType: 'json',
+      success: function(response) {
+        if (response.status == 'success') {
+          // Reload the page to reflect new currency
+          location.reload();
+        } else {
+          alert(response.message || 'Failed to change currency');
+          $('#page-overlay').removeClass('visible incoming');
+        }
+      },
+      error: function() {
+        alert('An error occurred while changing currency');
+        $('#page-overlay').removeClass('visible incoming');
+      }
+    });
+  });
+});
+</script>
         
 
 <?php

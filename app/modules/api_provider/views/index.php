@@ -114,6 +114,53 @@
       </div>
     </div>
   </div>
+  
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><?=lang("Update Order Status")?></h3>
+            </div>
+            <div class="card-body">
+                <form class="form actionForm" action="<?=cn($module."/update_order_status")?>" data-redirect="<?=cn($module)?>" method="POST">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label><?=lang("Order ID")?></label>
+                                    <input type="text" class="form-control square" name="order_id" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-min-width mr-1 mb-1"><?=lang("Submit")?></button>
+                        <button type="button" class="btn btn-default btn-min-width mb-1" onclick="history.go(-1)"><?=lang("Cancel")?></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $(".actionForm").submit(function(event) {
+        event.preventDefault();
+        var _that = $(this);
+        var _action = _that.attr("action");
+        var _data = _that.serialize();
+        var _order_id = _that.find('input[name="order_id"]').val();
+        
+        if (_order_id == "") {
+            notify("error", "<?=lang("Please enter Order ID")?>");
+            return false;
+        }
+        
+        window.location.href = "<?=cn($module."/update_order_status")?>" + "/" + _order_id;
+    });
+});
+</script>
   <?php } else {
     echo Modules::run("blocks/empty_data");
   } ?>

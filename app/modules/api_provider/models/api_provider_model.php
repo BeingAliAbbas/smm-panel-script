@@ -44,18 +44,23 @@ class api_provider_model extends MY_Model {
 		return $result;
 	}
 
-	function get_all_orders_status($limit = "", $start = ""){
-		$where = "(`status` = 'active' or `status` = 'processing' or `status` = 'inprogress'  or `status` = 'pending' or `status` = '') AND `api_provider_id` != 0 AND `api_order_id` > 0 AND `changed` < '".NOW."' AND service_type != 'subscriptions'";
-		$data  = array();
-		$this->db->select("*");
-		$this->db->from($this->tb_orders);
-		$this->db->where($where);
-		$this->db->order_by("id", 'ASC');
-		$this->db->limit($limit, $start);
-		$query = $this->db->get();
-		$result = $query->result();
-		return $result;
-	}
+function get_all_orders_status($limit = "", $start = ""){
+    $this->db->select("*");
+    $this->db->from($this->tb_orders);
+
+    // Ignore completed, partial, canceled, and error orders
+    $this->db->where_not_in('status', ['completed', 'partial', 'canceled', 'error']);
+
+    // Order by latest
+    $this->db->order_by("id", 'DESC');
+
+    // Apply limit and start for pagination
+    $this->db->limit($limit, $start);
+
+    $query = $this->db->get();
+    return $query->result();
+}
+
 
 	function get_all_subscriptions_status(){
 		$where = "(`sub_status` = 'Active' or `sub_status` = 'Paused' OR `status` = '') AND `api_provider_id` != 0 AND `api_order_id` > 0 AND `changed` < '".NOW."' AND service_type = 'subscriptions'";

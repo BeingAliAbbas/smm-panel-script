@@ -375,6 +375,7 @@ $lang["parameter"] = "Parameter";
 $lang["multiple_orders_status"] = "Multiple orders status";
 $lang["services_lists"] = "Services Lists";
 $lang["Balance"] = "Balance";
+$lang["Currency"] = "Currency";
 $lang["your_api_key"] = "Your API key";
 $lang["service_id"] = "Service ID";
 $lang["link_to_page"] = "Link to page";
@@ -849,4 +850,15 @@ $lang["Maximal_payment"] = "Maximal payment";
 $lang["allowed"] = "Allowed";
 $lang["not_allowed"] = "Not Allowed";
 $lang["take_fee_from_user"] = "Take fee from user";
+
+/*----------  Multi-Currency  ----------*/
+$lang["Multi-Currency Management"] = "Multi-Currency Management";
+$lang["Code"] = "Code";
+$lang["Name"] = "Name";
+$lang["Symbol"] = "Symbol";
+$lang["Exchange Rate"] = "Exchange Rate";
+$lang["Default"] = "Default";
+$lang["Set as Default"] = "Set as Default";
+$lang["Update"] = "Update";
+$lang["Add"] = "Add";
 

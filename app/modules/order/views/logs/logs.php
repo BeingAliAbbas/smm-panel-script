@@ -112,7 +112,8 @@
               </thead>
               <tbody>
                 <?php
-                $currency_symbol = get_option("currency_symbol","");
+                $current_currency = get_current_currency();
+                $currency_symbol = $current_currency ? $current_currency->symbol : get_option("currency_symbol","");
                 $decimal_places = get_option('currency_decimal', 2);
                 $decimalpoint = get_option('currency_decimal_separator', 'dot') == 'comma' ? ',' : '.';
                 $separator = get_option('currency_thousand_separator', 'space') == 'space' ? ' ' : (get_option('currency_thousand_separator', 'comma') == 'comma' ? ',' : '.');
@@ -195,12 +196,12 @@
                             ?>
                           </li> 
                           <li><?=lang("Quantity")?>: <?=$row->quantity?></li>
-                          <li><?=lang("Charge")?>: <?= $currency_symbol . currency_format($row->charge, $decimal_places, $decimalpoint, $separator) ?></li>
+                          <li><?=lang("Charge")?>: <?= $currency_symbol . currency_format(convert_currency($row->charge), $decimal_places, $decimalpoint, $separator) ?></li>
                           <?php if (get_role("admin")): ?>
                           <li><?=lang("Provider Charge")?>: 
                             <small style="color: #3498db; font-size: 12px;">
                               <?= (isset($provider_charge_in_pkr) && $provider_charge_in_pkr > 0) 
-                                  ? '$' . $row->formal_charge . ' (' . $currency_symbol . currency_format($provider_charge_in_pkr, $decimal_places, $decimalpoint, $separator) . ')' 
+                                  ? '$' . $row->formal_charge . ' (' . $currency_symbol . currency_format(convert_currency($provider_charge_in_pkr), $decimal_places, $decimalpoint, $separator) . ')' 
                                   : lang("No charge available"); ?>
                             </small>
                           </li>
@@ -220,7 +221,7 @@
                     </div>
                   </td>
                   <?php if (get_role("admin")): ?>
-                  <td><?= $currency_symbol . currency_format($profit, $decimal_places, $decimalpoint, $separator); ?></td>
+                  <td><?= $currency_symbol . currency_format(convert_currency($profit), $decimal_places, $decimalpoint, $separator); ?></td>
                   <?php endif; ?>
                   <td style="color: #fff;"><?=convert_timezone($row->created, "user")?></td>
                   <td>

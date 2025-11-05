@@ -5,7 +5,7 @@
         <?php
           $ids = (!empty($order->ids)) ? $order->ids : '';
         ?>
-        <form class="form actionForm" action="<?= cn($module . "/ajax_logs_update/$ids") ?>" data-redirect="<?= cn($module . "/log/error") ?>" method="POST">
+        <form class="form actionForm" action="<?= cn($module . "/ajax_logs_update/$ids") ?>" data-redirect="<?= cn($module . "/log/all") ?>" method="POST">
           <div class="modal-header bg-pantone">
             <h4 class="modal-title"><i class="fa fa-edit"></i> <?= lang("Edit_Order") ?></h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>

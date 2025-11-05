@@ -993,133 +993,137 @@ class api_provider extends MX_Controller {
 	}
 
 	private function cron_status_orders(){
-		$page = (!empty(segment(4))) ? segment(4) : 0;
-		$page = (!empty($page) && $page > 0) ? ($page - 1) : 0;
-		$limit_per_page = 15;
-		$orders = $this->model->get_all_orders_status($limit_per_page, $page * $limit_per_page);
-		if (empty($orders)) {
-			echo "There is no order at the present.<br>Successfully";
-			return;
-		}
+    $limit = 50;
+    $orders = $this->model->get_all_orders_status($limit, 0);
 
-		$new_currency_rate = get_option('new_currecry_rate', 1);
-		if ($new_currency_rate == 0) $new_currency_rate = 1;
+    if (empty($orders)) {
+        echo "There is no order at the present.<br>Successfully";
+        return;
+    }
 
-		foreach ($orders as $row) {
-			$api = $this->model->get("url, key", $this->tb_api_providers, ["id" => $row->api_provider_id] );
-			if (empty($api)) {
-				echo $row->id."<br>API Provider missing.<br>";
-				continue;
-			}
-			$data_post = ['key'=>$api->key,'action'=>'status','order'=>$row->api_order_id];
-			$response  = json_decode($this->connect_api($api->url, $data_post));
+    $new_currency_rate = get_option('new_currecry_rate', 1);
+    if ($new_currency_rate == 0) $new_currency_rate = 1;
 
-			if (!empty($response->error)) {
-				echo $row->id." ".$response->error."<br>";
-				$this->db->update($this->tb_orders, [
-					"note"    => $response->error,
-					"changed" => NOW,
-				], ["id" => $row->id]);
-			}
+    foreach ($orders as $row) {
+        echo "Checking Order ID: {$row->id}<br>"; // ✅ log every checked order
 
-			if (isset($response->status) && $response->status != "") {
-				if (!in_array($response->status, ['Completed','Processing','In progress','Partial','Canceled','Refunded'])) {
-					$response->status = 'Pending';
-				}
+        $api = $this->model->get("url, key", $this->tb_api_providers, ["id" => $row->api_provider_id]);
+        if (empty($api)) {
+            echo $row->id." → API Provider missing.<br>";
+            continue;
+        }
 
-				$data = [];
-				$rand_time = get_random_time();
+        $data_post = ['key'=>$api->key,'action'=>'status','order'=>$row->api_order_id];
+        $response  = json_decode($this->connect_api($api->url, $data_post));
 
-				if ($row->is_drip_feed) {
-					$status_dripfeed = (strrpos($response->status, 'progress') || strrpos(strtolower($response->status), 'active')) ? 'inprogress'
-						: strtolower(str_replace([" ","_"], "", $response->status));
-					if (!in_array($status_dripfeed, ['canceled','inprogress','completed'])) {
-						$status_dripfeed = 'inprogress';
-					}
-					$data = [
-						"changed" => date('Y-m-d H:i:s', strtotime(NOW) + $rand_time),
-						"status"  => $status_dripfeed,
-					];
+        if (!empty($response->error)) {
+            echo $row->id." → Error: ".$response->error."<br>";
+            $this->db->update($this->tb_orders, [
+                "note"    => $response->error,
+                "changed" => NOW,
+            ], ["id" => $row->id]);
+        }
 
-					if (isset($response->runs)) {
-						$data['sub_response_orders'] = json_encode($response);
-					} else {
-						switch ($response->status) {
-							case 'Completed':
-								$response->runs = $row->runs;
-								break;
-							case 'In progress':
-								$response->runs = 0;
-								break;
-							case 'Canceled':
-								$response->runs = 0;
-								break;
-						}
-						$data['sub_response_orders'] = json_encode($response);
-					}
+        if (isset($response->status) && $response->status != "") {
+            echo $row->id." → API Status: ".$response->status."<br>"; // ✅ log API status
 
-					if (isset($response->orders)) {
-						$db_drip = json_decode($row->sub_response_orders);
-						if (isset($db_drip->orders)) {
-							$new_drip_orders = array_diff($response->orders, $db_drip->orders);
-						} else {
-							$new_drip_orders = $response->orders;
-						}
-						if (!empty($new_drip_orders)) {
-							$this->insert_order_from_dripfeed_subscription($row, $api, $new_drip_orders);
-						}
-					}
+            if (!in_array($response->status, ['Completed','Processing','In progress','Partial','Canceled','Refunded'])) {
+                $response->status = 'Pending';
+            }
 
-				} else {
-					$remains = $response->remains;
-					if ($remains < 0) {
-						$remains = "+".abs($remains);
-					}
-					$data = [
-						"start_counter" => $response->start_count,
-						"remains"       => $remains,
-						"note"          => "",
-						"changed"       => date('Y-m-d H:i:s', strtotime(NOW) + $rand_time),
-						"status"        => ($response->status == "In progress") ? "inprogress" : strtolower($response->status),
-					];
-				}
+            $data = [];
+            $rand_time = get_random_time();
 
-				if (!empty($data)) {
-					// Refund / Partial / Canceled compensation
-					if ($row->sub_response_posts != 1 && in_array($response->status, ["Refunded","Canceled","Partial"])) {
-						$data['charge'] = 0;
-						$formal_charge  = 0;
-						$profit         = 0;
-						$return_funds   = $charge = $row->charge;
+            if ($row->is_drip_feed) {
+                $status_dripfeed = (strrpos($response->status, 'progress') || strrpos(strtolower($response->status), 'active')) ? 'inprogress'
+                    : strtolower(str_replace([" ","_"], "", $response->status));
+                if (!in_array($status_dripfeed, ['canceled','inprogress','completed'])) {
+                    $status_dripfeed = 'inprogress';
+                }
+                $data = [
+                    "changed" => date('Y-m-d H:i:s', strtotime(NOW) + $rand_time),
+                    "status"  => $status_dripfeed,
+                ];
 
-						if ($response->status == "Partial") {
-							$order_remains = $response->remains;
-							if ($row->quantity < $response->remains) {
-								$order_remains     = $row->quantity;
-								$data['remains']   = $order_remains;
-							}
-							$return_funds     = $charge * ($order_remains / $row->quantity);
-							$real_charge      = $charge - $return_funds;
-							$formal_charge    = $row->formal_charge * (1 - ($order_remains / $row->quantity ));
-							$profit           = $row->profit * (1 - ($order_remains / $row->quantity ));
-							$data['charge']   = $real_charge;
-						}
+                if (isset($response->runs)) {
+                    $data['sub_response_orders'] = json_encode($response);
+                } else {
+                    switch ($response->status) {
+                        case 'Completed':
+                            $response->runs = $row->runs;
+                            break;
+                        case 'In progress':
+                        case 'Canceled':
+                            $response->runs = 0;
+                            break;
+                    }
+                    $data['sub_response_orders'] = json_encode($response);
+                }
 
-						$data['formal_charge'] = $formal_charge;
-						$data['profit']        = $profit;
+                if (isset($response->orders)) {
+                    $db_drip = json_decode($row->sub_response_orders);
+                    if (isset($db_drip->orders)) {
+                        $new_drip_orders = array_diff($response->orders, $db_drip->orders);
+                    } else {
+                        $new_drip_orders = $response->orders;
+                    }
+                    if (!empty($new_drip_orders)) {
+                        $this->insert_order_from_dripfeed_subscription($row, $api, $new_drip_orders);
+                    }
+                }
 
-						$user = $this->model->get("id, balance", $this->tb_users, ["id"=> $row->uid]);
-						if (!empty($user)) {
-							$balance = $user->balance + $return_funds;
-							$this->db->update($this->tb_users, ["balance" => $balance], ["id"=> $row->uid]);
-						}
-					}
-					$this->db->update($this->tb_orders, $data, ["id" => $row->id]);
-				}
-			}
-		}
-		echo "Successfully";
-	}
+            } else {
+                $remains = $response->remains;
+                if ($remains < 0) {
+                    $remains = "+".abs($remains);
+                }
+                $data = [
+                    "start_counter" => $response->start_count,
+                    "remains"       => $remains,
+                    "note"          => "",
+                    "changed"       => date('Y-m-d H:i:s', strtotime(NOW) + $rand_time),
+                    "status"        => ($response->status == "In progress") ? "inprogress" : strtolower($response->status),
+                ];
+            }
+
+            if (!empty($data)) {
+                // Refund / Partial / Canceled compensation
+                if ($row->sub_response_posts != 1 && in_array($response->status, ["Refunded","Canceled","Partial"])) {
+                    $data['charge'] = 0;
+                    $formal_charge  = 0;
+                    $profit         = 0;
+                    $return_funds   = $charge = $row->charge;
+
+                    if ($response->status == "Partial") {
+                        $order_remains = $response->remains;
+                        if ($row->quantity < $response->remains) {
+                            $order_remains     = $row->quantity;
+                            $data['remains']   = $order_remains;
+                        }
+                        $return_funds     = $charge * ($order_remains / $row->quantity);
+                        $real_charge      = $charge - $return_funds;
+                        $formal_charge    = $row->formal_charge * (1 - ($order_remains / $row->quantity ));
+                        $profit           = $row->profit * (1 - ($order_remains / $row->quantity ));
+                        $data['charge']   = $real_charge;
+                    }
+
+                    $data['formal_charge'] = $formal_charge;
+                    $data['profit']        = $profit;
+
+                    $user = $this->model->get("id, balance", $this->tb_users, ["id"=> $row->uid]);
+                    if (!empty($user)) {
+                        $balance = $user->balance + $return_funds;
+                        $this->db->update($this->tb_users, ["balance" => $balance], ["id"=> $row->uid]);
+                    }
+                }
+                $this->db->update($this->tb_orders, $data, ["id" => $row->id]);
+            }
+        }
+    }
+
+    echo "Successfully";
+}
+
 
 	private function cron_sync_services(){
 		ini_set('max_execution_time', 300000);
@@ -1140,11 +1144,16 @@ class api_provider extends MX_Controller {
 			'min_max_dripfeed' => 1,
 		];
 
-		$apis = $this->model->fetch("id, name, ids, url, key", $this->tb_api_providers, "`status` = 1 AND `changed` < '".NOW."' ", "changed", "ASC", 0, 2);
-		if (empty($apis)) {
-			echo "There is no API providers at the present";
-			return;
-		}
+		$apis = $this->model->fetch(
+    "id, name, ids, url, key",
+    $this->tb_api_providers,
+    "`status` = 1",
+    "changed",
+    "ASC",
+    0,
+    2
+);
+
 
 		foreach ($apis as $api) {
 			$data_post = ['key'=>$api->key,'action'=>'services'];
@@ -1283,4 +1292,453 @@ class api_provider extends MX_Controller {
       	curl_close($ch);
       	return $result;
     }
+
+
+// new status cron
+
+public function update_order_status($order_id = ""){
+    if (!get_role('admin') || !session('uid')) {
+        redirect(cn('statistics'));
+    }
+
+    if ($order_id == "") {
+        $data = [
+            "module" => get_class($this),
+        ];
+        $this->load->view('update_status_form', $data);
+        return;
+    }
+
+    $order = $this->model->get("*", $this->tb_orders, ["id" => $order_id]);
+    if (empty($order)) {
+        echo json_encode([
+            "status" => "error",
+            "message" => "Order ID #{$order_id} not found",
+            "api_order_id" => null,
+            "api_charge" => null
+        ]);
+        return;
+    }
+
+    // Prepare fallback api_charge from order record if present
+    $api_charge = null;
+    if (isset($order->provider_charge) && $order->provider_charge !== '') {
+        $api_charge = $order->provider_charge;
+    } elseif (isset($order->api_charge) && $order->api_charge !== '') {
+        $api_charge = $order->api_charge;
+    }
+
+    if (empty($order->api_order_id) || empty($order->api_provider_id)) {
+        echo json_encode([
+            "status" => "error",
+            "message" => "Order ID #{$order_id} is not an API order or missing API details",
+            "api_order_id" => isset($order->api_order_id) ? $order->api_order_id : null,
+            "api_charge" => $api_charge
+        ]);
+        return;
+    }
+
+    $api = $this->model->get("url, key", $this->tb_api_providers, ["id" => $order->api_provider_id]);
+    if (empty($api)) {
+        echo json_encode([
+            "status" => "error",
+            "message" => "API Provider for order ID #{$order_id} not found",
+            "api_order_id" => $order->api_order_id,
+            "api_charge" => $api_charge
+        ]);
+        return;
+    }
+
+    $data_post = ['key' => $api->key, 'action' => 'status', 'order' => $order->api_order_id];
+    $response = json_decode($this->connect_api($api->url, $data_post));
+
+    // If we got a response and it contains a price/charge, use it (override fallback)
+    if ($response) {
+        if (isset($response->charge)) {
+            $api_charge = $response->charge;
+        } elseif (isset($response->price)) {
+            $api_charge = $response->price;
+        } elseif (isset($response->provider_price)) {
+            $api_charge = $response->provider_price;
+        }
+    }
+
+    if (!$response) {
+        echo json_encode([
+            "status" => "error",
+            "message" => "No response from API provider for order ID #{$order_id}",
+            "api_order_id" => $order->api_order_id,
+            "api_charge" => $api_charge
+        ]);
+        return;
+    }
+
+    if (!empty($response->error)) {
+        $this->db->update($this->tb_orders, [
+            "note" => $response->error,
+            "changed" => NOW,
+        ], ["id" => $order->id]);
+
+        echo json_encode([
+            "status" => "error",
+            "message" => "API Error: " . $response->error,
+            "api_order_id" => $order->api_order_id,
+            "api_charge" => $api_charge
+        ]);
+        return;
+    }
+
+    if (isset($response->status) && $response->status != "") {
+        $api_status_raw = trim($response->status);
+        $api_status = strtolower($api_status_raw);
+
+        // If partial -> do not change DB, just notify and return (include api_charge)
+        if ($api_status === 'partial') {
+            echo json_encode([
+                "status" => "info",
+                "message" => "Partial status detected — no update applied",
+                "details" => [
+                    "order_id" => $order->id,
+                    "api_status" => $api_status_raw,
+                    "remains" => isset($response->remains) ? $response->remains : null,
+                    "api_order_id" => $order->api_order_id,
+                    "api_charge" => $api_charge
+                ],
+                "api_order_id" => $order->api_order_id,
+                "api_charge" => $api_charge
+            ]);
+            return;
+        }
+
+        if (!in_array($api_status_raw, ['Completed', 'Processing', 'In progress', 'Partial', 'Canceled', 'Refunded'])) {
+            $response->status = 'Pending';
+        }
+
+        $data = [];
+        $old_status = $order->status;
+
+        if ($order->is_drip_feed) {
+            $status_dripfeed = (strrpos(strtolower($response->status), 'progress') !== false || strrpos(strtolower($response->status), 'active') !== false) ? 'inprogress'
+                : strtolower(str_replace([" ", "_"], "", $response->status));
+
+            if (!in_array($status_dripfeed, ['canceled', 'inprogress', 'completed'])) {
+                $status_dripfeed = 'inprogress';
+            }
+
+            $data = [
+                "changed" => NOW,
+                "status" => $status_dripfeed,
+            ];
+
+            if (isset($response->runs)) {
+                $data['sub_response_orders'] = json_encode($response);
+            } else {
+                switch ($response->status) {
+                    case 'Completed':
+                        $response->runs = $order->runs;
+                        break;
+                    case 'In progress':
+                    case 'Canceled':
+                        $response->runs = 0;
+                        break;
+                }
+                $data['sub_response_orders'] = json_encode($response);
+            }
+
+            if (isset($response->orders)) {
+                $db_drip = json_decode($order->sub_response_orders);
+                if (isset($db_drip->orders)) {
+                    $new_drip_orders = array_diff($response->orders, $db_drip->orders);
+                } else {
+                    $new_drip_orders = $response->orders;
+                }
+                if (!empty($new_drip_orders)) {
+                    $this->insert_order_from_dripfeed_subscription($order, $api, $new_drip_orders);
+                }
+            }
+        } else {
+            $remains = isset($response->remains) ? $response->remains : null;
+            if ($remains !== null && $remains < 0) {
+                $remains = "+" . abs($remains);
+            }
+
+            $data = [
+                "start_counter" => isset($response->start_count) ? $response->start_count : null,
+                "remains" => $remains,
+                "note" => "",
+                "changed" => NOW,
+                "status" => ($response->status == "In progress") ? "inprogress" : strtolower($response->status),
+            ];
+        }
+
+        if (!empty($data)) {
+            // Refund only for canceled/refunded. Partial already skipped above.
+            if ($order->sub_response_posts != 1 && in_array($api_status, ["refunded", "canceled"])) {
+                $data['charge'] = 0;
+                $formal_charge = 0;
+                $profit = 0;
+                $return_funds = $charge = $order->charge;
+
+                $data['formal_charge'] = $formal_charge;
+                $data['profit'] = $profit;
+
+                $user = $this->model->get("id, balance", $this->tb_users, ["id" => $order->uid]);
+                if (!empty($user)) {
+                    $balance = $user->balance + $return_funds;
+                    $this->db->update($this->tb_users, ["balance" => $balance], ["id" => $order->uid]);
+                }
+            }
+
+            $this->db->update($this->tb_orders, $data, ["id" => $order->id]);
+
+            echo json_encode([
+                "status" => "success",
+                "message" => "Order ID #{$order_id} updated successfully",
+                "details" => [
+                    "order_id" => $order->id,
+                    "old_status" => $old_status,
+                    "new_status" => $data['status'],
+                    "start_count" => isset($response->start_count) ? $response->start_count : null,
+                    "remains" => isset($response->remains) ? $response->remains : null,
+                    "api_status" => $response->status,
+                    "api_order_id" => $order->api_order_id,
+                    "api_charge" => $api_charge
+                ],
+                "api_order_id" => $order->api_order_id,
+                "api_charge" => $api_charge
+            ]);
+        } else {
+            echo json_encode([
+                "status" => "error",
+                "message" => "No data to update for order ID #{$order_id}",
+                "api_order_id" => $order->api_order_id,
+                "api_charge" => $api_charge
+            ]);
+        }
+    } else {
+        echo json_encode([
+            "status" => "error",
+            "message" => "Invalid API response format for order ID #{$order_id}",
+            "api_order_id" => $order->api_order_id,
+            "api_charge" => $api_charge
+        ]);
+    }
+}
+public function update_latest_orders($limit = 200){
+    if (!get_role('admin') || !session('uid')) {
+        redirect(cn('statistics'));
+    }
+
+    $limit = (int)$limit;
+    if ($limit <= 0) $limit = 200;
+    if ($limit > 500) $limit = 500;
+
+    $start_time = microtime(true);
+
+    $orders = $this->model->fetch(
+        "*",
+        $this->tb_orders,
+        "api_order_id != '' AND api_provider_id > 0 AND status IN ('pending','processing','inprogress')",
+        "id",
+        "DESC",
+        0,
+        $limit
+    );
+
+    if (empty($orders)) {
+        echo json_encode([
+            "status" => "error",
+            "message" => "No pending orders found to update"
+        ]);
+        return;
+    }
+
+    $updated_count = 0;
+    $error_count = 0;
+    $no_change_count = 0;
+    $partial_count = 0;
+    $partial_ids = [];
+    $results = [];
+
+    foreach ($orders as $row) {
+        $api = $this->model->get("url, key", $this->tb_api_providers, ["id" => $row->api_provider_id]);
+        if (empty($api)) {
+            $results[] = [
+                'order_id' => $row->id,
+                'status' => 'error',
+                'message' => 'API Provider not found'
+            ];
+            $error_count++;
+            continue;
+        }
+
+        $data_post = ['key' => $api->key, 'action' => 'status', 'order' => $row->api_order_id];
+        $response = json_decode($this->connect_api($api->url, $data_post));
+
+        if (!$response) {
+            $results[] = [
+                'order_id' => $row->id,
+                'status' => 'error',
+                'message' => 'No response from API provider'
+            ];
+            $error_count++;
+            continue;
+        }
+
+        if (!empty($response->error)) {
+            $results[] = [
+                'order_id' => $row->id,
+                'status' => 'error',
+                'message' => $response->error
+            ];
+            $error_count++;
+
+            $this->db->update($this->tb_orders, [
+                "note" => $response->error,
+                "changed" => NOW,
+            ], ["id" => $row->id]);
+            continue;
+        }
+
+        if (isset($response->status) && $response->status != "") {
+            // Normalize status for comparisons
+            $api_status_raw = trim($response->status);
+            $api_status = strtolower($api_status_raw);
+
+            // If Partial -> skip updating this order, only highlight it
+            if ($api_status === 'partial') {
+                $results[] = [
+                    'order_id' => $row->id,
+                    'status' => 'partial_detected',
+                    'message' => 'Partial status detected — update skipped',
+                    'api_status' => $api_status_raw,
+                    'remains' => isset($response->remains) ? $response->remains : null
+                ];
+                $partial_count++;
+                $partial_ids[] = $row->id;
+                continue; // skip further processing for partial
+            }
+
+            // Standardize status values (fallback to pending if unknown)
+            if (!in_array($api_status_raw, ['Completed', 'Processing', 'In progress', 'Partial', 'Canceled', 'Refunded'])) {
+                $response->status = 'Pending';
+            }
+
+            $data = [];
+            $old_status = $row->status;
+
+            if ($row->is_drip_feed) {
+                $status_dripfeed = (strrpos(strtolower($response->status), 'progress') !== false || strrpos(strtolower($response->status), 'active') !== false) ? 'inprogress'
+                    : strtolower(str_replace([" ", "_"], "", $response->status));
+
+                if (!in_array($status_dripfeed, ['canceled', 'inprogress', 'completed'])) {
+                    $status_dripfeed = 'inprogress';
+                }
+
+                $data = [
+                    "changed" => NOW,
+                    "status" => $status_dripfeed,
+                ];
+
+                if (isset($response->runs)) {
+                    $data['sub_response_orders'] = json_encode($response);
+                } else {
+                    switch ($response->status) {
+                        case 'Completed':
+                            $response->runs = $row->runs;
+                            break;
+                        case 'In progress':
+                        case 'Canceled':
+                            $response->runs = 0;
+                            break;
+                    }
+                    $data['sub_response_orders'] = json_encode($response);
+                }
+
+                if (isset($response->orders)) {
+                    $db_drip = json_decode($row->sub_response_orders);
+                    if (isset($db_drip->orders)) {
+                        $new_drip_orders = array_diff($response->orders, $db_drip->orders);
+                    } else {
+                        $new_drip_orders = $response->orders;
+                    }
+                    if (!empty($new_drip_orders)) {
+                        $this->insert_order_from_dripfeed_subscription($row, $api, $new_drip_orders);
+                    }
+                }
+            } else {
+                $remains = isset($response->remains) ? $response->remains : null;
+                if ($remains !== null && $remains < 0) {
+                    $remains = "+" . abs($remains);
+                }
+
+                $data = [
+                    "start_counter" => isset($response->start_count) ? $response->start_count : null,
+                    "remains" => $remains,
+                    "note" => "",
+                    "changed" => NOW,
+                    "status" => ($response->status == "In progress") ? "inprogress" : strtolower($response->status),
+                ];
+            }
+
+            if (!empty($data)) {
+                // Refunds/compensation only for canceled/refunded (partial intentionally skipped above)
+                if ($row->sub_response_posts != 1 && in_array($api_status, ["refunded", "canceled"])) {
+                    $data['charge'] = 0;
+                    $formal_charge = 0;
+                    $profit = 0;
+                    $return_funds = $charge = $row->charge;
+
+                    $data['formal_charge'] = $formal_charge;
+                    $data['profit'] = $profit;
+
+                    $user = $this->model->get("id, balance", $this->tb_users, ["id" => $row->uid]);
+                    if (!empty($user)) {
+                        $balance = $user->balance + $return_funds;
+                        $this->db->update($this->tb_users, ["balance" => $balance], ["id" => $row->uid]);
+                    }
+                }
+
+                // Update the order
+                $this->db->update($this->tb_orders, $data, ["id" => $row->id]);
+
+                if ($old_status != $data['status']) {
+                    $results[] = [
+                        'order_id' => $row->id,
+                        'old_status' => $old_status,
+                        'new_status' => $data['status'],
+                        'status' => 'success',
+                        'message' => 'Status updated'
+                    ];
+                    $updated_count++;
+                } else {
+                    $results[] = [
+                        'order_id' => $row->id,
+                        'status' => 'info',
+                        'message' => 'No status change needed'
+                    ];
+                    $no_change_count++;
+                }
+            }
+        }
+    }
+
+    $execution_time = microtime(true) - $start_time;
+
+    echo json_encode([
+        "status" => "success",
+        "message" => "Order status update completed",
+        "summary" => [
+            "total_processed" => count($orders),
+            "updated" => $updated_count,
+            "no_change" => $no_change_count,
+            "errors" => $error_count,
+            "partial_detected" => $partial_count,
+            "partial_ids" => $partial_ids,
+            "execution_time" => round($execution_time, 2) . " seconds"
+        ],
+        "results" => $results
+    ]);
+}
+
 }
