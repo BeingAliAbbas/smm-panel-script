@@ -3,11 +3,11 @@
   width: 100%;
   height: 100vh;
   z-index: 1;
-  background: #fa6d7e;
-  background: -webkit-linear-gradient(45deg, #fa6d7e, #f98c6b) !important;
-  background: -moz- oldlinear-gradient(45deg, #fa6d7e, #f98c6b) !important;
-  background: -o-linear-gradient(45deg, #fa6d7e, #f98c6b) !important;
-  background: linear-gradient(45deg, #fa6d7e, #f98c6b) !important;
+  background: #006d77;
+  background: -webkit-linear-gradient(45deg, #006d77, #83c5be) !important;
+  background: -moz- oldlinear-gradient(45deg, #006d77, #83c5be) !important;
+  background: -o-linear-gradient(45deg, #006d77, #83c5be) !important;
+  background: linear-gradient(45deg, #006d77, #83c5be) !important;
 }
 
 
@@ -41,7 +41,7 @@
 }
 
 .header .navbar .navbar-nav .nav-link:hover, .header .navbar .navbar-nav .active > .nav-link{
-  color: #fa7778 !important;
+  color: #006d77 !important;
   width: 100%;
   font-weight: 500;
 }
@@ -82,7 +82,7 @@
 }
 
 .header .btn-login:hover{
-  color: #fa7778!important;
+  color: #006d77!important;
   font-weight: 500;
 }
 
@@ -91,7 +91,7 @@
 }
 
 .header .btn-outline-primary.sign-up{
-  border-color: #fa7778!important;
+  border-color: #006d77!important;
   color: #22012f !important;
   z-index: 9999;
 }
@@ -100,12 +100,12 @@
   font-weight: 500;
   color: #fff!important;
   z-index: 9999;
-  border-color: #fea921!important;
-  background-color: #fea921!important;
-  background-image: -webkit-linear-gradient(left,#ff7802 0%,#fea921 100%),-webkit-linear-gradient(left,#ff7802 0%,#fea921 100%)!important;
-  background-image: -moz-linear-gradient(left,#ff7802 0%,#fea921 100%),-moz-linear-gradient(left,#ff7802 0%,#fea921 100%)!important;
-  background-image: -o-linear-gradient(left,#ff7802 0%,#fea921 100%),-o-linear-gradient(left,#ff7802 0%,#fea921 100%)!important;
-  background-image: linear-gradient(to right,#ff7802 0%,#fea921 100%),linear-gradient(to right,#ff7802 0%,#fea921 100%)!important;
+  border-color: #e29578!important;
+  background-color: #e29578!important;
+  background-image: -webkit-linear-gradient(left,#006d77 0%,#e29578 100%),-webkit-linear-gradient(left,#006d77 0%,#e29578 100%)!important;
+  background-image: -moz-linear-gradient(left,#006d77 0%,#e29578 100%),-moz-linear-gradient(left,#006d77 0%,#e29578 100%)!important;
+  background-image: -o-linear-gradient(left,#006d77 0%,#e29578 100%),-o-linear-gradient(left,#006d77 0%,#e29578 100%)!important;
+  background-image: linear-gradient(to right,#006d77 0%,#e29578 100%),linear-gradient(to right,#006d77 0%,#e29578 100%)!important;
 }
 
 

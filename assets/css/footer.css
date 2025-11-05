@@ -11,7 +11,7 @@
 }
 
 .footer a:not(.btn):hover {
-  color: #04a9f4;
+  color: #006d77;
 }
 
 .footer .title {
@@ -20,7 +20,7 @@
 }
 
 .footer_top {
-  border-bottom: 1px solid #04a9f4;
+  border-bottom: 1px solid #006d77;
 }
 
 .footer_top .site-logo img {
@@ -43,7 +43,7 @@
 }
 
 .footer-bottom .list-inline-item a:hover {
-  color: #04a9f4;
+  color: #006d77;
 }
 
 .footer-lang-selector {

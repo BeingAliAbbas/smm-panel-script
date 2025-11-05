@@ -1,6 +1,6 @@
 body{
 	padding: 0px !important;
-	background: #0b141b;
+	background: #edf6f9;
   
   }
   .card{
@@ -60,11 +60,11 @@ body{
   
   .news_announcement .modal-header{
 	color: white;
-	background: #05d0a0;
-	background: -webkit-linear-gradient(45deg, #05d0a0, #9fd6ef) !important;
-	background: -moz- oldlinear-gradient(45deg, #05d0a0, #9fd6ef) !important;
-	background: -o-linear-gradient(45deg, #05d0a0, #9fd6ef) !important;
-	background: linear-gradient(45deg, #05d0a0, #9fd6ef) !important; 
+	background: #006d77;
+	background: -webkit-linear-gradient(45deg, #006d77, #83c5be) !important;
+	background: -moz- oldlinear-gradient(45deg, #006d77, #83c5be) !important;
+	background: -o-linear-gradient(45deg, #006d77, #83c5be) !important;
+	background: linear-gradient(45deg, #006d77, #83c5be) !important; 
   }
   
   .news_announcement .modal-content{
@@ -72,7 +72,7 @@ body{
   }
   
   .news_announcement .modal-content .modal-body{
-	background: #f7f7f7;
+	background: #edf6f9;
 	padding: 0.5rem;
   }
   
@@ -221,7 +221,7 @@ body{
 	vertical-align: middle;
 	color: #fff;
 	font-size: 18px;
-	background: #2DCEE3;
+	background: #006d77;
 	display: table-cell;
   }
   
@@ -232,7 +232,7 @@ body{
   
   .ticket-lists .item .avatar span.text-circle.pending{
 	color: #fff;
-	background: #2dcee3;
+	background: #83c5be;
   }
   
   .rounded-circle {
@@ -240,7 +240,7 @@ body{
   }
   
   .ticket-lists .item:hover{
-	background: #eceff1;
+	background: #ffddd2;
   }
   
   .ticket-lists .item{
@@ -292,7 +292,7 @@ body{
 	margin: 0px 8px 0 0;
   }
   #frame .content .messages ul li.sent .msg-content {
-	background: #f0f2f7;
+	background: #ffddd2;
   }
   
   #frame .content .messages ul li.replies img {
@@ -306,9 +306,9 @@ body{
   
   #frame .content .messages ul li.replies .msg-content {
 	color: #fff;
-	background: -moz-linear-gradient(135deg, rgb(255, 78, 111), rgb(251, 145, 104));
-	background: -o-linear-gradient(135deg, rgb(255, 78, 111), rgb(251, 145, 104));
-	background: linear-gradient(135deg, rgb(255, 78, 111), rgb(251, 145, 104));
+	background: -moz-linear-gradient(135deg, #006d77, #83c5be);
+	background: -o-linear-gradient(135deg, #006d77, #83c5be);
+	background: linear-gradient(135deg, #006d77, #83c5be);
   }
   
   #frame .content .messages ul li.sent .message .msg-footer{
