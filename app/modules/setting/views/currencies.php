@@ -255,15 +255,33 @@ $(document).ready(function() {
   $('#copyCronUrl').on('click', function() {
     var cronUrl = $('#cronUrlText').text();
     
-    // Create temporary input to copy
+    // Use modern Clipboard API with fallback for older browsers
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(cronUrl).then(function() {
+        show_message('Cron URL copied to clipboard!', 'success');
+      }).catch(function() {
+        // Fallback if clipboard API fails
+        copyToClipboardFallback(cronUrl);
+      });
+    } else {
+      // Fallback for older browsers
+      copyToClipboardFallback(cronUrl);
+    }
+  });
+  
+  // Fallback function for older browsers
+  function copyToClipboardFallback(text) {
     var tempInput = $('<input>');
     $('body').append(tempInput);
-    tempInput.val(cronUrl).select();
-    document.execCommand('copy');
+    tempInput.val(text).select();
+    try {
+      document.execCommand('copy');
+      show_message('Cron URL copied to clipboard!', 'success');
+    } catch (err) {
+      show_message('Failed to copy. Please copy manually.', 'error');
+    }
     tempInput.remove();
-    
-    show_message('Cron URL copied to clipboard!', 'success');
-  });
+  }
 });
 
 function show_message(message, type) {

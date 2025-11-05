@@ -238,7 +238,9 @@ class currencies extends MX_Controller {
 		curl_setopt($ch, CURLOPT_URL, $api_url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		// SSL verification enabled for security
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 		
 		$response = curl_exec($ch);
 		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -276,10 +278,11 @@ class currencies extends MX_Controller {
 			if (isset($rates[$currency->code])) {
 				$new_rate = $rates[$currency->code];
 				
-				// Since API returns rates relative to base currency,
-				// we need to convert to "per base currency" format
-				// API gives: 1 BASE = X TARGET
-				// We store: 1 BASE = X TARGET (same format)
+				// The API returns rates in format: 1 BASE = X TARGET
+				// Example: With PKR as base, API returns: "USD": 0.00353876
+				// This means: 1 PKR = 0.00353876 USD
+				// Our database stores rates in the same format (exchange_rate for USD would be 0.00353876)
+				// So we can directly use the rate from API
 				$this->db->where('id', $currency->id);
 				$this->db->update('currencies', [
 					'exchange_rate' => $new_rate,
