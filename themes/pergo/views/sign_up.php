@@ -230,7 +230,7 @@ function validateWhatsappNumber(event) {
 .form-signup select {
   width: 100%;
   height: 40px;
-  border: 1px solid #04a9f4;
+  border: 1px solid #006d77;
   border-radius: 6px;
   padding: 0 12px;
   background: transparent;
@@ -256,7 +256,7 @@ function validateWhatsappNumber(event) {
   font-size: 15px;
   font-weight: bold;
   color: #ffffff;
-  background: #04a9f4;
+  background: #006d77;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -293,7 +293,7 @@ function validateWhatsappNumber(event) {
 }
 
 .form-signup .custom-control-label a {
-  color: #04a9f4;
+  color: #006d77;
   text-decoration: none;
 }
 
@@ -315,7 +315,7 @@ function validateWhatsappNumber(event) {
 }
 
 .form-signup .signup-link a {
-  color: #04a9f4;
+  color: #006d77;
   text-decoration: none;
   font-weight: 600;
 }

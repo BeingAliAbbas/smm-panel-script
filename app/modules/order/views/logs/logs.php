@@ -90,7 +90,7 @@
                       <button type="button" class="btn btn-outline-info dropdown-toggle" data-toggle="dropdown" style="background-color: #06324e; color: #fff; border: none;">
                           <i class="fa fa-clone mr-2"></i> Copy Options
                       </button>
-                      <div class="dropdown-menu" style="background-color: #051d2f!important; border: 1px solid #04a9f4;">
+                      <div class="dropdown-menu" style="background-color: #051d2f!important; border: 1px solid #006d77;">
                           <a class="dropdown-item" href="#" onclick="copyAllApiOrderIds()" style="background-color: #051d2f!important; color: #fff !important;">
                               <i class="fa fa-copy mr-2"></i> Copy All API Order IDs
                           </a>
@@ -199,7 +199,7 @@
                           <li><?=lang("Charge")?>: <?= $currency_symbol . currency_format(convert_currency($row->charge), $decimal_places, $decimalpoint, $separator) ?></li>
                           <?php if (get_role("admin")): ?>
                           <li><?=lang("Provider Charge")?>: 
-                            <small style="color: #3498db; font-size: 12px;">
+                            <small style="color: #006d77; font-size: 12px;">
                               <?= (isset($provider_charge_in_pkr) && $provider_charge_in_pkr > 0) 
                                   ? '$' . $row->formal_charge . ' (' . $currency_symbol . currency_format(convert_currency($provider_charge_in_pkr), $decimal_places, $decimalpoint, $separator) . ')' 
                                   : lang("No charge available"); ?>

@@ -15,7 +15,7 @@
     :root{
       --sel-font-size: clamp(14px, 3.6vw, 16px);
       --sel-line-height: 1.3;
-      --sel-border: #04a9f4;
+      --sel-border: #006d77;
       --sel-border-focus: #0390cf;
       --sel-bg: #ffffff;
       --sel-bg-alt: #f5fbfe;
@@ -25,7 +25,7 @@
       --sel-highlight-text: #fff;
       --sel-selected-bg: #d3eefc;
       --sel-meta-color: #000000;
-      --sel-scrollbar-thumb: #04a9f4;
+      --sel-scrollbar-thumb: #006d77;
       --sel-scrollbar-track: #cfe8f5;
     }
     /* Dark palette (apply by body.dark) */

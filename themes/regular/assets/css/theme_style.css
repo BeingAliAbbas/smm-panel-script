@@ -226,11 +226,11 @@ section.section-2 .content .title{
 }
 
 .header.shrink .navbar .navbar-nav .active > .nav-link{
-  color: #fa7778 !important;
+  color: #006d77 !important;
 }
 
 .header.shrink .navbar .navbar-nav .nav-link:hover{
-  color: #fa7778 !important;
+  color: #006d77 !important;
 }
 
 
@@ -240,7 +240,7 @@ section.section-2 .content .title{
 }
 
 .header.shrink .btn-login:hover{
-  color: #fa7778!important;
+  color: #006d77!important;
   font-weight: 600;
 }
 
@@ -249,7 +249,7 @@ section.section-2 .content .title{
 }
 
 .header.shrink .btn-outline-primary.sign-up{
-  border-color: #fa7778!important;
+  border-color: #006d77!important;
   color: #22012f !important;
   z-index: 9999;
 }

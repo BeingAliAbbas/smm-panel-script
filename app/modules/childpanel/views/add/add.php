@@ -13,7 +13,7 @@
 <div class="row justify-content-md-center justify-content-xl-center m-t-30" id="result_ajaxSearch">
   <div class="col-md-10 col-xl-10 ">
     <div class="card">
-        <div class="card-header d-flex align-items-center" style="border: 0.1px solid #05d0a0; border-radius: 3.5px 3.5px 0px 0px; background: #05d0a0;">
+        <div class="card-header d-flex align-items-center" style="border: 0.1px solid #006d77; border-radius: 3.5px 3.5px 0px 0px; background: #006d77;">
         <div class="tabs-list">
           <ul class="nav nav-tabs">
             <li class="">

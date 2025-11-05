@@ -201,7 +201,7 @@ echo "<style>
 
     a {
         text-decoration: none;
-        color: #467fcf;
+        color: #006d77;
     }
 
     a:hover {
@@ -291,7 +291,7 @@ if (get_role("admin")) {
         echo "<tr>
                 <td>" . htmlspecialchars($row['id']) . "</td>
                 <td><span class='status-label'>" . htmlspecialchars($row['status']) . "</span></td>
-                <td><a href='" . htmlspecialchars($row['link']) . "' target='_blank' style='color: #467fcf !important;'>" . htmlspecialchars($row['link']) . "</a></td>
+                <td><a href='" . htmlspecialchars($row['link']) . "' target='_blank' style='color: #006d77 !important;'>" . htmlspecialchars($row['link']) . "</a></td>
                 <td>" . htmlspecialchars($row['quantity']) . "</td>
                 <td>" . htmlspecialchars($row['start_counter']) . "</td>
                 <td>" . htmlspecialchars($row['remains']) . "</td>

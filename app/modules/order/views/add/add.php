@@ -714,7 +714,7 @@ $currency_symbol = $current_currency ? $current_currency->symbol : get_option('c
                   </div>
 
                   <div class="form-actions left">
-                  <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1" style="border-radius: 5px !important; background-color: #04a9f4; color: #fff; min-width: 120px; margin-right: 5px; margin-top: 15px; margin-bottom: 5px;">
+                  <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1" style="border-radius: 5px !important; background-color: #006d77; color: #fff; min-width: 120px; margin-right: 5px; margin-top: 15px; margin-bottom: 5px;">
                   <?=lang("place_order")?>
                   </button>
                   </div>
