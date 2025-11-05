@@ -206,7 +206,7 @@ $currency_symbol = $current_currency ? $current_currency->symbol : get_option('c
   .announcement-container {
     margin: 20px auto !important;
     padding: 20px !important;
-    /* background: linear-gradient(135deg, #051d2f, #0a3b5e) !important; */
+    /* background: linear-gradient(135deg, #004d54, #0a3b5e) !important; */
     color: #ffffff !important;
     border: 0.5px solid #0e4c75 !important;
     border-radius: 15px !important;

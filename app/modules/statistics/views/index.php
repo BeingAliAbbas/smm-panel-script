@@ -181,7 +181,7 @@ echo "<style>
     th {
         padding: 12px;
         text-align: left;
-        background-color: #05d0a1;
+        background-color: #006d77;
         color: #061d2b;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
@@ -384,7 +384,7 @@ p {
     display: block;
     margin: 20px auto;
     padding: 10px 20px;
-    background-color: #05d0a1;
+    background-color: #006d77;
     color: #ffffff;
     text-align: center;
     font-size: 16px;
@@ -574,7 +574,7 @@ $mysqli->close();
     .add-funds-button {
         margin-top: 10px;
         padding: 10px 20px;
-        background-color: #05d0a1;
+        background-color: #006d77;
         color: #00ffff;
         border-radius: 5px;
         text-decoration: none;
@@ -639,7 +639,7 @@ $mysqli->close();
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background-color: #05d0a1;
+    background-color: #006d77;
     color: #00ffff;
     text-decoration: none;
     font-weight: bold;

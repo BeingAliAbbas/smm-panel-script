@@ -1,6 +1,6 @@
 /* Footer Styling */
 .footer {
-  background-color: #051d2f;
+  background-color: #004d54;
   color: #a7a7a7;
   padding: 30px 0;
 }
@@ -34,7 +34,7 @@
 .footer_bottom {
   border-top: 2px solid #a7a7a7;
   padding: 20px;
-  background-color: #051d2f;
+  background-color: #004d54;
 }
 
 .footer-bottom .list-inline-item a {

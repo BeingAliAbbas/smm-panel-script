@@ -1,5 +1,5 @@
 <div class="card content">
-  <div class="card-header" style="border:0.1px solid #1B78FC;border-radius:3.5px 3.5px 0 0;background:#1B78FC;">
+  <div class="card-header" style="border:0.1px solid #006d77;border-radius:3.5px 3.5px 0 0;background:#006d77;">
     <h3 class="card-title"><i class="fa fa-question-circle"></i> <?= lang("Modules") ?></h3>
   </div>
 

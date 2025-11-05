@@ -253,7 +253,7 @@
                     </td>
                     <td><?php echo $currency_symbol . number_format((float)$transaction->amount, 2); ?></td>
                     <td>
-                      <span style="color: <?php echo ((int)$transaction->status === 1) ? '#05d0a1' : 'red'; ?>;">
+                      <span style="color: <?php echo ((int)$transaction->status === 1) ? '#006d77' : 'red'; ?>;">
                         <?php echo ((int)$transaction->status === 1) ? 'Paid' : 'Unpaid'; ?>
                       </span>
                     </td>

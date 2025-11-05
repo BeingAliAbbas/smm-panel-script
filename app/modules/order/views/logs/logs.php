@@ -90,8 +90,8 @@
                       <button type="button" class="btn btn-outline-info dropdown-toggle" data-toggle="dropdown" style="background-color: #06324e; color: #fff; border: none;">
                           <i class="fa fa-clone mr-2"></i> Copy Options
                       </button>
-                      <div class="dropdown-menu" style="background-color: #051d2f!important; border: 1px solid #006d77;">
-                          <a class="dropdown-item" href="#" onclick="copyAllApiOrderIds()" style="background-color: #051d2f!important; color: #fff !important;">
+                      <div class="dropdown-menu" style="background-color: #004d54!important; border: 1px solid #006d77;">
+                          <a class="dropdown-item" href="#" onclick="copyAllApiOrderIds()" style="background-color: #004d54!important; color: #fff !important;">
                               <i class="fa fa-copy mr-2"></i> Copy All API Order IDs
                           </a>
                       </div>

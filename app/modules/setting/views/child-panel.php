@@ -1,5 +1,5 @@
 <div class="card content">
-      <div class="card-header" style="border: 0.1px solid #1B78FC; border-radius: 3.5px 3.5px 0px 0px; background: #1B78FC;">
+      <div class="card-header" style="border: 0.1px solid #006d77; border-radius: 3.5px 3.5px 0px 0px; background: #006d77;">
         <h3 class="card-title"><i class="fe fe-archive"></i> <?= lang("childpanel_setting") ?></h3>
     </div>
          <div class="card-body">

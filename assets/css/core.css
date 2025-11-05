@@ -5372,7 +5372,7 @@ button.close {
 }
 
 .modal-header {
-  background: #07324d; /* Consistent dark header */
+  background: #004d54; /* Consistent dark header */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -5421,7 +5421,7 @@ button.close {
   justify-content: flex-end;
   padding: 1rem 1.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1); /* Subtle top border */
-  background: #07324d; /* Consistent footer background */
+  background: #004d54; /* Consistent footer background */
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
 }
