@@ -861,4 +861,5 @@ $lang["Default"] = "Default";
 $lang["Set as Default"] = "Set as Default";
 $lang["Update"] = "Update";
 $lang["Add"] = "Add";
+$lang["Fetch Latest Rates"] = "Fetch Latest Rates";
 

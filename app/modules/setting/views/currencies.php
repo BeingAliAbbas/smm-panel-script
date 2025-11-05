@@ -1,12 +1,21 @@
 <div class="card content">
   <div class="card-header" style="border: 0.1px solid #05d0a0; border-radius: 3.5px 3.5px 0px 0px; background: #05d0a0;">
     <h3 class="card-title"><i class="fe fe-dollar-sign"></i> <?=lang("Multi-Currency Management")?></h3>
+    <div class="card-options">
+      <button class="btn btn-sm btn-primary fetch-rates-btn" style="margin-right: 10px;">
+        <i class="fe fe-refresh-cw"></i> <?=lang("Fetch Latest Rates")?>
+      </button>
+    </div>
   </div>
   <div class="card-body">
     <div class="row">
       <div class="col-md-12">
         <div class="alert alert-info">
           <i class="fe fe-info"></i> Manage multiple currencies for your SMM panel. Users can switch between currencies in the sidebar. All amounts will be converted based on exchange rates.
+        </div>
+        
+        <div class="alert alert-warning" style="display:none;" id="rate-fetch-info">
+          <i class="fe fe-clock"></i> <span id="rate-fetch-message"></span>
         </div>
         
         <div class="table-responsive">
@@ -181,6 +190,50 @@ $(document).ready(function() {
         if (response.status != 'success') {
           show_message(response.message, 'error');
         }
+      }
+    });
+  });
+  
+  // Fetch latest rates from API
+  $('.fetch-rates-btn').on('click', function() {
+    var btn = $(this);
+    var originalHtml = btn.html();
+    
+    // Disable button and show loading
+    btn.prop('disabled', true);
+    btn.html('<i class="fe fe-loader"></i> Fetching...');
+    
+    $.ajax({
+      url: '<?=cn("currencies/fetch_rates")?>',
+      type: 'POST',
+      data: {
+        <?=$this->security->get_csrf_token_name()?>: '<?=$this->security->get_csrf_hash()?>'
+      },
+      dataType: 'json',
+      success: function(response) {
+        if (response.status == 'success') {
+          show_message(response.message, 'success');
+          
+          // Show info message
+          $('#rate-fetch-message').text('Last updated: ' + response.data.last_update + ' - ' + response.data.updated_count + ' currencies updated');
+          $('#rate-fetch-info').show();
+          
+          // Reload page after 2 seconds to show new rates
+          setTimeout(function() {
+            location.reload();
+          }, 2000);
+        } else {
+          show_message(response.message, 'error');
+        }
+        
+        // Re-enable button
+        btn.prop('disabled', false);
+        btn.html(originalHtml);
+      },
+      error: function() {
+        show_message('Failed to fetch exchange rates. Please try again.', 'error');
+        btn.prop('disabled', false);
+        btn.html(originalHtml);
       }
     });
   });

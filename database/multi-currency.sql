@@ -15,9 +15,10 @@ CREATE TABLE IF NOT EXISTS `currencies` (
 
 -- Insert default currencies
 -- PKR is the default base currency, all rates are relative to PKR
+-- Rate format: 1 PKR = X foreign currency (e.g., 1 USD = 282.63 PKR means rate = 1/282.63 = 0.00353941)
 INSERT INTO `currencies` (`code`, `name`, `symbol`, `exchange_rate`, `is_default`, `status`) VALUES
 ('PKR', 'Pakistani Rupee', 'Rs', 1.00000000, 1, 1),
-('USD', 'US Dollar', '$', 0.00359066, 0, 1),
+('USD', 'US Dollar', '$', 0.00353941, 0, 1),
 ('EUR', 'Euro', '€', 0.00330341, 0, 1),
 ('GBP', 'British Pound', '£', 0.00283632, 0, 1),
 ('INR', 'Indian Rupee', '₹', 0.29851434, 0, 1),

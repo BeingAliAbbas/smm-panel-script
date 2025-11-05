@@ -211,4 +211,87 @@ class currencies extends MX_Controller {
 			'message' => 'Currency added successfully'
 		]);
 	}
+
+	/**
+	 * Fetch latest exchange rates from API
+	 * Uses exchangerate-api.com (free tier: 1,500 requests/month)
+	 */
+	public function fetch_rates(){
+		if ($this->input->method() !== 'post') {
+			ms([
+				'status'  => 'error',
+				'message' => 'Invalid method'
+			]);
+		}
+
+		// Get the default currency (PKR)
+		$default_currency = $this->model->get_default_currency();
+		if (!$default_currency) {
+			ms([
+				'status'  => 'error',
+				'message' => 'Default currency not set'
+			]);
+		}
+
+		// Fetch rates from API (using PKR as base)
+		$api_url = "https://api.exchangerate-api.com/v4/latest/" . $default_currency->code;
+		
+		// Use cURL to fetch the data
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $api_url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		
+		$response = curl_exec($ch);
+		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+
+		if ($http_code !== 200 || !$response) {
+			ms([
+				'status'  => 'error',
+				'message' => 'Failed to fetch exchange rates from API'
+			]);
+		}
+
+		$data = json_decode($response, true);
+		
+		if (!isset($data['rates']) || !is_array($data['rates'])) {
+			ms([
+				'status'  => 'error',
+				'message' => 'Invalid API response format'
+			]);
+		}
+
+		// Update rates for all currencies
+		$updated_count = 0;
+		$all_currencies = $this->model->get_active_currencies();
+		
+		foreach ($all_currencies as $currency) {
+			// Skip the default currency
+			if ($currency->is_default == 1) {
+				continue;
+			}
+
+			// Check if rate exists in API response
+			if (isset($data['rates'][$currency->code])) {
+				$new_rate = $data['rates'][$currency->code];
+				
+				// Update the rate in database
+				$this->db->where('id', $currency->id);
+				$this->db->update('currencies', ['exchange_rate' => $new_rate]);
+				
+				$updated_count++;
+			}
+		}
+
+		ms([
+			'status'  => 'success',
+			'message' => "Exchange rates updated successfully. {$updated_count} currencies updated.",
+			'data'    => [
+				'updated_count' => $updated_count,
+				'last_update'   => date('Y-m-d H:i:s')
+			]
+		]);
+	}
 }
