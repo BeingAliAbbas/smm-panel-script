@@ -1,8 +1,8 @@
 -- Update script to fix incorrect exchange rates
 -- Run this if you already have the currencies table installed
 
--- Update USD rate: 1 USD = 282.63 PKR, so 1 PKR = 0.00353876 USD
-UPDATE `currencies` SET `exchange_rate` = 0.00353876 WHERE `code` = 'USD';
+-- Update USD rate: 1 USD = 282.63 PKR, so 1 PKR = 1/282.63 = 0.00353819 USD
+UPDATE `currencies` SET `exchange_rate` = 0.00353819 WHERE `code` = 'USD';
 
 -- Update EUR rate (approximate)
 UPDATE `currencies` SET `exchange_rate` = 0.00325000 WHERE `code` = 'EUR';

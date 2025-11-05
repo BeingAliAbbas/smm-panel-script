@@ -46,7 +46,7 @@ echo "  Result: $OLD_RESULT USD (INCORRECT - should be 3.24)"
 echo ""
 
 # Verify the new correct rate
-NEW_RATE=0.00353876
+NEW_RATE=0.00353819
 NEW_RESULT=$(echo "scale=4; $PKR_AMOUNT * $NEW_RATE" | bc)
 NEW_ROUNDED=$(echo "scale=2; $PKR_AMOUNT * $NEW_RATE" | bc)
 
