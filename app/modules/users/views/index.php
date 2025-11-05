@@ -15,11 +15,11 @@
         <h3 class="card-title"><?=lang("Lists")?></h3>
         <div class="card-options">
         <div class="dropdown1" style="position: relative; display: inline-block;">
-  <button type="button" class="btn btn-outline-info dropdown-toggle" onclick="toggleDropdown()" style="color: #04a9f4; border-color: #04a9f4; background-color: transparent;">
+  <button type="button" class="btn btn-outline-info dropdown-toggle" onclick="toggleDropdown()" style="color: #006d77; border-color: #006d77; background-color: transparent;">
     <i class="fe fe-upload mr-2"></i>Export
   </button>
 
-  <div id="customDropdown" class="dropdown-menu1" style="display: none; position: absolute; top: 100%; right: 2px; background-color: #051d2f; border: 1px solid #04a9f4; border-radius: 6px; padding: 8px 0; min-width: 150px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 1000;">
+  <div id="customDropdown" class="dropdown-menu1" style="display: none; position: absolute; top: 100%; right: 2px; background-color: #004d54; border: 1px solid #006d77; border-radius: 6px; padding: 8px 0; min-width: 150px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 1000;">
     <a class="dropdown-item1" href="<?=cn($module.'/export/excel')?>" style="color: #ffffff; padding: 10px 15px; font-size: 14px; display: block; transition: background-color 0.3s ease, color 0.3s ease;">Excel</a>
     
     <a class="dropdown-item1" href="<?=cn($module.'/export/csv')?>" style="color: #ffffff; padding: 10px 15px; font-size: 14px; display: block; transition: background-color 0.3s ease, color 0.3s ease;">CSV</a>
@@ -109,16 +109,16 @@
               <td>
     <div class="title"><h6><?php _echo($row->first_name) . " " . _echo($row->last_name); ?></h6></div>
     <div class="sub" style="margin-right: 15px; margin-bottom: 10px;">
-        <a href="<?=cn("$module/mail/".$row->ids)?>" class="ajaxModal" style="display: inline-flex; align-items: center; padding: 4px 8px; border: 1px solid #04a9f4; border-radius: 4px; color: #333; font-size: 12px; text-decoration: none;">
-            <i class="fa fa-envelope" style="margin-right: 6px; font-size: 14px; color: #04a9f4;"></i>
+        <a href="<?=cn("$module/mail/".$row->ids)?>" class="ajaxModal" style="display: inline-flex; align-items: center; padding: 4px 8px; border: 1px solid #006d77; border-radius: 4px; color: #333; font-size: 12px; text-decoration: none;">
+            <i class="fa fa-envelope" style="margin-right: 6px; font-size: 14px; color: #006d77;"></i>
             <small style="color:#fff;"><?php _echo($row->email); ?></small>
         </a>
     </div>
 
     <div class="sub" style="margin-bottom: 10px;">
         <small>
-            <a href="https://wa.me/<?php echo $row->whatsapp_number; ?>" target="_blank" style="display: inline-flex; align-items: center; padding: 4px 8px; border: 1px solid #04a9f4; border-radius: 4px; color: #04a9f4; font-size: 12px; text-decoration: none;">
-                <i class="fa fa-whatsapp" style="margin-right: 6px; font-size: 14px; color: #04a9f4;"></i>
+            <a href="https://wa.me/<?php echo $row->whatsapp_number; ?>" target="_blank" style="display: inline-flex; align-items: center; padding: 4px 8px; border: 1px solid #006d77; border-radius: 4px; color: #006d77; font-size: 12px; text-decoration: none;">
+                <i class="fa fa-whatsapp" style="margin-right: 6px; font-size: 14px; color: #006d77;"></i>
                 <?php echo $row->whatsapp_number; ?>
             </a>
         </small>

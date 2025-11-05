@@ -1,6 +1,6 @@
 /* Footer Styling */
 .footer {
-  background-color: #051d2f;
+  background-color: #004d54;
   color: #a7a7a7;
   padding: 30px 0;
 }
@@ -11,7 +11,7 @@
 }
 
 .footer a:not(.btn):hover {
-  color: #04a9f4;
+  color: #006d77;
 }
 
 .footer .title {
@@ -20,7 +20,7 @@
 }
 
 .footer_top {
-  border-bottom: 1px solid #04a9f4;
+  border-bottom: 1px solid #006d77;
 }
 
 .footer_top .site-logo img {
@@ -28,13 +28,13 @@
 }
 
 .footer_top .quick-link li a:hover {
-  color: #ff6f61;
+  color: #e29578;
 }
 
 .footer_bottom {
   border-top: 2px solid #a7a7a7;
   padding: 20px;
-  background-color: #051d2f;
+  background-color: #004d54;
 }
 
 .footer-bottom .list-inline-item a {
@@ -43,7 +43,7 @@
 }
 
 .footer-bottom .list-inline-item a:hover {
-  color: #04a9f4;
+  color: #006d77;
 }
 
 .footer-lang-selector {

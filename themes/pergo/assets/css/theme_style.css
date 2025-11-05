@@ -15,7 +15,7 @@ body{
   padding-top: 0;
   padding-bottom: 0;
   border-bottom: 0.5px solid;
-  border-color: #04a9f4;
+  border-color: #006d77;
   background: #061d2b;
 }
 
@@ -49,7 +49,7 @@ body{
 /* Active link with background color */
 .header .navbar .navbar-nav .active > .nav-link {
   color: #000000 !important;
-  background-color: #04a9f4;
+  background-color: #006d77;
   font-weight: 600;
   border-radius: 5px;
 }
@@ -57,7 +57,7 @@ body{
 /* Hover styles for nav links */
 .header .navbar .navbar-nav .nav-link:hover {
   color: #000000 !important;
-  background-color: #04a9f4;
+  background-color: #006d77;
   font-weight: 600;
   border-radius: 5px;
   /* No size increase */
@@ -84,14 +84,14 @@ body{
 
 /* Hover styles for login button */
 .header .btn-login:hover {
-  color: #04a9f4 !important; /* Text color changes to dark for better contrast */
+  color: #006d77 !important; /* Text color changes to dark for better contrast */
 }
 
 /* Base styles for sign-up button */
 .header .btn-outline-primary.sign-up {
   padding: 5px 18px;
-  border: 2px solid #04a9f4;
-  color: #04a9f4;
+  border: 2px solid #006d77;
+  color: #006d77;
   background-color: transparent;
   border-radius: 5px;
   transition: background-color 0.3s ease;
@@ -100,7 +100,7 @@ body{
 
 /* Hover styles for sign-up button */
 .header a.btn-outline-primary.sign-up:hover {
-  background-color: #04a9f4;
+  background-color: #006d77;
   color: #061d2b; /* Text color changes to dark for better contrast */
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
@@ -125,7 +125,7 @@ body{
   /* Navbar toggler button */
   .header .navbar .navbar-toggler {
     font-size: 24px;
-    color: #04a9f4;
+    color: #006d77;
     border: none;
     padding: 8px 12px;
   }
@@ -173,7 +173,7 @@ section.banner .contents{
 }
 
 section.banner .contents .head-title{
-  color: #04a9f4;
+  color: #006d77;
   font-size: 36px;
   font-weight: 1000;
   line-height: 48px;
@@ -187,7 +187,7 @@ section.banner .contents p{
   margin: 0px;
   font-size: 14px;
   line-height: 25px;
-  color: #04a9f4;
+  color: #006d77;
 }
 
 section.banner .contents .head-button{
@@ -321,7 +321,7 @@ section.our-services .feature-item:hover {
 }*/
 
 section.our-services .feature-item:hover {
-  background: #07324d;
+  background: #004d54;
 
   box-shadow: 0 10px 22px 10px rgba(27, 38, 49, 0.1);
   color: #fff;
@@ -419,7 +419,7 @@ section.reviews .item .star-icon{
 /*section 3*/
 
 section.section-3{
-  color: #fa7778;
+  color: #006d77;
   position: relative;
   padding: 60px 0 40px;
   box-shadow: 0 10px 22px 10px rgba(27, 38, 49, 0.1);
@@ -584,11 +584,11 @@ section.section-3.subscribe-form .input-group-append{
   margin: 0 auto;
   width: 90%;
   position: absolute;
-  background-color: #fea921;
-  background-image: -webkit-linear-gradient(left,#ff7802 0%,#fea921 100%),-webkit-linear-gradient(left,#ff7802 0%,#fea921 100%);
-  background-image: -moz-linear-gradient(left,#ff7802 0%,#fea921 100%),-moz-linear-gradient(left,#ff7802 0%,#fea921 100%);
-  background-image: -o-linear-gradient(left,#ff7802 0%,#fea921 100%),-o-linear-gradient(left,#ff7802 0%,#fea921 100%);
-  background-image: linear-gradient(to right,#ff7802 0%,#fea921 100%),linear-gradient(to right,#ff7802 0%,#fea921 100%);
+  background-color: #e29578;
+  background-image: -webkit-linear-gradient(left,#006d77 0%,#e29578 100%),-webkit-linear-gradient(left,#006d77 0%,#e29578 100%);
+  background-image: -moz-linear-gradient(left,#006d77 0%,#e29578 100%),-moz-linear-gradient(left,#006d77 0%,#e29578 100%);
+  background-image: -o-linear-gradient(left,#006d77 0%,#e29578 100%),-o-linear-gradient(left,#006d77 0%,#e29578 100%);
+  background-image: linear-gradient(to right,#006d77 0%,#e29578 100%),linear-gradient(to right,#006d77 0%,#e29578 100%);
 }
 
 .header.shrink .btn-login{
@@ -597,7 +597,7 @@ section.section-3.subscribe-form .input-group-append{
 }
 
 .header.shrink .btn-login:hover{
-  color: #fea921!important;
+  color: #e29578!important;
   font-weight: 600;
 }
 
@@ -615,12 +615,12 @@ section.section-3.subscribe-form .input-group-append{
   font-weight: 600;
   color: #fff!important;
   z-index: 9999;
-  border-color: #fea921!important;
-  background-color: #fea921!important;
-  background-image: -webkit-linear-gradient(left,#ff7802 0%,#fea921 100%),-webkit-linear-gradient(left,#ff7802 0%,#fea921 100%)!important;
-  background-image: -moz-linear-gradient(left,#ff7802 0%,#fea921 100%),-moz-linear-gradient(left,#ff7802 0%,#fea921 100%)!important;
-  background-image: -o-linear-gradient(left,#ff7802 0%,#fea921 100%),-o-linear-gradient(left,#ff7802 0%,#fea921 100%)!important;
-  background-image: linear-gradient(to right,#ff7802 0%,#fea921 100%),linear-gradient(to right,#ff7802 0%,#fea921 100%)!important;
+  border-color: #e29578!important;
+  background-color: #e29578!important;
+  background-image: -webkit-linear-gradient(left,#006d77 0%,#e29578 100%),-webkit-linear-gradient(left,#006d77 0%,#e29578 100%)!important;
+  background-image: -moz-linear-gradient(left,#006d77 0%,#e29578 100%),-moz-linear-gradient(left,#006d77 0%,#e29578 100%)!important;
+  background-image: -o-linear-gradient(left,#006d77 0%,#e29578 100%),-o-linear-gradient(left,#006d77 0%,#e29578 100%)!important;
+  background-image: linear-gradient(to right,#006d77 0%,#e29578 100%),linear-gradient(to right,#006d77 0%,#e29578 100%)!important;
 }
 
 @media (max-width: 768px){
@@ -716,7 +716,7 @@ section.section-3.subscribe-form .input-group-append{
 .form-login input[type="email"] {
   width: 100%;  /* Ensure full width */
   height: 45px;  /* Set input height */
-  border: 1px solid #04a9f4;  /* Border color */
+  border: 1px solid #006d77;  /* Border color */
   border-radius: 6px;
   padding: 0 15px;
   background: transparent;
@@ -742,7 +742,7 @@ section.section-3.subscribe-form .input-group-append{
 }
 
 .form-login .form-footer a {
-  color: #04a9f4;
+  color: #006d77;
   text-decoration: none;
   font-weight: 600;
 }
@@ -759,7 +759,7 @@ section.section-3.subscribe-form .input-group-append{
   height: 45px;
   text-align: center;
   color: #ffffff; /* White text color */
-  background-color: #04a9f4;
+  background-color: #006d77;
   border-radius: 10px; /* Rounded corners */
   cursor: pointer;
   transition: all 0.3s ease-in-out;
@@ -789,7 +789,7 @@ section.section-3.subscribe-form .input-group-append{
   letter-spacing: 0.05em;
   margin-bottom: 1.5rem;
   margin-top: 40px;
-  color: #04a9f4;
+  color: #006d77;
 }
 
 
@@ -808,7 +808,7 @@ section.section-3.subscribe-form .input-group-append{
 }
 
 .desktop-only-paragraph b {
-  color: #04a9f4;
+  color: #006d77;
 }
 
 /* Desktop-specific styles */
@@ -859,7 +859,7 @@ section.section-3.subscribe-form .input-group-append{
 }
 
 .form-login .signup-link a {
-  color: #04a9f4;
+  color: #006d77;
   text-decoration: none;
   font-weight: 600;
 }
@@ -939,13 +939,13 @@ section.section-3.subscribe-form .input-group-append{
 	padding: 0px 7px;
     font-size: 12px;
     font-weight: 100;
-    color: #04a9f4;
+    color: #006d77;
     cursor: pointer;
     margin-right: 0px;
     height: 20px;
     text-align:center;
 	border-radius: 5px;
-    border: 0.2px solid #04a9f4;
+    border: 0.2px solid #006d77;
     background-size: 300% 100%;
 	background: #061d2b;
 
@@ -957,7 +957,7 @@ section.section-3.subscribe-form .input-group-append{
 }
 
 .btn-forgot-pass:hover {
-	background: #04a9f4;
+	background: #006d77;
   color: #061d2b;
 }
 
@@ -968,12 +968,12 @@ section.section-3.subscribe-form .input-group-append{
 	padding: 5px 20px;
     font-size: 14px;
     font-weight: 500;
-    color: #04a9f4;
+    color: #006d77;
     height: 20px;
 	width: 150px;
     text-align:center;
 	border-radius: 20px;
-    border: 0.2px solid #04a9f4;
+    border: 0.2px solid #006d77;
 	background: #061d2b;
 	
     moz-transition: all .4s ease-in-out;
@@ -993,7 +993,7 @@ section.section-3.subscribe-form .input-group-append{
     text-align:center;
 	border-radius: 20px;
     border: 0.2px solid white;
-	background: #04a9f4;
+	background: #006d77;
   background-position: 100% 0;
     moz-transition: all .4s ease-in-out;
     -o-transition: all .4s ease-in-out;

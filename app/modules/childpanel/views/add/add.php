@@ -13,7 +13,7 @@
 <div class="row justify-content-md-center justify-content-xl-center m-t-30" id="result_ajaxSearch">
   <div class="col-md-10 col-xl-10 ">
     <div class="card">
-        <div class="card-header d-flex align-items-center" style="border: 0.1px solid #05d0a0; border-radius: 3.5px 3.5px 0px 0px; background: #05d0a0;">
+        <div class="card-header d-flex align-items-center" style="border: 0.1px solid #006d77; border-radius: 3.5px 3.5px 0px 0px; background: #006d77;">
         <div class="tabs-list">
           <ul class="nav nav-tabs">
             <li class="">
@@ -108,10 +108,10 @@
       height: 5px;
       width: 250px;
       background: #eca28d;
-      background: -webkit-linear-gradient(45deg, #eca28d, #f98c6b) !important;
-      background: -moz- oldlinear-gradient(45deg, #eca28d, #f98c6b) !important;
-      background: -o-linear-gradient(45deg, #eca28d, #f98c6b) !important;
-      background: linear-gradient(45deg, #eca28d, #f98c6b) !important;
+      background: -webkit-linear-gradient(45deg, #eca28d, #83c5be) !important;
+      background: -moz- oldlinear-gradient(45deg, #eca28d, #83c5be) !important;
+      background: -o-linear-gradient(45deg, #eca28d, #83c5be) !important;
+      background: linear-gradient(45deg, #eca28d, #83c5be) !important;
       position: relative;
       border-radius: 30px; }
     .page-title .border-line::before {
@@ -122,7 +122,7 @@
       height: 10px;
       width: 10px;
       border-radius: 50%;
-      background: #fa6d7e;
+      background: #006d77;
       -webkit-animation-duration: 6s;
       animation-duration: 6s;
       -webkit-animation-timing-function: linear;

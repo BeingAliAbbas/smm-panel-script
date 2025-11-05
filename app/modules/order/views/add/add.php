@@ -206,7 +206,7 @@ $currency_symbol = $current_currency ? $current_currency->symbol : get_option('c
   .announcement-container {
     margin: 20px auto !important;
     padding: 20px !important;
-    /* background: linear-gradient(135deg, #051d2f, #0a3b5e) !important; */
+    /* background: linear-gradient(135deg, #004d54, #0a3b5e) !important; */
     color: #ffffff !important;
     border: 0.5px solid #0e4c75 !important;
     border-radius: 15px !important;
@@ -714,7 +714,7 @@ $currency_symbol = $current_currency ? $current_currency->symbol : get_option('c
                   </div>
 
                   <div class="form-actions left">
-                  <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1" style="border-radius: 5px !important; background-color: #04a9f4; color: #fff; min-width: 120px; margin-right: 5px; margin-top: 15px; margin-bottom: 5px;">
+                  <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1" style="border-radius: 5px !important; background-color: #006d77; color: #fff; min-width: 120px; margin-right: 5px; margin-top: 15px; margin-bottom: 5px;">
                   <?=lang("place_order")?>
                   </button>
                   </div>
@@ -802,10 +802,10 @@ $currency_symbol = $current_currency ? $current_currency->symbol : get_option('c
       height: 5px;
       width: 250px;
       background: #eca28d;
-      background: -webkit-linear-gradient(45deg, #eca28d, #f98c6b) !important;
-      background: -moz- oldlinear-gradient(45deg, #eca28d, #f98c6b) !important;
-      background: -o-linear-gradient(45deg, #eca28d, #f98c6b) !important;
-      background: linear-gradient(45deg, #eca28d, #f98c6b) !important;
+      background: -webkit-linear-gradient(45deg, #eca28d, #83c5be) !important;
+      background: -moz- oldlinear-gradient(45deg, #eca28d, #83c5be) !important;
+      background: -o-linear-gradient(45deg, #eca28d, #83c5be) !important;
+      background: linear-gradient(45deg, #eca28d, #83c5be) !important;
       position: relative;
       border-radius: 30px; }
     .page-title .border-line::before {
@@ -816,7 +816,7 @@ $currency_symbol = $current_currency ? $current_currency->symbol : get_option('c
       height: 10px;
       width: 10px;
       border-radius: 50%;
-      background: #fa6d7e;
+      background: #006d77;
       -webkit-animation-duration: 6s;
       animation-duration: 6s;
       -webkit-animation-timing-function: linear;

@@ -9,7 +9,7 @@
     <div class="row">
 	  <div class="col-sm-7 col-lg-7 item">
        <div class="card">
-          <div class="card-header d-flex align-items-center" style="border: 0.1px solid #1B78FC; border-radius: 3.5px 3.5px 0px 0px; background: #1B78FC;">
+          <div class="card-header d-flex align-items-center" style="border: 0.1px solid #006d77; border-radius: 3.5px 3.5px 0px 0px; background: #006d77;">
             <div class="tabs-list">
               <ul class="nav nav-tabs">
                 <li class="mmm">
