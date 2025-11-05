@@ -9,6 +9,24 @@
           <i class="fe fe-info"></i> Manage multiple currencies for your SMM panel. Users can switch between currencies in the sidebar. All amounts will be converted based on exchange rates.
         </div>
         
+        <div class="mb-3">
+          <button type="button" class="btn btn-success" id="fetchRatesBtn">
+            <i class="fe fe-download"></i> Fetch Latest Exchange Rates
+          </button>
+          <button type="button" class="btn btn-info" id="showCronUrl">
+            <i class="fe fe-link"></i> Show Cron URL
+          </button>
+        </div>
+        
+        <div class="alert alert-warning d-none" id="cronUrlBox">
+          <strong>Cron URL:</strong><br>
+          <code id="cronUrlText"></code>
+          <button type="button" class="btn btn-sm btn-primary ml-2" id="copyCronUrl">
+            <i class="fe fe-copy"></i> Copy
+          </button>
+          <br><small class="text-muted mt-2 d-block">Use this URL in your cron job to automatically update exchange rates daily.</small>
+        </div>
+        
         <div class="table-responsive">
           <table class="table table-hover table-bordered table-vcenter card-table">
             <thead>
@@ -31,8 +49,16 @@
               ?>
               <tr>
                 <td><strong><?=$currency->code?></strong></td>
-                <td><?=$currency->name?></td>
-                <td><?=$currency->symbol?></td>
+                <td>
+                  <input type="text" class="form-control form-control-sm currency-name" 
+                         data-id="<?=$currency->id?>" value="<?=htmlspecialchars($currency->name)?>" 
+                         style="width: 150px;">
+                </td>
+                <td>
+                  <input type="text" class="form-control form-control-sm currency-symbol" 
+                         data-id="<?=$currency->id?>" value="<?=htmlspecialchars($currency->symbol)?>" 
+                         style="width: 80px;">
+                </td>
                 <td>
                   <input type="number" step="0.00000001" class="form-control form-control-sm exchange-rate" 
                          data-id="<?=$currency->id?>" value="<?=$currency->exchange_rate?>" style="width: 150px;">
@@ -54,7 +80,7 @@
                   </label>
                 </td>
                 <td>
-                  <button class="btn btn-sm btn-success update-rate" data-id="<?=$currency->id?>">
+                  <button class="btn btn-sm btn-success update-currency" data-id="<?=$currency->id?>">
                     <i class="fe fe-check"></i> <?=lang("Update")?>
                   </button>
                 </td>
@@ -117,26 +143,56 @@
 
 <script>
 $(document).ready(function() {
-  // Update exchange rate
-  $('.update-rate').on('click', function() {
+  // Update currency (name, symbol, and rate)
+  $('.update-currency').on('click', function() {
     var id = $(this).data('id');
+    var name = $('.currency-name[data-id="' + id + '"]').val();
+    var symbol = $('.currency-symbol[data-id="' + id + '"]').val();
     var rate = $('.exchange-rate[data-id="' + id + '"]').val();
     
+    // Validate inputs
+    if (!name || !symbol || !rate) {
+      show_message('All fields are required', 'error');
+      return;
+    }
+    
+    // Update both currency details and exchange rate
     $.ajax({
-      url: '<?=cn("currencies/update_rate")?>',
+      url: '<?=cn("currencies/update_currency")?>',
       type: 'POST',
       data: {
         id: id,
-        exchange_rate: rate,
+        name: name,
+        symbol: symbol,
         <?=$this->security->get_csrf_token_name()?>: '<?=$this->security->get_csrf_hash()?>'
       },
       dataType: 'json',
       success: function(response) {
         if (response.status == 'success') {
-          show_message(response.message, 'success');
+          // Now update the exchange rate
+          $.ajax({
+            url: '<?=cn("currencies/update_rate")?>',
+            type: 'POST',
+            data: {
+              id: id,
+              exchange_rate: rate,
+              <?=$this->security->get_csrf_token_name()?>: '<?=$this->security->get_csrf_hash()?>'
+            },
+            dataType: 'json',
+            success: function(rateResponse) {
+              if (rateResponse.status == 'success') {
+                show_message('Currency updated successfully', 'success');
+              } else {
+                show_message(rateResponse.message, 'error');
+              }
+            }
+          });
         } else {
           show_message(response.message, 'error');
         }
+      },
+      error: function() {
+        show_message('Failed to update currency', 'error');
       }
     });
   });
@@ -184,6 +240,86 @@ $(document).ready(function() {
       }
     });
   });
+  
+  // Fetch latest exchange rates
+  $('#fetchRatesBtn').on('click', function() {
+    var btn = $(this);
+    btn.prop('disabled', true).html('<i class="fe fe-loader"></i> Fetching...');
+    
+    $.ajax({
+      url: '<?=cn("currencies/fetch_rates")?>',
+      type: 'POST',
+      data: {
+        <?=$this->security->get_csrf_token_name()?>: '<?=$this->security->get_csrf_hash()?>'
+      },
+      dataType: 'json',
+      success: function(response) {
+        btn.prop('disabled', false).html('<i class="fe fe-download"></i> Fetch Latest Exchange Rates');
+        
+        if (response.status == 'success') {
+          show_message(response.message, 'success');
+          // Reload page to show updated rates
+          setTimeout(function() {
+            location.reload();
+          }, 1500);
+        } else {
+          show_message(response.message, 'error');
+        }
+      },
+      error: function() {
+        btn.prop('disabled', false).html('<i class="fe fe-download"></i> Fetch Latest Exchange Rates');
+        show_message('Failed to fetch exchange rates', 'error');
+      }
+    });
+  });
+  
+  // Show cron URL
+  $('#showCronUrl').on('click', function() {
+    var cronBox = $('#cronUrlBox');
+    var baseUrl = '<?=base_url()?>';
+    var cronUrl = baseUrl + 'currencies/cron_fetch_rates';
+    
+    // Add token if available
+    var token = '<?=get_option("currency_cron_token", "")?>';
+    if (token) {
+      cronUrl += '?token=' + token;
+    }
+    
+    $('#cronUrlText').text(cronUrl);
+    cronBox.removeClass('d-none');
+  });
+  
+  // Copy cron URL
+  $('#copyCronUrl').on('click', function() {
+    var cronUrl = $('#cronUrlText').text();
+    
+    // Use modern Clipboard API with fallback for older browsers
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(cronUrl).then(function() {
+        show_message('Cron URL copied to clipboard!', 'success');
+      }).catch(function() {
+        // Fallback if clipboard API fails
+        copyToClipboardFallback(cronUrl);
+      });
+    } else {
+      // Fallback for older browsers
+      copyToClipboardFallback(cronUrl);
+    }
+  });
+  
+  // Fallback function for older browsers
+  function copyToClipboardFallback(text) {
+    var tempInput = $('<input>');
+    $('body').append(tempInput);
+    tempInput.val(text).select();
+    try {
+      document.execCommand('copy');
+      show_message('Cron URL copied to clipboard!', 'success');
+    } catch (err) {
+      show_message('Failed to copy. Please copy manually.', 'error');
+    }
+    tempInput.remove();
+  }
 });
 
 function show_message(message, type) {

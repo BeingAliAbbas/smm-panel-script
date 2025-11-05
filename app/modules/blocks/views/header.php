@@ -9,104 +9,189 @@
 /* ===== Header Currency Switcher ===== */
 .currency-switcher-header {
   position: absolute;
-  right: 25px;
-  top: 18px;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
-  /* background: rgba(255,255,255,0.1); */
-  /* border: 1px solid rgba(255,255,255,0.2); */
-  /* border-radius: 8px; */
-  padding: 4px 10px;
   z-index: 5000;
   color: #fff;
   font-size: 13px;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  transition: background 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s ease;
+  margin-top: 8px; /* Adjust based on your header height */
 }
 
-.currency-switcher-header label {
-  margin-right: 8px;
-  font-weight: 500;
-  color: #fff;
-  font-size: 13px;
-  white-space: nowrap;
-}
 .currency-switcher-header select {
-  background-color: rgba(255,255,255,0.15);
+  background-color: rgba(255,255,255,0.2);
   color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 25px 5px 10px;
-  font-size: 13px;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 6px;
+  padding: 6px 28px 6px 10px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
   outline: none;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  min-width: 120px;
+  width: 70px;
+  height: 32px;
+  transition: all 0.3s ease;
+         margin-top: -12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
+
+.currency-switcher-header select:hover {
+  background-color: rgba(255,255,255,0.25);
+  border-color: rgba(255,255,255,0.4);
+}
+
+.currency-switcher-header select:focus {
+  background-color: rgba(255,255,255,0.3);
+  border-color: rgba(255,255,255,0.5);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+
 .currency-switcher-header select option {
-  color: #000; /* ensure options readable */
+  background: #fff;
+  color: #333;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: normal;
 }
+
 .currency-switcher-header .select-wrap {
   position: relative;
+  display: flex;
+  align-items: center;
 }
+
 .currency-switcher-header .select-wrap::after {
   content: "";
   position: absolute;
-  right: 8px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 6px solid #fff;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid #fff;
   pointer-events: none;
+  transition: transform 0.2s ease;
 }
+
+.currency-switcher-header select:focus + .select-wrap::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* Hide the currency label */
+.currency-switcher-header .label {
+  display: none;
+}
+
+/* Mobile Styles */
 @media (max-width: 768px) {
   .currency-switcher-header {
-    top: 12px;
-    right: 12px;
-    padding: 4px 8px;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 6px;
   }
-  .currency-switcher-header label {
-    display: none;
-  }
+  
   .currency-switcher-header select {
-    min-width: 100px;
+    width: 60px;
+    height: 30px;
+    padding: 5px 24px 5px 8px;
+    font-size: 13px;
+    border-radius: 5px;
+  }
+  
+  .currency-switcher-header .select-wrap::after {
+    right: 8px;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 4px solid #fff;
   }
 }
 
+@media (max-width: 480px) {
+  .currency-switcher-header {
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 5px;
+  }
+  
+  .currency-switcher-header select {
+    width: 55px;
+    height: 28px;
+    padding: 4px 22px 4px 6px;
+    font-size: 12px;
+    border-radius: 4px;
+  }
+  
+  
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+  .currency-switcher-header {
+    right: 6px;
+  }
+  
+  .currency-switcher-header select {
+    width: 50px;
+    height: 26px;
+    padding: 3px 20px 3px 5px;
+    font-size: 11px;
+  }
+}
+
+
+.card-title.text-center {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+
+.notifcation.m-r-10 {
+  z-index: 100;
+  position: relative;
+}
 </style>
  <!--Not Sidenav-->
     
 <div class="top-header">
-  <div class="show-btn" onclick="openNav()" style="font-size: 45px; margin: 20px 0 0 20px; cursor: pointer; display: inline-block; position: absolute; color: #fff; z-index: 100">
+  <div class="show-btn" onclick="openNav()" style="font-size: 45px; margin: 20px 0 0 20px; cursor: pointer; display: inline-block; position: absolute; left: 0; color: #fff; z-index: 100">
     <span class="header-toggler-icon"></span>
-    
   </div>
   
-  <!-- Header currency switcher (moved from sidenav) -->
-<div class="currency-switcher-header" id="currencySwitcherHeader" role="region" aria-label="<?=lang('Currency_switcher')?>">
-  <span class="label"><?=lang("Currency")?>:</span>
-  <div class="select-wrap">
-    <select id="currencySelectorHeader" class="form-control form-control-sm" aria-label="<?=lang('Select_currency')?>">
-      <?php
-        $current_currency = get_current_currency();
-        $currencies = get_active_currencies();
-        if (!empty($currencies)) {
-          foreach ($currencies as $currency) {
-      ?>
-      <option value="<?=$currency->code?>" <?=($current_currency && $current_currency->code == $currency->code) ? 'selected' : ''?>>
-        <?=$currency->code?> - <?=$currency->symbol?>
-      </option>
-      <?php
+  <!-- Header currency switcher -->
+  <div class="currency-switcher-header" id="currencySwitcherHeader" role="region" aria-label="<?=lang('Currency_switcher')?>">
+    <span class="label"><?=lang("Currency")?>:</span>
+    <div class="select-wrap">
+      <select id="currencySelectorHeader" class="form-control form-control-sm" aria-label="<?=lang('Select_currency')?>">
+        <?php
+          $current_currency = get_current_currency();
+          $currencies = get_active_currencies();
+          if (!empty($currencies)) {
+            foreach ($currencies as $currency) {
+        ?>
+        <option value="<?=$currency->code?>" <?=($current_currency && $current_currency->code == $currency->code) ? 'selected' : ''?>>
+          <?=$currency->symbol?>
+        </option>
+        <?php
+            }
           }
-        }
-      ?>
-    </select>
+        ?>
+      </select>
+    </div>
   </div>
-</div>
 
         <?php
           if (session('uid_tmp')) {
@@ -184,26 +269,6 @@
                   <?=lang("Admin_account")?>
                 <?php }?> 
               </h6>
-              
-              <!-- Currency Switcher -->
-              <div class="currency-switcher" style="margin-top: 10px;">
-                <label style="font-size: 12px; margin-bottom: 5px; display: block;"><?=lang("Currency")?></label>
-                <select id="currencySelector" class="form-control form-control-sm" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2);">
-                  <?php
-                    $current_currency = get_current_currency();
-                    $currencies = get_active_currencies();
-                    if (!empty($currencies)) {
-                      foreach ($currencies as $currency) {
-                  ?>
-                  <option value="<?=$currency->code?>" <?=($current_currency && $current_currency->code == $currency->code) ? 'selected' : ''?>>
-                    <?=$currency->code?> - <?=$currency->symbol?>
-                  </option>
-                  <?php 
-                      }
-                    }
-                  ?>
-                </select>
-              </div>
         </div>
       <!--Below SideNavHeader-->
       <div id="main-container">
