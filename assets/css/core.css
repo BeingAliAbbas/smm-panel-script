@@ -9703,11 +9703,11 @@ button.bg-dark:focus {
 }
 
 .text-primary {
-  color: #ff6f61 !important;
+  color: #e29578 !important;
 }
 
 a.text-primary:hover, a.text-primary:focus {
-  color: #ff6f61 !important;
+  color: #e29578 !important;
 }
 
 .text-secondary {
@@ -11655,9 +11655,9 @@ a.icon:hover {
 }
 
 .nav-tabs .nav-link:hover:not(.disabled) {
-  border-color: #ff6f61;
+  border-color: #e29578;
   font-weight: 500;
-  color: #ff6f61;
+  color: #e29578;
 }
 
 .nav-tabs .nav-link.active {

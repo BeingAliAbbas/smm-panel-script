@@ -51,7 +51,7 @@ body{
   
   @keyframes change_color {
 	from {background: #ffffff;}
-	to {background: #cd201f;}
+	to {background: #e29578;}
   }
   
   .news_announcement .modal-right .modal-dialog {
@@ -377,12 +377,12 @@ body{
 	vertical-align: middle;
 	color: #fff;
 	font-size: 15px;
-	background: #2DCEE3;
+	background: #006d77;
 	display: table-cell;
   }
   
   .ticket-contents .item .avatar span.text-circle.admin{
-	background: #ff6f61;
+	background: #e29578;
   }
   
   .ticket-contents .item .content .username{
@@ -463,7 +463,7 @@ body{
   }
   
   .settings .sidebar .item li.active > a,.settings .sidebar .item li:hover > a {
-	color: #ff6f61;
+	color: #e29578;
 	font-weight: 600;
   }
   
@@ -604,8 +604,8 @@ body{
 	background: linear-gradient(to right, #373b44, #4286f4);}
   
   .theme-default .nav-tabs .nav-link.active, .theme-default .nav-tabs .nav-link:hover {
-	  border-color: #04a9f4;
-	  color: #ff6f61; }
+	  border-color: #006d77;
+	  color: #e29578; }
   .theme-purple .nav-tabs .nav-link.active, .theme-purple .nav-tabs .nav-link:hover {
 	  border-color: #9a56ff;
 	  color: #9a56ff; } 
@@ -614,8 +614,8 @@ body{
 	  
 	  .theme-light-blue .nav-tabs .nav-link.active, 
 		.theme-light-blue .nav-tabs .nav-link:hover {
-			border: 1px solid #04a9f4;
-			background: linear-gradient(to bottom, #04c5f8, #048fd8);
+			border: 1px solid #006d77;
+			background: linear-gradient(to bottom, #83c5be, #006d77);
 			border-radius: 5px;
 			color: #000;
 			font-weight: 600;
