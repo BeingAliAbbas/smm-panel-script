@@ -259,13 +259,19 @@ $(document).ready(function() {
 });
 
 function show_message(message, type) {
-  $.toast({
-    heading: type == 'success' ? 'Success' : 'Error',
-    text: message,
-    position: 'top-right',
-    loaderBg: type == 'success' ? '#5ba035' : '#c9302c',
-    icon: type,
-    hideAfter: 3000
-  });
+  // Check if jQuery Toast plugin is available
+  if (typeof $.toast === 'function') {
+    $.toast({
+      heading: type == 'success' ? 'Success' : 'Error',
+      text: message,
+      position: 'top-right',
+      loaderBg: type == 'success' ? '#5ba035' : '#c9302c',
+      icon: type,
+      hideAfter: 3000
+    });
+  } else {
+    // Fallback to alert if toast plugin is not available
+    alert((type == 'success' ? 'Success: ' : 'Error: ') + message);
+  }
 }
 </script>

@@ -320,6 +320,8 @@ class setting extends MX_Controller {
         
         if ($result['status'] === 'success') {
             // Update the option
+            // Note: 'new_currecry_rate' is the existing option name in the database
+            // We maintain this spelling for backward compatibility
             update_option('new_currecry_rate', $result['rate']);
             
             echo json_encode([
