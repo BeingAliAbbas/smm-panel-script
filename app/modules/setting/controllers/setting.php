@@ -247,6 +247,46 @@ class setting extends MX_Controller {
     }
 
     /**
+     * Generate secure cron token for exchange rate updates
+     * Called via AJAX from the currency settings page
+     */
+    public function generate_cron_token() {
+        if ($this->input->method() !== 'post') {
+            ms([
+                'status'  => 'error',
+                'message' => 'Invalid method'
+            ]);
+        }
+
+        // Check if token already exists
+        $existing_token = get_option('exchange_rate_cron_token', '');
+        
+        if ($existing_token) {
+            // Return existing token
+            ms([
+                'status'  => 'success',
+                'token'   => $existing_token
+            ]);
+        }
+
+        // Generate a cryptographically secure random token
+        if (function_exists('random_bytes')) {
+            $token = bin2hex(random_bytes(32));
+        } else {
+            // Fallback for older PHP versions
+            $token = bin2hex(openssl_random_pseudo_bytes(32));
+        }
+
+        // Save the token
+        update_option('exchange_rate_cron_token', $token);
+
+        ms([
+            'status'  => 'success',
+            'token'   => $token
+        ]);
+    }
+
+    /**
      * Cron-accessible endpoint to automatically update exchange rate
      * Access via: yoursite.com/setting/cron_update_exchange_rate?token=xxx
      */
@@ -255,7 +295,8 @@ class setting extends MX_Controller {
         $token = $this->input->get('token', true);
         $expected_token = get_option('exchange_rate_cron_token', '');
         
-        if (empty($expected_token) || $token !== $expected_token) {
+        // Use hash_equals to prevent timing attacks
+        if (empty($expected_token) || !hash_equals($expected_token, (string)$token)) {
             echo json_encode([
                 'status' => 'error',
                 'message' => 'Invalid or missing token'
@@ -314,6 +355,9 @@ class setting extends MX_Controller {
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'SMM-Panel-Script/1.0');
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
         
         $response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);

@@ -198,29 +198,34 @@ $(document).ready(function() {
   $('#showCronUrlBtn').on('click', function() {
     var cronBox = $('#cronUrlBox');
     var baseUrl = '<?=base_url()?>';
-    var targetCurrency = '<?=get_option("currency_code", "USD")?>';
+    var btn = $(this);
     
-    // Generate or get the cron token
-    var token = '<?=get_option("exchange_rate_cron_token", "")?>';
-    if (!token) {
-      // Generate a random token if it doesn't exist
-      token = generateRandomToken();
-      // Save it via AJAX
-      $.ajax({
-        url: '<?=cn("setting/ajax_general_settings")?>',
-        type: 'POST',
-        data: {
-          exchange_rate_cron_token: token,
-          <?=$this->security->get_csrf_token_name()?>: '<?=$this->security->get_csrf_hash()?>'
-        },
-        dataType: 'json'
-      });
-    }
+    btn.prop('disabled', true).html('<i class="fe fe-loader"></i> Loading...');
     
-    var cronUrl = baseUrl + 'setting/cron_update_exchange_rate?token=' + token;
-    
-    $('#cronUrlText').text(cronUrl);
-    cronBox.removeClass('d-none');
+    // Generate token server-side for better security
+    $.ajax({
+      url: '<?=cn("setting/generate_cron_token")?>',
+      type: 'POST',
+      data: {
+        <?=$this->security->get_csrf_token_name()?>: '<?=$this->security->get_csrf_hash()?>'
+      },
+      dataType: 'json',
+      success: function(response) {
+        btn.prop('disabled', false).html('<i class="fe fe-link"></i> Show Cron URL for Auto-Update');
+        
+        if (response.status == 'success') {
+          var cronUrl = baseUrl + 'setting/cron_update_exchange_rate?token=' + response.token;
+          $('#cronUrlText').text(cronUrl);
+          cronBox.removeClass('d-none');
+        } else {
+          show_message(response.message || 'Failed to generate cron URL', 'error');
+        }
+      },
+      error: function() {
+        btn.prop('disabled', false).html('<i class="fe fe-link"></i> Show Cron URL for Auto-Update');
+        show_message('Failed to generate cron URL', 'error');
+      }
+    });
   });
   
   // Copy cron URL
@@ -250,11 +255,6 @@ $(document).ready(function() {
       show_message('Failed to copy. Please copy manually.', 'error');
     }
     tempInput.remove();
-  }
-  
-  // Generate random token
-  function generateRandomToken() {
-    return Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
   }
 });
 
