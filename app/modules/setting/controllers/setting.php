@@ -196,4 +196,158 @@ class setting extends MX_Controller {
             ]);
         }
     }
+
+    /**
+     * Fetch current exchange rate from API (USD to target currency)
+     * Called via AJAX from the currency settings page
+     */
+    public function fetch_exchange_rate() {
+        if ($this->input->method() !== 'post') {
+            ms([
+                'status'  => 'error',
+                'message' => 'Invalid method'
+            ]);
+        }
+
+        $target_currency = $this->input->post('target_currency', true);
+        
+        if (empty($target_currency)) {
+            $target_currency = get_option('currency_code', 'PKR');
+        }
+
+        // Use USD as base currency for the API
+        $base_currency = 'USD';
+        
+        if ($target_currency === 'USD') {
+            ms([
+                'status'  => 'error',
+                'message' => 'Exchange rate is not needed when target currency is USD'
+            ]);
+        }
+
+        // Fetch exchange rate from API
+        $result = $this->fetch_rate_from_api($base_currency, $target_currency);
+        
+        if ($result['status'] === 'success') {
+            ms([
+                'status'  => 'success',
+                'message' => 'Exchange rate fetched successfully',
+                'data'    => [
+                    'rate' => $result['rate'],
+                    'base' => $base_currency,
+                    'target' => $target_currency
+                ]
+            ]);
+        } else {
+            ms([
+                'status'  => 'error',
+                'message' => $result['message']
+            ]);
+        }
+    }
+
+    /**
+     * Cron-accessible endpoint to automatically update exchange rate
+     * Access via: yoursite.com/setting/cron_update_exchange_rate?token=xxx
+     */
+    public function cron_update_exchange_rate() {
+        // Check token for security
+        $token = $this->input->get('token', true);
+        $expected_token = get_option('exchange_rate_cron_token', '');
+        
+        if (empty($expected_token) || $token !== $expected_token) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Invalid or missing token'
+            ]);
+            return;
+        }
+
+        $target_currency = get_option('currency_code', 'PKR');
+        $base_currency = 'USD';
+        
+        if ($target_currency === 'USD') {
+            echo json_encode([
+                'status'  => 'error',
+                'message' => 'Exchange rate is not needed when target currency is USD'
+            ]);
+            return;
+        }
+
+        // Fetch exchange rate from API
+        $result = $this->fetch_rate_from_api($base_currency, $target_currency);
+        
+        if ($result['status'] === 'success') {
+            // Update the option
+            update_option('new_currecry_rate', $result['rate']);
+            
+            echo json_encode([
+                'status'  => 'success',
+                'message' => 'Exchange rate updated successfully',
+                'data'    => [
+                    'rate' => $result['rate'],
+                    'base' => $base_currency,
+                    'target' => $target_currency,
+                    'updated_at' => date('Y-m-d H:i:s')
+                ]
+            ]);
+        } else {
+            echo json_encode([
+                'status'  => 'error',
+                'message' => $result['message']
+            ]);
+        }
+    }
+
+    /**
+     * Helper method to fetch exchange rate from API
+     * Uses exchangerate-api.com (free, no API key required)
+     */
+    private function fetch_rate_from_api($base_currency, $target_currency) {
+        // Use exchangerate-api.com (free tier, no API key required)
+        $api_url = "https://api.exchangerate-api.com/v4/latest/{$base_currency}";
+        
+        // Fetch exchange rates using cURL
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $api_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curl_error = curl_error($ch);
+        curl_close($ch);
+        
+        if ($http_code !== 200 || !$response) {
+            return [
+                'status' => 'error',
+                'message' => 'Failed to fetch exchange rates from API' . ($curl_error ? ': ' . $curl_error : '')
+            ];
+        }
+        
+        $data = json_decode($response, true);
+        
+        if (!isset($data['rates']) || empty($data['rates'])) {
+            return [
+                'status' => 'error',
+                'message' => 'Invalid API response'
+            ];
+        }
+        
+        if (!isset($data['rates'][$target_currency])) {
+            return [
+                'status' => 'error',
+                'message' => "Exchange rate for {$target_currency} not found in API response"
+            ];
+        }
+        
+        $rate = $data['rates'][$target_currency];
+        
+        return [
+            'status' => 'success',
+            'rate' => $rate
+        ];
+    }
 }
