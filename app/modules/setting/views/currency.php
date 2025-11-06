@@ -12,7 +12,7 @@
               <div class="form-group">
                 <label class="form-label"><?=lang("currency_code")?></label>
                 <small><?=lang("the_paypal_payments_only_supports_these_currencies")?></small>
-                <select  name="currency_code" class="form-control square">
+                <select  name="currency_code" id="currency_code" class="form-control square">
                   <?php 
                     $currency_codes = currency_codes();
                     if(!empty($currency_codes)){
@@ -116,7 +116,7 @@
                       </span>
                       <input type="text" class="form-control text-right" name="new_currecry_rate" id="new_currecry_rate" value="<?=get_option('new_currecry_rate', 1)?>">
                       <span class="input-group-append">
-                        <span class="input-group-text"><?=get_option("currency_code", "USD")?></span>
+                        <span class="input-group-text" id="target_currency_display"><?=get_option("currency_code", "USD")?></span>
                       </span>
                     </div>
                     <small class="text-muted"><span class="text-danger">*</span> <?=lang("if_you_dont_want_to_change_currency_rate_then_leave_this_currency_rate_field_to_1")?></small>
@@ -124,7 +124,7 @@
                   
                   <div class="form-group">
                     <button type="button" class="btn btn-success" id="fetchExchangeRateBtn">
-                      <i class="fe fe-download"></i> Fetch Current Exchange Rate (USD to <?=get_option("currency_code", "USD")?>)
+                      <i class="fe fe-download"></i> <span id="fetch_btn_text">Fetch Current Exchange Rate (USD to <?=get_option("currency_code", "USD")?>)</span>
                     </button>
                     <button type="button" class="btn btn-info ml-2" id="showCronUrlBtn">
                       <i class="fe fe-link"></i> Show Cron URL for Auto-Update
@@ -156,10 +156,25 @@
 
 <script>
 $(document).ready(function() {
+  // Function to update currency display
+  function updateCurrencyDisplay() {
+    var selectedCurrency = $('#currency_code').val() || 'USD';
+    $('#target_currency_display').text(selectedCurrency);
+    $('#fetch_btn_text').text('Fetch Current Exchange Rate (USD to ' + selectedCurrency + ')');
+  }
+  
+  // Update on page load
+  updateCurrencyDisplay();
+  
+  // Update when currency dropdown changes
+  $('#currency_code').on('change', function() {
+    updateCurrencyDisplay();
+  });
+  
   // Fetch current exchange rate from API
   $('#fetchExchangeRateBtn').on('click', function() {
     var btn = $(this);
-    var targetCurrency = '<?=get_option("currency_code", "USD")?>';
+    var targetCurrency = $('#currency_code').val() || 'USD';
     
     if (targetCurrency === 'USD') {
       show_message('Exchange rate is not needed when target currency is USD', 'error');
@@ -177,7 +192,7 @@ $(document).ready(function() {
       },
       dataType: 'json',
       success: function(response) {
-        btn.prop('disabled', false).html('<i class="fe fe-download"></i> Fetch Current Exchange Rate (USD to ' + targetCurrency + ')');
+        btn.prop('disabled', false).html('<i class="fe fe-download"></i> <span id="fetch_btn_text">Fetch Current Exchange Rate (USD to ' + targetCurrency + ')</span>');
         
         if (response.status == 'success') {
           // Update the rate field
@@ -188,7 +203,7 @@ $(document).ready(function() {
         }
       },
       error: function() {
-        btn.prop('disabled', false).html('<i class="fe fe-download"></i> Fetch Current Exchange Rate (USD to ' + targetCurrency + ')');
+        btn.prop('disabled', false).html('<i class="fe fe-download"></i> <span id="fetch_btn_text">Fetch Current Exchange Rate (USD to ' + targetCurrency + ')</span>');
         show_message('Failed to fetch exchange rate', 'error');
       }
     });
