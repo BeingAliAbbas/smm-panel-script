@@ -592,6 +592,10 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
             $new_balance = $user_balance - $total_charge;
             $new_balance = ($new_balance > 0) ? $new_balance : 0;
             $this->db->update($this->tb_users, ["balance" => $new_balance], ["id" => session("uid")]);
+            
+            // Log balance deduction for order
+            $this->load->helper('balance_logs');
+            log_order_deduction(session("uid"), $ids, $total_charge, $user_balance, $new_balance);
         }
 
         /*---------- Helper Function to Send WhatsApp Notification ----------*/
@@ -824,8 +828,13 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 			}
 			if (!empty($orders)) {
 				$this->db->insert_batch($this->tb_order, $orders);
+				$old_balance = $user->balance;
 				$new_balance = $user->balance - $sum_charge;
 				$this->db->update($this->tb_users, ["balance" => $new_balance], ["id" => session("uid")]);
+				
+				// Log balance deduction for mass order
+				$this->load->helper('balance_logs');
+				log_order_deduction(session("uid"), 'mass_order_' . date('YmdHis'), $sum_charge, $old_balance, $new_balance);
 			}
 		}
 		if (!empty($error_details)) {
@@ -997,8 +1006,15 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 				$user = $this->model->get("id, balance", $this->tb_users, ["id"=> $check_item->uid]);
 				if (!empty($user) && !in_array($check_item->status, array('partial', 'cancelled', 'refunded'))) {
 					$balance = $user->balance;
-					$balance += $charge - $real_charge;
-					$this->db->update($this->tb_users, ["balance" => $balance], ["id"=> $check_item->uid]);
+					$refund_amount = $charge - $real_charge;
+					$new_balance = $balance + $refund_amount;
+					$this->db->update($this->tb_users, ["balance" => $new_balance], ["id"=> $check_item->uid]);
+					
+					// Log balance refund
+					if ($refund_amount > 0) {
+						$this->load->helper('balance_logs');
+						log_refund($check_item->uid, $check_item->ids, $refund_amount, $balance, $new_balance);
+					}
 				}
 				$data['charge'] = $real_charge;
 				$data['formal_charge'] = $formal_charge;
