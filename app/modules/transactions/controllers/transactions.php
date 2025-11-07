@@ -169,6 +169,10 @@ class transactions extends MX_Controller {
 				$new_balance      = $current_balance + ($check_item->amount - $check_item->txn_fee);
 				$this->db->update($this->tb_users, ["balance" => $new_balance], ["id" => $check_item->uid]);
 
+				// Log balance change
+				$this->load->helper('balance_logs');
+				log_payment_addition($check_item->uid, $transaction_id, ($check_item->amount - $check_item->txn_fee), $current_balance, $new_balance, $payment_method);
+
 				$this->send_transaction_success_whatsapp($check_item->uid, $transaction_id, $check_item->amount);
 			}
 
@@ -239,6 +243,7 @@ class transactions extends MX_Controller {
 		}
 
 		// Update user balance
+		$old_balance = $user->balance;
 		$new_balance = $user->balance + $funds;
 		$this->db->update($this->tb_users, ['balance' => $new_balance], ['id' => $user->id]);
 
@@ -255,6 +260,10 @@ class transactions extends MX_Controller {
 			'created'        => NOW,
 		];
 		$this->db->insert($this->tb_transaction_logs, $data_log);
+
+		// Log balance change
+		$this->load->helper('balance_logs');
+		log_manual_funds($user->id, $funds, $old_balance, $new_balance, $note, $transaction_id);
 
 		ms([
 			'status'  => 'success',

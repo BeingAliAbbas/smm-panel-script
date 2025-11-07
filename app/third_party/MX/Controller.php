@@ -61,7 +61,7 @@ class MX_Controller
 			}
         }
 
-		if (!in_array(segment(2), array('cron', 'set_language')) && !in_array(segment(3), array('cron', 'complete'))) {
+		if (!in_array(segment(2), array('cron', 'set_language', 'cron_fetch_rates')) && !in_array(segment(3), array('cron', 'complete'))) {
 			$allowed_controllers = array('auth', 'api', 'client', 'services', 'crons');
 			$allowed_page = array('logout');
 			if (!session('uid') && !$this->__check_maintenance_mode() && !in_array($this->router->fetch_class(), $allowed_controllers) && !in_array($this->router->fetch_method(), $allowed_page)) {

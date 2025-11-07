@@ -310,6 +310,22 @@ $lang["Amount_paid_includes_fee"] = "Amount Paid (includes fee)";
 $lang["Paid"]                     = "Paid";
 $lang["waiting_for_buyer_funds"]  = "Waiting for buyer funds...";
 $lang["cancelled_timed_out"]      = "Cancelled/Timed Out";
+
+/**
+ *
+ * Balance Logs
+ *
+ */
+$lang["Balance_Logs"]             = "Balance Logs";
+$lang["Balance_Change_History"]   = "Balance Change History";
+$lang["Action_Type"]              = "Action Type";
+$lang["Balance_Before"]           = "Balance Before";
+$lang["Balance_After"]            = "Balance After";
+$lang["Related_ID"]               = "Related ID";
+$lang["Related_Type"]             = "Related Type";
+$lang["Date_Time"]                = "Date & Time";
+$lang["User_Email"]               = "User Email";
+
 /**
  *
  * Support Tickets and FAQs

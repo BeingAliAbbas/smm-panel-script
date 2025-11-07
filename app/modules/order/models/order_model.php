@@ -17,6 +17,200 @@ class order_model extends MY_Model {
 		parent::__construct();
 	}
 
+	/**
+	 * GET DASHBOARD DATA FOR ADD PAGE
+	 * Retrieves all dashboard statistics for the user
+	 * @param int $user_id
+	 * @return array
+	 */
+	public function get_dashboard_data($user_id) {
+		$dashboard_data = array();
+
+		// Get user details
+		$user = $this->get("balance, spent, role", $this->tb_users, ['id' => $user_id]);
+		if (!$user) {
+			return $dashboard_data;
+		}
+
+		$user_role = $user->role;
+		$balance = $user->balance;
+		$total_spent = $user->spent;
+
+		// Get currency info
+		$current_currency = get_current_currency();
+		$currency_symbol = $current_currency ? $current_currency->symbol : get_option('currency_symbol', "$");
+
+		// Get decimal settings
+		$decimal_point = '.';
+		switch (get_option('currency_decimal_separator', 'dot')) {
+			case 'comma':
+				$decimal_point = ',';
+				break;
+		}
+
+		$separator = ',';
+		switch (get_option('currency_thousand_separator', 'comma')) {
+			case 'dot':
+				$separator = '.';
+				break;
+			case 'space':
+				$separator = ' ';
+				break;
+		}
+
+		// Calculate formatted balance with currency conversion
+		if (empty($balance) || $balance == 0) {
+			$formatted_balance = 0.0000;
+		} else {
+			$formatted_balance = convert_currency($balance);
+			$formatted_balance = currency_format($formatted_balance, get_option('currency_decimal', 2), $decimal_point, $separator);
+		}
+
+		// Calculate formatted spent with currency conversion
+		if (empty($total_spent) || $total_spent == 0) {
+			$formatted_spent = 0.0000;
+		} else {
+			$formatted_spent = convert_currency($total_spent);
+			$formatted_spent = currency_format($formatted_spent, get_option('currency_decimal', 2), $decimal_point, $separator);
+		}
+
+		// Get total orders count
+		$this->db->select("COUNT(*) AS total_orders");
+		$this->db->from($this->tb_order);
+		$this->db->where("uid", $user_id);
+		$total_orders = $this->db->get()->row()->total_orders;
+
+		// If user is admin - get admin statistics
+		if ($user_role === 'admin') {
+			// Get total users
+			$this->db->select("COUNT(*) AS total_users");
+			$this->db->from($this->tb_users);
+			$total_users = $this->db->get()->row()->total_users;
+
+			// Get total amount received (sum of transactions)
+			$this->db->select("SUM(amount) AS total_received");
+			$this->db->from("general_transaction_logs");
+			$this->db->where("status", 1);
+			$total_received = $this->db->get()->row()->total_received;
+
+			if (empty($total_received) || $total_received == 0) {
+				$formatted_total_received = 0.0000;
+			} else {
+				$formatted_total_received = convert_currency($total_received);
+				$formatted_total_received = currency_format($formatted_total_received, get_option('currency_decimal', 2), $decimal_point, $separator);
+			}
+
+			// Get total orders (all orders, not just the current user's orders)
+			$this->db->select("COUNT(*) AS total_orders_all");
+			$this->db->from($this->tb_order);
+			$total_orders_all = $this->db->get()->row()->total_orders_all;
+
+			$dashboard_data = array(
+				'user_role' => 'admin',
+				'currency_symbol' => $currency_symbol,
+				'total_received' => $formatted_total_received,
+				'total_users' => $total_users,
+				'total_orders' => $total_orders_all,
+				'balance' => $balance,
+				'spent' => $total_spent,
+			);
+		} else {
+			// User dashboard
+			$dashboard_data = array(
+				'user_role' => 'user',
+				'currency_symbol' => $currency_symbol,
+				'balance' => $formatted_balance,
+				'spent' => $formatted_spent,
+				'total_orders' => $total_orders,
+				'show_low_balance_warning' => ($balance == 0 || (is_numeric($balance) && $balance < 10)),
+			);
+		}
+
+		return $dashboard_data;
+	}
+
+	/**
+	 * GET USER ROLE
+	 * @param int $user_id
+	 * @return string|null
+	 */
+	public function get_user_role($user_id) {
+		$user = $this->get("role", $this->tb_users, ['id' => $user_id]);
+		return $user ? $user->role : null;
+	}
+
+	/**
+	 * GET WHATSAPP DATA FOR USER
+	 * Checks if user has a valid WhatsApp number
+	 * @param int $user_id
+	 * @return array
+	 */
+	public function get_whatsapp_data($user_id) {
+		$user = $this->get("whatsapp_number", $this->tb_users, ['id' => $user_id]);
+		
+		$whatsapp_exists = false;
+		if ($user && !empty($user->whatsapp_number) && $user->whatsapp_number !== '+92') {
+			$whatsapp_exists = true;
+		}
+
+		return array(
+			'exists' => $whatsapp_exists,
+			'number' => $user ? $user->whatsapp_number : '',
+		);
+	}
+
+	/**
+	 * UPDATE USER WHATSAPP NUMBER
+	 * @param int $user_id
+	 * @param string $whatsapp_number
+	 * @return bool
+	 */
+	public function update_user_whatsapp_number($user_id, $whatsapp_number) {
+		// Validate format
+		if (!preg_match('/^\+?[0-9]{10,15}$/', $whatsapp_number)) {
+			return false;
+		}
+
+		// Update in database
+		$this->db->update($this->tb_users, 
+			array(
+				'whatsapp_number' => $whatsapp_number,
+				'whatsapp_number_updated' => 1
+			), 
+			array('id' => $user_id)
+		);
+
+		return ($this->db->affected_rows() > 0);
+	}
+
+	/**
+	 * GET USER INFO FOR ADD PAGE
+	 * @param int $user_id
+	 * @return object|null
+	 */
+	public function get_user_info($user_id) {
+		return $this->get("first_name, last_name, email, balance, whatsapp_number", $this->tb_users, ['id' => $user_id]);
+	}
+
+	/**
+	 * GET ANNOUNCEMENT TEXT
+	 * @return string
+	 */
+	public function get_announcement_text() {
+		return get_option('new_order_text', '');
+	}
+
+	/**
+	 * GET VERTICAL IMAGE MODAL DATA
+	 * @return array
+	 */
+	public function get_vertical_image_modal_data() {
+		return array(
+			'show' => get_option('show_vertical_image_modal', 0),
+			'url' => get_option('vertical_image_modal_url', 'https://i.ibb.co/8LZvrpDK/file-000000006374622f80e6350155d31b37.png')
+		);
+	}
+
 	function get_categories_list(){
 		$data  = array();
 		$this->db->select("*");
@@ -280,6 +474,7 @@ class order_model extends MY_Model {
 		$result = $query->result();
 		return $result;
 	}
+	
 	public function get_bulk_orders($status) {
 		$this->db->select("ids");
 		$this->db->from($this->tb_order);
@@ -317,13 +512,9 @@ class order_model extends MY_Model {
 		}
 		return $result;
 	}
+
 	public function get_whatsapp_config() {
 		$config = $this->db->get("whatsapp_config")->row();
 		return ($config) ? $config : false;
 	}
-	
-
-	
 }
-
-

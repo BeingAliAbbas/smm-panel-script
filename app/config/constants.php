@@ -128,6 +128,7 @@ define("USERS_PRICE", "general_users_price");
 define("USER_LOGS", "general_user_logs");
 define("USER_BLOCK_IP", "general_user_block_ip");
 define("USER_MAIL_LOGS", "general_user_mail_logs");
+define("BALANCE_LOGS", "general_balance_logs");
 define("SUBSCRIBERS", "general_subscribers");
 
 define("PAYMENTS_METHOD", "payments");

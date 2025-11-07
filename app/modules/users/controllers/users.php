@@ -1,12 +1,5 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-	// Include the Composer autoloader to load PHPMailer and other dependencies
-	require 'vendor/autoload.php';
-
-	use PHPMailer\PHPMailer\PHPMailer;
-	use PHPMailer\PHPMailer\Exception;
-	
-	
 
 class users extends MX_Controller {
 	public $tb_users;
@@ -158,109 +151,6 @@ class users extends MX_Controller {
 
 
 
-	public function sendFundAddedEmail($emailTo, $firstName, $lastName, $amount, $transaction_id, $payment_method) {
-		$mail = new PHPMailer(true);
-	
-		try {
-			// Server settings
-			$mail->isSMTP();
-			$mail->Host = 'mail.beastsmm.pk'; // Your SMTP server
-			$mail->SMTPAuth = true;
-			$mail->Username = 'transactions@beastsmm.pk'; // SMTP username
-			$mail->Password = 'Aliabbas321@'; // SMTP password
-	
-			// SSL on port 465
-			$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // SSL encryption
-			$mail->Port = 465;
-	
-			// Recipients
-			$mail->setFrom('transactions@beastsmm.pk', 'Beast SMM Transaction');
-			$mail->addAddress($emailTo); // User's email
-	
-			// Determine the payment method and set the logo
-			$paymentLogo = '';
-			$logoPath = '';
-			$cid = '';
-	
-			// Fallback Image (Base64)
-			$fallbackLogo = 'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAA...'; // Put your base64 encoded placeholder logo here
-	
-			if ($payment_method == 'EasyPaisa') {
-				// Embedding the EasyPaisa logo
-				$logoPath = '/path/to/your/assets/images/payments/easypaisa.png'; // Local path or absolute path
-				$cid = 'easypaisa_logo';
-				$mail->addEmbeddedImage($logoPath, $cid, 'easypaisa.png', 'base64', 'image/png');
-				$paymentLogo = "<img src='cid:$cid' alt='EasyPaisa Logo' style='width: 150px;' onerror=\"this.src='$fallbackLogo'\">";
-			} elseif ($payment_method == 'JazzCash') {
-				// Embedding the JazzCash logo
-				$logoPath = 'assets/images/payments/jazzcash.png'; // Local path or absolute path
-				$cid = 'jazzcash_logo';
-				$mail->addEmbeddedImage($logoPath, $cid, 'jazzcash.png', 'base64', 'image/png');
-				$paymentLogo = "<img src='cid:$cid' alt='JazzCash Logo' style='width: 150px;' onerror=\"this.src='$fallbackLogo'\">";
-			}
-	
-			// Content
-			$mail->isHTML(true);
-			$mail->Subject = 'Funds Added Successfully to Your Account';
-			$mail->Body = "
-<div style='font-family: Arial, sans-serif; line-height: 1.8; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 10px; background-color: #ffffff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden;'>
-    
-    <!-- Header -->
-    <div style='background-color: #f1f1f1; padding: 20px; text-align: center;'>
-        <img src='https://beastsmm.pk/assets/uploads/userda4b9237bacccdf19c0760cab7aec4a8359010b0/03f55486b7bbbc80dd4482e269a2a1b9.png' alt='Beast SMM Logo' style='max-width: 150px; height: auto;'>
-    </div>
-    
-    <!-- Body -->
-    <div style='padding: 20px;'>
-        <div style='text-align: center; margin-bottom: 20px;'>
-            $paymentLogo
-        </div>
-
-        <h3 style='color: #4CAF50; text-align: center; font-size: 24px; margin-top: 0;'>Your Funds Have Been Added Successfully!</h3>
-
-        <table style='width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 16px;'>
-            <tr>
-                <td style='padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold; width: 40%;'>User:</td>
-                <td style='padding: 10px; border-bottom: 1px solid #ddd;'>$firstName $lastName</td>
-            </tr>
-            <tr>
-                <td style='padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;'>Amount Added:</td>
-                <td style='padding: 10px; border-bottom: 1px solid #ddd;'>$amount PKR</td>
-            </tr>
-            <tr>
-                <td style='padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;'>Transaction ID:</td>
-                <td style='padding: 10px; border-bottom: 1px solid #ddd;'>$transaction_id</td>
-            </tr>
-            <tr>
-                <td style='padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold;'>Payment Method:</td>
-                <td style='padding: 10px; border-bottom: 1px solid #ddd;'>$payment_method</td>
-            </tr>
-        </table>
-
-        <p style='text-align: center; margin-top: 30px; font-size: 14px;'>Thank you for using Beast SMM. We value your business!</p>
-    </div>
-    
-    <!-- Footer -->
-    <div style='background-color: #f1f1f1; padding: 10px; text-align: center; font-size: 12px; color: #555;'>
-        &copy; 2025 Beast SMM. All rights reserved.
-    </div>
-</div>
-";
-
-	
-			// Send email
-			$mail->send();
-			return true; // Email sent successfully
-		} catch (Exception $e) {
-			// Log the error for debugging
-			error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
-			return false; // Email failed to send
-		}
-	}
-	
-
-	
-
 	public function add_funds_manual($ids = ""){
 		$user    = $this->model->get("ids, id, first_name, last_name, email", $this->tb_users, "ids = '{$ids}' ");
 		$payments_defaut = $this->model->fetch('type, name', $this->tb_payments, ['status' => 1]);
@@ -339,9 +229,7 @@ class users extends MX_Controller {
 		
 		// Update user data
 		if ($this->db->update($this->tb_users, $data, ['ids' => $ids])) {
-			// Send email to the user with fund details
-			$this->sendFundAddedEmail($checkUser->email, $checkUser->first_name, $checkUser->last_name, $funds, $transaction_id, $payment_method);
-	
+			// Email sending removed as requested: no email will be sent when funds are added manually.
 			ms(array(
 				'status'  => 'success',
 				'message' => lang("Update_successfully"),

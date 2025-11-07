@@ -1,51 +1,5 @@
 <?php
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-function sendErrorNotification($order_id, $note) {
-    require 'vendor/autoload.php'; // Ensure PHPMailer is autoloaded
-
-    $mail = new PHPMailer(true);
-
-    try {
-        // Server settings
-        $mail->isSMTP();
-        $mail->Host = 'mail.beastsmm';
-        $mail->SMTPAuth = true;
-        $mail->Username = '';
-        $mail->Password = 'Aliabbas321@';
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        $mail->Port = 465;
-
-        // Recipients
-        $mail->setFrom('transactions@beastsmm.pk', 'Beast SMM Notification');
-        $mail->addAddress('beastsmm98@gmail.com');
-
-        // Email content
-        $mail->isHTML(true);
-        $mail->Subject = 'Order Error Notification - Order ID: ' . $order_id;
-        $mail->Body = "
-            <div style='font-family: Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px;'>
-                <h2 style='color: #f44336;'>Error Notification</h2>
-                <p>An error has occurred with the following order:</p>
-                <ul>
-                    <li><strong>Order ID:</strong> {$order_id}</li>
-                    <li><strong>Note:</strong> {$note}</li>
-                </ul>
-                <p>Please take the necessary actions.</p>
-                <br>
-                <p>Regards,<br>Beast SMM System</p>
-            </div>
-        ";
-
-        // Send the email
-        $mail->send();
-    } catch (Exception $e) {
-        error_log("Error in sending email: {$mail->ErrorInfo}");
-    }
-}
-
 defined('BASEPATH') OR exit('No direct script access allowed');
  
 class order extends MX_Controller {
@@ -95,18 +49,32 @@ class order extends MX_Controller {
 
 	}
 
-	// ADD
-	public function index(){
-		redirect(cn("order/add"));
-	}
-
+	// ADD - Refactored to pass data through controller
 	public function add(){
 		$this->load->model("services/services_model", 'services_model');
 		$categories = $this->services_model->get_active_categories();
+		
+		// Get dashboard data from model
+		$dashboard_data = $this->model->get_dashboard_data(session('uid'));
+		
+		// Get user role
+		$user_role = $this->model->get_user_role(session('uid'));
+		
+		// Get WhatsApp status
+		$whatsapp_data = $this->model->get_whatsapp_data(session('uid'));
+		
+		// Get current currency
+		$current_currency = get_current_currency();
+		$currency_symbol = $current_currency ? $current_currency->symbol : get_option('currency_symbol', "$");
+		
 		$data = array(
-			"module"       => get_class($this),
-			'categories'   => $categories,
-			'services'     => "",
+			"module"                  => get_class($this),
+			'categories'              => $categories,
+			'services'                => "",
+			'dashboard_data'          => $dashboard_data,
+			'user_role'               => $user_role,
+			'whatsapp_number_exists'  => $whatsapp_data['exists'],
+			'currency_symbol'         => $currency_symbol,
 		);
 		$this->template->build('add/add', $data);
 	}
@@ -592,6 +560,10 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
             $new_balance = $user_balance - $total_charge;
             $new_balance = ($new_balance > 0) ? $new_balance : 0;
             $this->db->update($this->tb_users, ["balance" => $new_balance], ["id" => session("uid")]);
+            
+            // Log balance deduction for order
+            $this->load->helper('balance_logs');
+            log_order_deduction(session("uid"), $order_id, $total_charge, $user_balance, $new_balance);
         }
 
         /*---------- Helper Function to Send WhatsApp Notification ----------*/
@@ -939,85 +911,101 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 	}
 	
 
-	public function ajax_logs_update($ids = ""){
-		if (!get_role('admin')) _validation('error', "Permission Denied!");
-		
-		$link 			= post("link");
-		$start_counter  = post("start_counter");
-		$remains 		= post("remains");
-		$status 		= post("status");
+		public function ajax_logs_update($ids = ""){
+    if (!get_role('admin')) _validation('error', "Permission Denied!");
+    
+    $link           = post("link");
+    $start_counter  = post("start_counter");
+    $remains        = post("remains");
+    $status         = post("status");
 
-		if($link == ""){
-			ms(array(
-				"status"  => "error",
-				"message" => lang("link_is_required")
-			));
-		}
+    if($link == ""){
+        ms(array(
+            "status"  => "error",
+            "message" => lang("link_is_required")
+        ));
+    }
 
-		if(!is_numeric($start_counter) && $start_counter != ""){
-			ms(array(
-				"status"  => "error",
-				"message" => lang("start_counter_is_a_number_format")
-			));
-		}
+    if(!is_numeric($start_counter) && $start_counter != ""){
+        ms(array(
+            "status"  => "error",
+            "message" => lang("start_counter_is_a_number_format")
+        ));
+    }
 
-		if(!is_numeric($remains) && $remains != ""){
-			ms(array(
-				"status"  => "error",
-				"message" => lang("start_counter_is_a_number_format")
-			));
-		}
+    if(!is_numeric($remains) && $remains != ""){
+        ms(array(
+            "status"  => "error",
+            "message" => lang("start_counter_is_a_number_format")
+        ));
+    }
 
-		$data = array(
-			"link" 	    	=> $link,
-			"status"    	=> $status,
-			"start_counter" => $start_counter,
-			"remains"    	=> $remains,
-			"changed" 		=> NOW,
-		);
+    $data = array(
+        "link"              => $link,
+        "status"            => $status,
+        "start_counter"     => $start_counter,
+        "remains"           => $remains,
+        "changed"           => NOW,
+    );
 
-		$check_item = $this->model->get("ids, cate_id, service_id, service_type, api_provider_id, api_service_id, charge, uid, quantity, status, formal_charge, profit", $this->tb_order, "ids = '{$ids}'");
-		if(!empty($check_item)){
-			/*----------  If status = refund  ----------*/
-			if ($status == "refunded" || $status == "partial" || $status == "canceled") {
-				$charge = $check_item->charge;
-				$charge_back = 0;
-				$real_charge = 0;
-				$formal_charge = 0;
-				$profit        = 0;
+    // ✅ FIX: Now fetching BOTH id (numeric) and ids (hash)
+    $check_item = $this->model->get("id, ids, cate_id, service_id, service_type, api_provider_id, api_service_id, charge, uid, quantity, status, formal_charge, profit", $this->tb_order, "ids = '{$ids}'");
+    
+    if(!empty($check_item)){
+        /*----------  If status = refund  ----------*/
+        if ($status == "refunded" || $status == "partial" || $status == "canceled") {
+            $charge = $check_item->charge;
+            $charge_back = 0;
+            $real_charge = 0;
+            $formal_charge = 0;
+            $profit = 0;
 
-				if ($status == "partial") {
-					$charge_back = ($charge * $remains) / $check_item->quantity;
-					$real_charge = $charge - $charge_back;
+            if ($status == "partial") {
+                $charge_back = ($charge * $remains) / $check_item->quantity;
+                $real_charge = $charge - $charge_back;
 
-					$formal_charge = $check_item->formal_charge * (1 - ($remains / $check_item->quantity ));
-					$profit        = $check_item->profit * (1 - ($remains / $check_item->quantity ));
-				}
+                $formal_charge = $check_item->formal_charge * (1 - ($remains / $check_item->quantity ));
+                $profit = $check_item->profit * (1 - ($remains / $check_item->quantity ));
+            }
 
-				$user = $this->model->get("id, balance", $this->tb_users, ["id"=> $check_item->uid]);
-				if (!empty($user) && !in_array($check_item->status, array('partial', 'cancelled', 'refunded'))) {
-					$balance = $user->balance;
-					$balance += $charge - $real_charge;
-					$this->db->update($this->tb_users, ["balance" => $balance], ["id"=> $check_item->uid]);
-				}
-				$data['charge'] = $real_charge;
-				$data['formal_charge'] = $formal_charge;
-				$data['profit']        = $profit;
-			}
+            $user = $this->model->get("id, balance", $this->tb_users, ["id"=> $check_item->uid]);
+            if (!empty($user) && !in_array($check_item->status, array('partial', 'cancelled', 'refunded'))) {
+                $balance = $user->balance;
+                $refund_amount = $charge - $real_charge;
+                $new_balance = $balance + $refund_amount;
+                $this->db->update($this->tb_users, ["balance" => $new_balance], ["id"=> $check_item->uid]);
+                
+                // ✅ FIX: Log balance refund with NUMERIC id (not hash ids)
+                if ($refund_amount > 0) {
+                    $this->load->helper('balance_logs');
+                    log_refund(
+                        $check_item->uid,           // user_id
+                        $check_item->id,            // ✅ NOW USING numeric id (2100) instead of ids (hash)
+                        $refund_amount,             // amount
+                        $balance,                   // old_balance
+                        $new_balance,               // new_balance
+                        $status                     // reason
+                    );
+                }
+            }
+            $data['charge'] = $real_charge;
+            $data['formal_charge'] = $formal_charge;
+            $data['profit'] = $profit;
+        }
 
-			$this->db->update($this->tb_order, $data, array("ids" => $check_item->ids));
-			
-			ms(array(
-				"status"  => "success",
-				"message" => lang("Update_successfully")
-			));
-		}else{
-			ms(array(
-				"status"  => "error",
-				"message" => lang("There_was_an_error_processing_your_request_Please_try_again_later")
-			));
-		}
-	}
+        $this->db->update($this->tb_order, $data, array("ids" => $check_item->ids));
+        
+        ms(array(
+            "status"  => "success",
+            "message" => lang("Update_successfully")
+        ));
+    }else{
+        ms(array(
+            "status"  => "error",
+            "message" => lang("There_was_an_error_processing_your_request_Please_try_again_later")
+        ));
+    }
+}
 	public function send_whatsapp_notification() {
 		// Check for required parameters
 		$whatsapp_number = $this->input->get('whatsapp_number');
@@ -1184,52 +1172,6 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 			));
 		}
 	}
-public function error_order_notification() {
-    // Query to check if there are any orders with 'error' status
-    $error_orders = $this->model->fetch("*", $this->tb_order, "status = 'error'");
-    
-    if (!empty($error_orders)) {
-        $admin = $this->model->get("id, first_name, last_name, email", $this->tb_users, "role = 'admin'", "id", "ASC");
-        
-        if (!empty($admin)) {
-            // Prepare subject and email content using placeholders
-            $subject = get_option('email_error_order_subject', 'Error Order Notification - {{website_name}}');
-            $subject = str_replace("{{website_name}}", get_option("website_name", "SmartPanel"), $subject);
-            
-            $email_content = get_option('email_error_order_content', '');
-            $email_content = str_replace("{{admin_firstname}}", $admin->first_name, $email_content);
-            $email_content = str_replace("{{admin_lastname}}", $admin->last_name, $email_content);
-            $email_content = str_replace("{{admin_email}}", $admin->email, $email_content);
-
-            $order_list = "";
-            foreach ($error_orders as $order) {
-                $order_list .= "<li>Order ID: {$order->id}, Note: {$order->note}</li>";
-            }
-            
-            $email_content = str_replace("{{error_orders}}", "<ul>{$order_list}</ul>", $email_content);
-
-            // Send the email to the admin
-            $check_send_email = $this->model->send_email($subject, $email_content, $admin->id, false);
-            
-            if ($check_send_email) {
-                ms(array(
-                    "status"  => "error",
-                    "message" => $check_send_email,
-                ));
-            }
-
-            ms(array(
-                "status"  => "success",
-                "message" => lang("Error notification email sent successfully.")
-            ));
-        }
-    } else {
-        ms(array(
-            "status"  => "error",
-            "message" => lang("No error orders found.")
-        ));
-    }
-}
 
 	// function Search Data
 	public function search(){
@@ -1362,66 +1304,41 @@ public function error_order_notification() {
 	public function ajax_log_delete_item($ids = ""){
 		$this->model->delete($this->tb_order, $ids, false);
 	}
-	public function update_whatsapp_number()
-	{
-		session_start();
-	
-		// Ensure the user is logged in
-		if (!isset($_SESSION['uid'])) {
-			$_SESSION['message'] = 'User not logged in.';
-			$_SESSION['message_type'] = 'danger';
-			header('Location: ' . cn('order/add')); // Redirect to the user dashboard
-			exit;
+
+	/**
+	 * UPDATE WHATSAPP NUMBER - NOW GOES THROUGH MODEL
+	 */
+	public function update_whatsapp_number() {
+		// Check if user is logged in
+		if (!session('uid')) {
+			$this->session->set_flashdata('message', 'User not logged in.');
+			$this->session->set_flashdata('message_type', 'danger');
+			redirect(cn('order/add'));
 		}
-	
-		$user_id = $_SESSION['uid'];
-	
-		if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['whatsapp_number'])) {
-			$whatsapp_number = trim($_POST['whatsapp_number']);
-	
-			// Validate the WhatsApp number format
+
+		if ($this->input->server('REQUEST_METHOD') === 'POST' && $this->input->post('whatsapp_number')) {
+			$whatsapp_number = trim($this->input->post('whatsapp_number'));
+			$user_id = session('uid');
+
+			// Validate WhatsApp number format
 			if (!preg_match('/^\+?[0-9]{10,15}$/', $whatsapp_number)) {
-				$_SESSION['message'] = 'Invalid WhatsApp number format.';
-				$_SESSION['message_type'] = 'danger';
-				header('Location: ' . cn('order/add'));
-				exit;
+				$this->session->set_flashdata('message', 'Invalid WhatsApp number format.');
+				$this->session->set_flashdata('message_type', 'danger');
+				redirect(cn('order/add'));
 			}
-	
-			// Database credentials
-			$host = 'localhost';
-			$dbname = 'beastsmm_ali';
-			$username = 'beastsmm_ali';
-			$password = 'ra6efcTo[4z#';
-	
-			try {
-				// Create a new PDO connection
-				$conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-				$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	
-				// Update the WhatsApp number and set the updated flag
-				$stmt = $conn->prepare("UPDATE general_users SET whatsapp_number = :whatsapp_number, whatsapp_number_updated = 1 WHERE id = :user_id");
-				$stmt->bindParam(':whatsapp_number', $whatsapp_number, PDO::PARAM_STR);
-				$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-	
-				if ($stmt->execute()) {
-					$_SESSION['message'] = 'Thanks, WhatsApp number updated successfully.';
-					$_SESSION['message_type'] = 'success';
-				} else {
-					$_SESSION['message'] = 'Failed to update WhatsApp number.';
-					$_SESSION['message_type'] = 'danger';
-				}
-	
-			} catch (PDOException $e) {
-				$_SESSION['message'] = 'Connection failed: ' . $e->getMessage();
-				$_SESSION['message_type'] = 'danger';
+
+			// Call model to update WhatsApp number
+			$update_result = $this->model->update_user_whatsapp_number($user_id, $whatsapp_number);
+
+			if ($update_result) {
+				$this->session->set_flashdata('message', 'Thanks, WhatsApp number updated successfully.');
+				$this->session->set_flashdata('message_type', 'success');
+			} else {
+				$this->session->set_flashdata('message', 'Failed to update WhatsApp number.');
+				$this->session->set_flashdata('message_type', 'danger');
 			}
-	
-			// Close the connection
-			$conn = null;
 		}
-	
-		// Redirect to the user dashboard
-		header('Location: ' . cn('order/add'));
-		exit;
+
+		redirect(cn('order/add'));
 	}
 }
