@@ -595,7 +595,7 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
             
             // Log balance deduction for order
             $this->load->helper('balance_logs');
-            log_order_deduction(session("uid"), $ids, $total_charge, $user_balance, $new_balance);
+            log_order_deduction(session("uid"), $order_id, $total_charge, $user_balance, $new_balance);
         }
 
         /*---------- Helper Function to Send WhatsApp Notification ----------*/
@@ -1013,7 +1013,7 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 					// Log balance refund
 					if ($refund_amount > 0) {
 						$this->load->helper('balance_logs');
-						log_refund($check_item->uid, $check_item->ids, $refund_amount, $balance, $new_balance);
+						log_refund($check_item->uid, $check_item->id, $refund_amount, $balance, $new_balance);
 					}
 				}
 				$data['charge'] = $real_charge;
