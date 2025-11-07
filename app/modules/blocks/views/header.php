@@ -382,6 +382,10 @@ if (!function_exists('get_role')) {
             <div class="nav-item" class="sidenavContent"><i class="fe fe-calendar"></i><?=lang("Transaction_logs")?></div>
           </a>
           
+          <a href="<?=cn('balance_logs')?>" class="nav-link <?=(segment(1) == 'balance_logs')?"active":""?>">
+            <div class="nav-item" class="sidenavContent"><i class="fe fe-activity"></i><?=lang("Balance_Logs")?></div>
+          </a>
+          
           
           <?php if(get_role("admin") || get_role("supporter")){
             $user_manager = array(
