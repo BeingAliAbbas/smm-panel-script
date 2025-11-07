@@ -25,7 +25,8 @@
               $currency_symbol = $current_currency ? $current_currency->symbol : get_option("currency_symbol", '$');
               foreach ($balance_logs as $key => $row) {
                 $i++;
-                $is_positive = in_array($row->action_type, ['addition', 'refund', 'manual_add']);
+                // Use helper functions for cleaner code
+                $is_positive = is_balance_positive_action($row->action_type);
                 $amount_class = $is_positive ? 'amount-positive' : 'amount-negative';
                 $amount_prefix = $is_positive ? '+' : '-';
           ?>
@@ -47,8 +48,8 @@
             
             <td>
               <?php
-                $action_display = ucfirst(str_replace('_', ' ', $row->action_type));
-                $badge_class = 'badge-action-' . $row->action_type;
+                $action_display = format_balance_action_display($row->action_type);
+                $badge_class = get_balance_action_class($row->action_type);
               ?>
               <span class="badge <?=$badge_class?>"><?=$action_display?></span>
             </td>

@@ -150,8 +150,12 @@ class balance_logs extends MX_Controller {
 		if (!get_role('admin')) {
 			ms(['status' => 'error', 'message' => 'Permission denied']);
 		}
-		$this->model->delete($this->tb_balance_logs, $ids, false);
-		ms(['status' => 'success', 'message' => lang('Deleted_successfully')]);
+		$result = $this->model->delete($this->tb_balance_logs, $ids, false);
+		if ($result) {
+			ms(['status' => 'success', 'message' => lang('Deleted_successfully')]);
+		} else {
+			ms(['status' => 'error', 'message' => lang('There_was_an_error_processing_your_request_Please_try_again_later')]);
+		}
 	}
 
 	/**

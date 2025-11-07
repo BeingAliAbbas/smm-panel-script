@@ -36,13 +36,10 @@ class balance_logs_model extends MY_Model {
 		$query = $this->db->get();
 		
 		if ($total_rows) {
-			$result = $query->num_rows();
-			return $result;
+			return $query->num_rows();
 		} else {
-			$result = $query->result();
-			return $result;
+			return $query->result();
 		}
-		return false;
 	}
 
 	/**

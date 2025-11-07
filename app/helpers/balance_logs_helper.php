@@ -137,3 +137,46 @@ if (!function_exists('log_manual_funds')) {
         return log_balance_change($uid, $action_type, abs($amount), $balance_before, $balance_after, $description, $transaction_id, 'manual');
     }
 }
+
+if (!function_exists('get_balance_action_class')) {
+    /**
+     * Get CSS class for balance action badge
+     * 
+     * @param string $action_type - Action type
+     * @return string - CSS class name
+     */
+    function get_balance_action_class($action_type) {
+        $classes = array(
+            'deduction'     => 'badge-action-deduction',
+            'addition'      => 'badge-action-addition',
+            'refund'        => 'badge-action-refund',
+            'manual_add'    => 'badge-action-manual_add',
+            'manual_deduct' => 'badge-action-manual_deduct',
+        );
+        return isset($classes[$action_type]) ? $classes[$action_type] : 'badge-default';
+    }
+}
+
+if (!function_exists('is_balance_positive_action')) {
+    /**
+     * Check if balance action is positive (increases balance)
+     * 
+     * @param string $action_type - Action type
+     * @return bool - True if positive action
+     */
+    function is_balance_positive_action($action_type) {
+        return in_array($action_type, ['addition', 'refund', 'manual_add']);
+    }
+}
+
+if (!function_exists('format_balance_action_display')) {
+    /**
+     * Format action type for display
+     * 
+     * @param string $action_type - Action type
+     * @return string - Formatted display text
+     */
+    function format_balance_action_display($action_type) {
+        return ucfirst(str_replace('_', ' ', $action_type));
+    }
+}
