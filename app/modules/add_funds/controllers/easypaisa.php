@@ -127,9 +127,8 @@ class easypaisa extends MX_Controller {
             $this->sendWhatsAppNotification($amount, $tx_orderID, $user_email, 'new');
 
             // Send email notification to admin about payment submission
-            require_once 'add_funds.php';
-            $adder = new add_funds();
-            $adder->send_payment_submission_notification($data_log, $this->payment_type);
+            $this->load->model('add_funds/add_funds_model');
+            Modules::run('add_funds/send_payment_submission_notification', $data_log, $this->payment_type);
 
             $this->load->view('easypaisa/redirect', [
                 'status'    => 'pending',

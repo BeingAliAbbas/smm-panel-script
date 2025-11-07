@@ -99,9 +99,8 @@ class sadapay extends MX_Controller
             $this->sendWhatsAppNotification($TXN_AMOUNT, $ORDER_ID, 'new');
 
             // Send email notification to admin about payment submission
-            require_once 'add_funds.php';
-            $adder = new add_funds();
-            $adder->send_payment_submission_notification($data_tnx_log, $this->payment_type);
+            $this->load->model('add_funds/add_funds_model');
+            Modules::run('add_funds/send_payment_submission_notification', $data_tnx_log, $this->payment_type);
 
             $this->load->view("sadapay/redirect", $data);
         } else {
