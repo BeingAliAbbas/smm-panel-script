@@ -21,6 +21,7 @@ class balance_logs extends MX_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->load->model(get_class($this).'_model', 'model');
+		$this->load->helper('balance_logs');
 
 		$this->module           = get_class($this);
 		$this->tb_users         = USERS;
