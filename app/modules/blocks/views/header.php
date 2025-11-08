@@ -1,236 +1,321 @@
 <style>
-  .search-box input.form-control{
-    margin: -1px;
-  }
-  .search-box select.form-control{
-    border-radius: 0px;
-    border: 1px solid #fff;
-  }
-
-.card-title.text-center {
-  position: relative;
-  z-index: 1;
-  margin: 0;
-  padding: 0;
+/* Modern Header Styles */
+.modern-header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 
-.notifcation.m-r-10 {
-  z-index: 100;
-  position: relative;
+.modern-header .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
 }
 
-/* ===== Sidenav Currency Switcher ===== */
-.currency-switcher-sidenav {
-  margin: 15px 15px 15px 15px;
-  position: relative;
+.modern-header .header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
 }
 
-.currency-switcher-sidenav label {
-  display: block;
-  color: #ffffff;
-  font-size: 12px;
+.modern-header .site-title {
+  font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin: 0;
+  color: white;
+  text-decoration: none;
+}
+
+.modern-header .site-title img {
+  max-height: 40px;
+  vertical-align: middle;
+}
+
+/* Desktop Navigation */
+.modern-header nav {
+  display: none;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.modern-header nav a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.modern-header nav a:hover {
+  color: #60a5fa;
+}
+
+.modern-header nav a.active {
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+/* Hamburger Menu Button */
+.modern-header .menu-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: block;
+  outline: none;
+}
+
+.modern-header .menu-btn:focus {
+  outline: none;
+}
+
+/* Mobile Menu */
+.modern-header .mobile-menu {
+  display: none;
+  background: #0f1419;
+  padding: 1rem 0;
+}
+
+.modern-header .mobile-menu.active {
+  display: block;
+}
+
+.modern-header .mobile-menu nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 1.5rem;
+}
+
+.modern-header .mobile-menu nav a {
+  padding: 0.75rem 0;
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modern-header .mobile-menu nav a:hover {
+  color: #60a5fa;
+}
+
+.modern-header .mobile-menu nav a.active {
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+/* User Info in Mobile */
+.modern-header .user-info-mobile {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.modern-header .user-info-mobile h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.modern-header .user-info-mobile h6 {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+/* Currency Switcher in Mobile */
+.modern-header .currency-switcher-mobile {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modern-header .currency-switcher-mobile label {
+  display: block;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.currency-switcher-sidenav select {
-  background: #ffffff !important;
-  color: #000000 !important;
-  border: 2px solid #000000 !important;
-  border-radius: 6px;
-  padding: 8px 28px 8px 10px;
-  font-size: 14px;
-  font-weight: 600;
+.modern-header .currency-switcher-mobile select {
+  width: 100%;
+  padding: 0.5rem;
+  background: #1a1a2e;
+  color: white;
+  border: 1px solid #374151;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
   cursor: pointer;
   outline: none;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  width: 100%;
-  height: 40px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-.currency-switcher-sidenav select:hover {
-  background: #f5f5f5 !important;
-  border-color: #333333 !important;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+.modern-header .currency-switcher-mobile select:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
 }
 
-.currency-switcher-sidenav select:focus {
-  background: #ffffff !important;
-  border-color: #000000 !important;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
-  outline: none;
-}
-
-.currency-switcher-sidenav select option {
-  background: #ffffff;
-  color: #000000;
-  padding: 10px 12px;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.currency-switcher-sidenav select option:hover {
-  background: #e0e0e0;
-  color: #000000;
-}
-
-.currency-switcher-sidenav select option:checked {
-  background: #000000;
-  color: #ffffff;
-  font-weight: 600;
-}
-
-/* Custom select wrapper for better styling */
-.currency-select-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.currency-select-wrapper::after {
-  content: "";
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 5px solid #000000;
-  pointer-events: none;
-  transition: transform 0.2s ease;
-}
-
-.currency-switcher-sidenav select:focus ~ .currency-select-wrapper::after,
-.currency-select-wrapper:has(select:focus)::after {
-  transform: translateY(-50%) rotate(180deg);
-}
-
-/* Divider */
-.currency-switcher-divider {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.1);
-  margin: 10px 0 5px 0;
-}
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-  .currency-switcher-sidenav {
-    margin: 12px 12px 12px 12px;
+/* Desktop View (768px and above) */
+@media (min-width: 768px) {
+  .modern-header nav {
+    display: flex;
   }
 
-  .currency-switcher-sidenav select {
-    padding: 7px 24px 7px 8px;
-    font-size: 13px;
-    height: 38px;
-  }
-
-  .currency-switcher-sidenav label {
-    font-size: 11px;
-    margin-bottom: 5px;
+  .modern-header .menu-btn {
+    display: none;
   }
 }
 
-@media (max-width: 480px) {
-  .currency-switcher-sidenav {
-    margin: 10px 10px 10px 10px;
-  }
+/* Page Content Spacing */
+body {
+  padding-top: 70px;
+}
 
-  .currency-switcher-sidenav select {
-    padding: 6px 22px 6px 8px;
-    font-size: 12px;
-    height: 36px;
-  }
+/* Notification Badge */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.375rem;
+  background-color: #3b82f6;
+  color: white;
+  margin-left: 0.25rem;
+}
+
+.badge-info {
+  background-color: #06b6d4;
 }
 </style>
 
-<!--Not Sidenav-->
-<div class="top-header">
-  <div class="show-btn" onclick="openNav()" style="font-size: 45px; margin: 20px 0 0 20px; cursor: pointer; display: inline-block; position: absolute; left: 0; color: #fff; z-index: 100">
-    <span class="header-toggler-icon"></span>
-  </div>
+<!-- Modern Responsive Header -->
+<header class="modern-header">
+  <div class="container">
+    <div class="header-content">
+      <h1 class="site-title">
+        <a href="<?=cn('order/add')?>">
+          <img src="<?=get_option('website_logo_white', BASE."assets/images/logo-white.png")?>" alt="website-logo">
+        </a>
+      </h1>
+      
+      <!-- Desktop Navigation -->
+      <nav>
+        <?php
+        session_start();
+        $user_id = $_SESSION['uid'];
 
-  <?php
-    if (session('uid_tmp')) {
-  ?>
-  <div class="notifcation m-r-10" style="font-size: 25px; margin: 18px 0 0 310px; cursor: pointer; display: inline-block; position: absolute; color: #fff; z-index: 100">
-    <a href="<?=cn("blocks/back_to_admin")?>" data-toggle="tooltip" data-placement="bottom" title="<?=lang('Back_to_Admin')?>" class="text-white ajaxBackToAdmin">
-      <i class="fe fe-log-out"></i>
-    </a>
-  </div>
-  <?php } ?>
+        if (!function_exists('get_role')) {
+            function get_role($role) {
+                $user_roles = $_SESSION['roles'];
+                return in_array($role, $user_roles);
+            }
+        }
+        ?>
+        
+        <?php if (get_role('admin')): ?>
+          <a href="<?= cn('statistics') ?>" class="<?=(segment(1) == 'statistics') ? 'active' : ''?>"><?= lang("Dashboard") ?></a>
+        <?php endif; ?>
+        
+        <a href="<?=cn('order/add')?>" class="<?=(segment(1) == 'order' && segment(2) == 'add') ? 'active' : ''?>"><?= lang("New_order") ?></a>
+        <a href="<?=cn('order/log')?>" class="<?=(segment(1) == 'order' && segment(2) == 'log') ? 'active' : ''?>"><?=lang("Orders")?></a>
+        <a href="<?=cn('services')?>" class="<?=(segment(1) == 'services') ? 'active' : ''?>"><?=lang('Services')?></a>
+        
+        <?php if (get_role("user") || get_role("admin")) { ?>
+          <a href="<?=cn('add_funds')?>" class="<?=(segment(1) == 'add_funds') ? 'active' : ''?>"><?=lang("Add_funds")?></a>
+        <?php } ?>
+        
+        <a href="<?=cn('tickets')?>" class="<?=(segment(1) == 'tickets') ? 'active' : ''?>">
+          <?=lang("Tickets")?>
+          <?php if(isset($total_unread_tickets) && $total_unread_tickets > 0): ?>
+            <span class="badge badge-info"><?=$total_unread_tickets?></span>
+          <?php endif; ?>
+        </a>
+        
+        <a href="<?=cn('profile')?>" class="<?=(segment(1) == 'profile') ? 'active' : ''?>"><?=lang("Account")?></a>
+        
+        <?php if (session('uid_tmp')) { ?>
+          <a href="<?=cn("blocks/back_to_admin")?>" title="<?=lang('Back_to_Admin')?>" class="ajaxBackToAdmin">
+            <i class="fe fe-log-out"></i> <?=lang('Back_to_Admin')?>
+          </a>
+        <?php } ?>
+        
+        <a href="<?=cn("auth/logout")?>"><?=lang("Sign_Out")?></a>
+      </nav>
 
-  <div class="card-title text-center" data-aos="fade-down" data-aos-easing="ease-in" data-aos-delay="1000">
-    <div class="site-logo">
-      <a href="<?=cn('order/add')?>">
-        <img src="<?=get_option('website_logo_white', BASE."assets/images/logo-white.png")?>" alt="website-logo" style="max-height: 40px; margin-top:15px;">
-      </a>
+      <!-- Mobile Menu Button -->
+      <button class="menu-btn" id="menuBtn">☰</button>
     </div>
   </div>
-</div>
 
-<div id="overlay" onclick="closeNav()"></div>
-<div id="closeBtn" onclick="closeNav()">&times;</div>
-<div class="sidenav" id="mySidenav">
-  <div class="sidenavHeader" style="color: #fff;">
-    <h4><?=lang("Hi")?>, <span class="text-uppercase"><?php _echo(get_field(USERS, ["id" => session('uid')], 'first_name'))?></span></h4>
-    <h6>
-      <?php
-        if (!get_role("admin")) {
-          $balance = get_field(USERS, ["id" => session('uid')], 'balance');
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <!-- User Info -->
+    <div class="user-info-mobile">
+      <h4><?=lang("Hi")?>, <span class="text-uppercase"><?php _echo(get_field(USERS, ["id" => session('uid')], 'first_name'))?></span></h4>
+      <h6>
+        <?php
+          if (!get_role("admin")) {
+            $balance = get_field(USERS, ["id" => session('uid')], 'balance');
 
-          switch (get_option('currency_decimal_separator', 'dot')) {
-            case 'dot':
-              $decimalpoint = '.';
-              break;
-            case 'comma':
-              $decimalpoint = ',';
-              break;
-            default:
-              $decimalpoint = '';
-              break;
-          } 
+            switch (get_option('currency_decimal_separator', 'dot')) {
+              case 'dot':
+                $decimalpoint = '.';
+                break;
+              case 'comma':
+                $decimalpoint = ',';
+                break;
+              default:
+                $decimalpoint = '';
+                break;
+            } 
 
-          switch (get_option('currency_thousand_separator', 'comma')) {
-            case 'dot':
-              $separator = '.';
-              break;
-            case 'comma':
-              $separator = ',';
-              break;
-            case 'space':
-              $separator = ' ';
-              break;
-            default:
-              $separator = '';
-              break;
-          }
-          if (empty($balance) || $balance == 0) {
-            $balance = 0.0000;
-          }else{
-            $balance = convert_currency($balance);
-            $balance = currency_format($balance, get_option('currency_decimal', 2), $decimalpoint, $separator);
-          }
-          
-          $current_currency = get_current_currency();
-          $currency_symbol = $current_currency ? $current_currency->symbol : get_option('currency_symbol',"$");
-      ?>
-      <?=lang("Balance")?>: <span id="balanceDisplay"><?=$currency_symbol?><?=$balance?></span>
-      <?php }else{?> 
-        <?=lang("Admin_account")?>
-      <?php }?> 
-    </h6>
-  </div>
+            switch (get_option('currency_thousand_separator', 'comma')) {
+              case 'dot':
+                $separator = '.';
+                break;
+              case 'comma':
+                $separator = ',';
+                break;
+              case 'space':
+                $separator = ' ';
+                break;
+              default:
+                $separator = '';
+                break;
+            }
+            if (empty($balance) || $balance == 0) {
+              $balance = 0.0000;
+            }else{
+              $balance = convert_currency($balance);
+              $balance = currency_format($balance, get_option('currency_decimal', 2), $decimalpoint, $separator);
+            }
+            
+            $current_currency = get_current_currency();
+            $currency_symbol = $current_currency ? $current_currency->symbol : get_option('currency_symbol',"$");
+        ?>
+        <?=lang("Balance")?>: <span id="balanceDisplay"><?=$currency_symbol?><?=$balance?></span>
+        <?php }else{?> 
+          <?=lang("Admin_account")?>
+        <?php }?> 
+      </h6>
+    </div>
 
-  <!-- Currency Switcher Inside Sidenav - Above Dashboard Link -->
-  <div class="currency-switcher-sidenav">
-    <label for="currencySelectorSidenav"><?=lang("Currency")?></label>
-    <div class="currency-select-wrapper">
-      <select id="currencySelectorSidenav" class="form-control" aria-label="<?=lang('Select_currency')?>">
+    <!-- Currency Switcher -->
+    <div class="currency-switcher-mobile">
+      <label for="currencySelectorMobile"><?=lang("Currency")?></label>
+      <select id="currencySelectorMobile" class="form-control" aria-label="<?=lang('Select_currency')?>">
         <?php
           $current_currency = get_current_currency();
           $currencies = get_active_currencies();
@@ -246,190 +331,94 @@
         ?>
       </select>
     </div>
-  </div>
 
-  <div class="currency-switcher-divider"></div>
-
-  <!--Below SideNavHeader-->
-  <div id="main-container">
-    <ul class="nav-tabs">
-      <?php
-      session_start();
-      $user_id = $_SESSION['uid'];
-
-      if (!function_exists('get_role')) {
-          function get_role($role) {
-              $user_roles = $_SESSION['roles'];
-              return in_array($role, $user_roles);
-          }
-      }
-      ?>
-
-      <!-- Sidebar link for Dashboard -->
+    <!-- Mobile Navigation Links -->
+    <nav>
       <?php if (get_role('admin')): ?>
-        <a style="margin-top: 2px;" href="<?= cn('statistics') ?>" class="nav-link <?=(segment(1) == 'statistics') ? "active" : ""?>">
-          <div class="nav-item title" class="sidenavContent">
-            <i class="fe fe-bar-chart-2"></i><?= lang("Dashboard") ?>
-          </div>
-        </a>
+        <a href="<?= cn('statistics') ?>" class="<?=(segment(1) == 'statistics') ? 'active' : ''?>"><?= lang("Dashboard") ?></a>
       <?php endif; ?>
 
-      <a href="<?=cn('order/add')?>" class="nav-link <?=(segment(1) == 'order' && segment(2) == 'add') ? "active" : ""?>" style="margin-top: 5px;">
-        <div class="nav-item" class="sidenavContent">
-          <i class="fe fe-shopping-cart"></i><?= lang("New_order") ?>
-        </div>
-      </a>
-
-      <a href="<?=cn('order/log')?>" class="nav-link <?=(segment(1) == 'order' && segment(2) == 'log')?"active":""?>">
-        <div class="nav-item" class="sidenavContent"><i class="fa fa-shopping-cart"></i><?=lang("Orders")?></div>
-      </a>
-      
-      <a href="<?=cn('refill/log')?>" class="nav-link <?=(segment(1) == 'order' && segment(2) == 'refill')?"active":""?>">
-        <div class="nav-item" class="sidenavContent"><i class="fa fa-recycle"></i><?=lang("Refill")?></div>
-      </a>
+      <a href="<?=cn('order/add')?>" class="<?=(segment(1) == 'order' && segment(2) == 'add') ? 'active' : ''?>"><?= lang("New_order") ?></a>
+      <a href="<?=cn('order/log')?>" class="<?=(segment(1) == 'order' && segment(2) == 'log') ? 'active' : ''?>"><?=lang("Orders")?></a>
+      <a href="<?=cn('refill/log')?>" class="<?=(segment(1) == 'order' && segment(2) == 'refill') ? 'active' : ''?>"><?=lang("Refill")?></a>
       
       <?php if (get_role("admin") || get_role("supporter")) { ?>
-        <a href="<?=cn('category')?>" class="nav-link <?=(segment(1) == 'category')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-table"></i><?=lang("Category")?></div>
-        </a>
+        <a href="<?=cn('category')?>" class="<?=(segment(1) == 'category') ? 'active' : ''?>"><?=lang("Category")?></a>
       <?php } ?>
 
-      <a href="<?=cn('services')?>" class="nav-link <?=(segment(1) == 'services')?"active":""?>">
-        <div class="nav-item" class="sidenavContent"><i class="fe fe-list"></i><?=lang('Services')?></div>
-      </a>
+      <a href="<?=cn('services')?>" class="<?=(segment(1) == 'services') ? 'active' : ''?>"><?=lang('Services')?></a>
       
-      <?php if (get_role("user")) { ?>
-        <a href="<?=cn('add_funds')?>" class="nav-link <?=(segment(1) == 'add_funds')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-money"></i><?=lang("Add_funds")?></div>
-        </a>
-      <?php } ?>
-      
-      <?php if (get_role("admin")) { ?>
-        <a href="<?=cn('add_funds')?>" class="nav-link <?=(segment(1) == 'add_funds')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-money"></i><?=lang("Add_funds")?></div>
-        </a>
+      <?php if (get_role("user") || get_role("admin")) { ?>
+        <a href="<?=cn('add_funds')?>" class="<?=(segment(1) == 'add_funds') ? 'active' : ''?>"><?=lang("Add_funds")?></a>
       <?php } ?>
       
       <?php if (get_option('enable_api_tab') && !get_role("admin")) { ?>      
-        <a href="<?=cn('api/docs')?>" class="nav-link <?=(segment(2) == 'docs')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fe fe-share-2"></i><?=lang("API")?></div>
-        </a>
+        <a href="<?=cn('api/docs')?>" class="<?=(segment(2) == 'docs') ? 'active' : ''?>"><?=lang("API")?></a>
       <?php } ?>
       
-      <?php if (get_role("user")) { ?>   
-        <a href="<?=cn('tickets')?>" class="nav-link <?=(segment(1) == 'tickets')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-comments-o"></i><?=lang("Tickets")?>&nbsp;&nbsp;&nbsp;&nbsp;<span class="badge badge-info"><?=$total_unread_tickets?></span></div>
-        </a>
-      <?php } else { ?>
-        <a href="<?=cn('tickets')?>" class="nav-link <?=(segment(1) == 'tickets') ? "active": ""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-comments-o"></i><?=lang("tickets")?>&nbsp;&nbsp;&nbsp;&nbsp;<span class="badge badge-info"><?=$total_unread_tickets?></span></div>
-        </a>
-      <?php } ?>
+      <a href="<?=cn('tickets')?>" class="<?=(segment(1) == 'tickets') ? 'active' : ''?>">
+        <?=lang("Tickets")?>
+        <?php if(isset($total_unread_tickets) && $total_unread_tickets > 0): ?>
+          <span class="badge badge-info"><?=$total_unread_tickets?></span>
+        <?php endif; ?>
+      </a>
       
       <?php if(get_option("enable_affiliate") == "1"){ ?>
-        <a href="<?=cn('affiliate')?>" class="nav-link <?=(segment(1) == 'affiliate')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-money"></i><?=lang("Affiliate")?></div>
-        </a>
+        <a href="<?=cn('affiliate')?>" class="<?=(segment(1) == 'affiliate') ? 'active' : ''?>"><?=lang("Affiliate")?></a>
       <?php } ?>
       
       <?php if(get_option("is_childpanel_status") == "1"){ ?>
-        <a href="<?=cn('childpanel/add')?>" class="nav-link <?=(segment(1) == 'childpanel')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-child"></i><?=lang("Child_Panel")?></div>
-        </a>
+        <a href="<?=cn('childpanel/add')?>" class="<?=(segment(1) == 'childpanel') ? 'active' : ''?>"><?=lang("Child_Panel")?></a>
       <?php } ?>
       
-      <a href="<?=cn('transactions')?>" class="nav-link <?=(segment(1) == 'transactions')?"active":""?>">
-        <div class="nav-item" class="sidenavContent"><i class="fe fe-calendar"></i><?=lang("Transaction_logs")?></div>
-      </a>
-
-      <a href="<?=cn('balance_logs')?>" class="nav-link <?=(segment(1) == 'balance_logs')?"active":""?>">
-            <div class="nav-item" class="sidenavContent"><i class="fe fe-activity"></i><?=lang("Balance_Logs")?></div>
-          </a>
-          
+      <a href="<?=cn('transactions')?>" class="<?=(segment(1) == 'transactions') ? 'active' : ''?>"><?=lang("Transaction_logs")?></a>
+      <a href="<?=cn('balance_logs')?>" class="<?=(segment(1) == 'balance_logs') ? 'active' : ''?>"><?=lang("Balance_Logs")?></a>
       
       <?php if(get_role("admin") || get_role("supporter")){ ?>
-        <div class="sidenavContentHeader">Admin Role</div>
-        <a href="<?=cn('users')?>" class="nav-link <?=(segment(1) == 'users')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fe fe-users"></i><?=lang("Users")?></div>
-        </a>
-
-        <a style="margin-top: 2px;" href="<?= cn('whatsapp_listed_updated.php') ?>" class="nav-link <?=(segment(1) == 'whatsapp_listed_updated') ? "active" : ""?>">
-          <div class="nav-item title" class="sidenavContent">
-            <i class="fe fe-users"></i>WA Number Updates
-          </div>
-        </a>
-        
-        <a href="<?=cn('subscribers')?>" class="nav-link <?=(segment(1) == 'subscribers')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-user-circle-o"></i><?php echo lang("subscribers"); ?></div>
-        </a>
-        
-        <a href="<?=cn('user_mail_logs')?>" class="nav-link <?=(segment(1) == 'user' && segment(2) == 'mail' && segment(3) == 'logs')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-envelope"></i><?=lang("User_Mail_Logs")?></div>
-        </a>
-        
-        <a href="<?=cn('user_logs')?>" class="nav-link <?=(segment(1) == 'user' && segment(2) == 'mail' && segment(3) == 'logs')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-sort"></i><?=lang("user_activity_logs")?></div>
-        </a>
-        
-        <a href="<?=cn('user_block_ip')?>" class="nav-link <?=(segment(1) == 'user' && segment(2) == 'mail' && segment(3) == 'logs')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-ban"></i><?=lang("banned_ip_address")?></div>
-        </a>
-      <?php } ?>
-      
-      <?php if(get_role("admin") || get_role("supporter")){ ?>
-        <div class="sidenavContentHeader">Settings</div>
-        <a href="<?=cn('setting')?>" class="nav-link <?=(segment(1) == 'setting')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-cog"></i><?=lang("System_Settings")?></div>
-        </a>
-        
-        <a href="<?=cn('api_provider')?>" class="nav-link <?=(segment(1) == 'api_provider')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-share-alt"></i><?=lang("Services_Providers")?></div>
-        </a>
-        
-        <a href="<?=cn('payments')?>" class="nav-link <?=(segment(1) == 'payments')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-credit-card"></i><?=lang("Payments")?></div>
-        </a>
-        
-        <a href="<?=cn('payments_bonuses')?>" class="nav-link <?=(segment(1) == 'payments_bonuses')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-money"></i><?=lang("Payments_Bonuses")?></div>
-        </a>
+        <a href="<?=cn('users')?>" class="<?=(segment(1) == 'users') ? 'active' : ''?>"><?=lang("Users")?></a>
+        <a href="<?= cn('whatsapp_listed_updated.php') ?>" class="<?=(segment(1) == 'whatsapp_listed_updated') ? 'active' : ''?>">WA Number Updates</a>
+        <a href="<?=cn('subscribers')?>" class="<?=(segment(1) == 'subscribers') ? 'active' : ''?>"><?php echo lang("subscribers"); ?></a>
+        <a href="<?=cn('user_mail_logs')?>" class="<?=(segment(1) == 'user' && segment(2) == 'mail' && segment(3) == 'logs') ? 'active' : ''?>"><?=lang("User_Mail_Logs")?></a>
+        <a href="<?=cn('user_logs')?>" class="<?=(segment(1) == 'user' && segment(2) == 'mail' && segment(3) == 'logs') ? 'active' : ''?>"><?=lang("user_activity_logs")?></a>
+        <a href="<?=cn('user_block_ip')?>" class="<?=(segment(1) == 'user' && segment(2) == 'mail' && segment(3) == 'logs') ? 'active' : ''?>"><?=lang("banned_ip_address")?></a>
+        <a href="<?=cn('setting')?>" class="<?=(segment(1) == 'setting') ? 'active' : ''?>"><?=lang("System_Settings")?></a>
+        <a href="<?=cn('api_provider')?>" class="<?=(segment(1) == 'api_provider') ? 'active' : ''?>"><?=lang("Services_Providers")?></a>
+        <a href="<?=cn('payments')?>" class="<?=(segment(1) == 'payments') ? 'active' : ''?>"><?=lang("Payments")?></a>
+        <a href="<?=cn('payments_bonuses')?>" class="<?=(segment(1) == 'payments_bonuses') ? 'active' : ''?>"><?=lang("Payments_Bonuses")?></a>
       <?php } ?>
       
       <?php if(get_role("admin")){ ?>
-        <div class="sidenavContentHeader">Others</div>
-        <a href="<?=cn('news')?>" class="nav-link <?=(segment(1) == 'news')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-bell"></i><?=lang("Announcement")?></div>
-        </a>
-        
-        <a href="<?=cn('faqs')?>" class="nav-link <?=(segment(1) == 'faqs')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-book"></i>FAQs</div>
-        </a>
-        
-        <a href="<?=cn('language')?>" class="nav-link <?=(segment(1) == 'language')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-language"></i><?=lang("Language")?></div>
-        </a>
-        
-        <a href="https://codewithali.online" target="_blank" class="nav-link <?=(segment(1) == 'hqsmmscripts')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-diamond"></i><?=lang("Modules_&_Scripts")?></div>
-        </a>
+        <a href="<?=cn('news')?>" class="<?=(segment(1) == 'news') ? 'active' : ''?>"><?=lang("Announcement")?></a>
+        <a href="<?=cn('faqs')?>" class="<?=(segment(1) == 'faqs') ? 'active' : ''?>">FAQs</a>
+        <a href="<?=cn('language')?>" class="<?=(segment(1) == 'language') ? 'active' : ''?>"><?=lang("Language")?></a>
+        <a href="https://codewithali.online" target="_blank"><?=lang("Modules_&_Scripts")?></a>
       <?php } ?>
       
-      <a href="<?=cn('profile')?>" class="nav-link <?=(segment(1) == 'profile')?"active":""?>">
-        <div class="nav-item" class="sidenavContent"><i class="fa fa-user"></i><?=lang("Account")?></div>
-      </a>
+      <a href="<?=cn('profile')?>" class="<?=(segment(1) == 'profile') ? 'active' : ''?>"><?=lang("Account")?></a>
       
-      <a href="<?=cn("auth/logout")?>" class="nav-link <?=(segment(1) == 'auth/logout')?"active":""?>">
-        <div class="nav-item" class="sidenavContent"><i class="fa fa-power-off"></i><?=lang("Sign_Out")?></div>
-      </a>
-      <br><br><br><br><br><br>
-    </ul>
+      <?php if (session('uid_tmp')) { ?>
+        <a href="<?=cn("blocks/back_to_admin")?>" class="ajaxBackToAdmin"><?=lang('Back_to_Admin')?></a>
+      <?php } ?>
+      
+      <a href="<?=cn("auth/logout")?>"><?=lang("Sign_Out")?></a>
+    </nav>
   </div>
-</div>
+</header>
 
 <script>
-// Sidenav currency switcher handler
+// Mobile menu toggle
+const menuBtn = document.getElementById('menuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+
+if (menuBtn && mobileMenu) {
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('active');
+  });
+}
+
+// Currency switcher handler for mobile
 $(document).ready(function() {
-  $('#currencySelectorSidenav').on('change', function() {
+  $('#currencySelectorMobile').on('change', function() {
     var selectedCurrency = $(this).val();
 
     // Show loading overlay
@@ -467,19 +456,6 @@ $(document).ready(function() {
     });
   });
 });
-
-// Existing navigation functions
-function openNav() {
-  document.getElementById("mySidenav").style.width = "280px";
-  document.getElementById("overlay").style.display = "block";
-  document.getElementById("closeBtn").style.display = "block";
-}
-
-function closeNav() {
-  document.getElementById("mySidenav").style.width = "0";
-  document.getElementById("overlay").style.display = "none";
-  document.getElementById("closeBtn").style.display = "none";
-}
 </script>
 
 <?php
