@@ -1588,11 +1588,11 @@ pre code {
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: #f8f9fa;
 }
 
 .table-hover tbody tr:hover {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: #e9ecef;
 }
 
 .table-primary,
@@ -4374,8 +4374,8 @@ input[type="button"].btn-block {
 .card-header {
   padding: 1.5rem 1.5rem;
   margin-bottom: 0;
-  background-color: rgba(0, 0, 0, 0.03);
-  border-bottom: 1px solid rgba(0, 40, 100, 0.12);
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
 }
 
 .card-header:first-child {
@@ -4388,8 +4388,8 @@ input[type="button"].btn-block {
 
 .card-footer {
   padding: 1.5rem 1.5rem;
-  background-color: rgba(0, 0, 0, 0.03);
-  border-top: 1px solid rgba(0, 40, 100, 0.12);
+  background-color: #f8f9fa;
+  border-top: 1px solid #dee2e6;
 }
 
 .card-footer:last-child {
@@ -13028,10 +13028,13 @@ a.icon:hover {
 
 .card {
   margin-top: 00px;
-  box-shadow: 0 10px 40px 0 rgba(62,57,107,.07), 0 2px 9px 0 rgba(62,57,107,.06);
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08), 0 1px 4px 0 rgba(0, 0, 0, 0.05);
   position: relative;
   margin-bottom: 1.5rem;
   width: 100%;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
 }
 
 .card .card {
@@ -13051,10 +13054,11 @@ a.icon:hover {
   margin: 0;
   padding: 1.5rem 1.5rem;
   position: relative;
+  color: #495057;
 }
 
 .card-body + .card-body {
-  border-top: 1px solid rgba(0, 40, 100, 0.12);
+  border-top: 1px solid #dee2e6;
 }
 
 .card-body > :last-child {
@@ -13083,13 +13087,14 @@ a.icon:hover {
 }
 
 .card-header {
-  background: none;
+  background: #f8f9fa;
   padding: 0.5rem 1.5rem;
   display: -ms-flexbox;
   display: flex;
   min-height: 3.5rem;
   -ms-flex-align: center;
   align-items: center;
+  border-bottom: 1px solid #dee2e6;
 }
 
 
@@ -13126,6 +13131,7 @@ a.icon:hover {
   line-height: 1.2;
   font-weight: 400;
   margin-bottom: 1.5rem;
+  color: #212529;
 }
 
 .card-title a {
