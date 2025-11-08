@@ -8,32 +8,32 @@
 :root {
   --sel-font-size: clamp(14px, 3.6vw, 16px);
   --sel-line-height: 1.3;
-  --sel-border: #04a9f4;
-  --sel-border-focus: #0390cf;
+  --sel-border: #ced4da;
+  --sel-border-focus: #4a90e2;
   --sel-bg: #ffffff;
-  --sel-bg-alt: #f5fbfe;
-  --sel-text: #000;
-  --sel-placeholder: #666;
-  --sel-highlight-bg: #00599e;
+  --sel-bg-alt: #f8f9fa;
+  --sel-text: #212529;
+  --sel-placeholder: #6c757d;
+  --sel-highlight-bg: #4a90e2;
   --sel-highlight-text: #fff;
-  --sel-selected-bg: #d3eefc;
-  --sel-meta-color: #000000;
-  --sel-scrollbar-thumb: #04a9f4;
-  --sel-scrollbar-track: #cfe8f5;
+  --sel-selected-bg: #e3f2fd;
+  --sel-meta-color: #495057;
+  --sel-scrollbar-thumb: #4a90e2;
+  --sel-scrollbar-track: #e9ecef;
 }
 
-/* Optional dark mode palette */
+/* Light mode palette (keeping dark mode for future use if needed) */
 body.dark, body[data-theme="dark"] {
-  --sel-bg: #151d25;
-  --sel-bg-alt: #1e2a34;
-  --sel-text: #e9edf0;
-  --sel-placeholder: #9aa8b3;
-  --sel-highlight-bg: #0d6ea8;
+  --sel-bg: #ffffff;
+  --sel-bg-alt: #f8f9fa;
+  --sel-text: #212529;
+  --sel-placeholder: #6c757d;
+  --sel-highlight-bg: #4a90e2;
   --sel-highlight-text: #ffffff;
-  --sel-selected-bg: #043549;
-  --sel-meta-color: #7ea0b8;
-  --sel-scrollbar-thumb: #0d6ea8;
-  --sel-scrollbar-track: #122029;
+  --sel-selected-bg: #e3f2fd;
+  --sel-meta-color: #495057;
+  --sel-scrollbar-thumb: #4a90e2;
+  --sel-scrollbar-track: #e9ecef;
 }
 
 /* ========= Icon styling ========= */
@@ -43,10 +43,10 @@ body.dark, body[data-theme="dark"] {
   min-width: 18px;
   text-align: center;
   font-size: 15px;
-  color: #000000;
+  color: #495057;
   line-height: 1;
 }
-body.dark .cat-icon { color: #58c9ff; }
+body.dark .cat-icon { color: #4a90e2; }
 
 /* Make icons white when option is highlighted */
 .select2-container--default .select2-results__option--highlighted[aria-selected] .cat-icon,
@@ -119,7 +119,7 @@ select.select2-hidden-accessible {
 .select2-container--default .select2-selection--single:focus,
 .select2-container--default .select2-selection--single:focus-visible {
   border-color: var(--sel-border-focus);
-  box-shadow: 0 0 0 3px rgba(4,169,244,.25);
+  box-shadow: 0 0 0 3px rgba(74,144,226,.15);
   outline: none;
 }
 
@@ -138,7 +138,7 @@ select.select2-hidden-accessible {
 }
 
 .select2-container--default .select2-selection--single .select2-selection__placeholder {
-  color: #000 !important;
+  color: #6c757d !important;
   white-space: normal;
   word-break: break-word;
   overflow-wrap: anywhere;

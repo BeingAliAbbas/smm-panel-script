@@ -3,11 +3,11 @@
   width: 100%;
   height: 100vh;
   z-index: 1;
-  background: #fa6d7e;
-  background: -webkit-linear-gradient(45deg, #fa6d7e, #f98c6b) !important;
-  background: -moz- oldlinear-gradient(45deg, #fa6d7e, #f98c6b) !important;
-  background: -o-linear-gradient(45deg, #fa6d7e, #f98c6b) !important;
-  background: linear-gradient(45deg, #fa6d7e, #f98c6b) !important;
+  background: #f8f9fa;
+  background: -webkit-linear-gradient(45deg, #f8f9fa, #e9ecef) !important;
+  background: -moz- oldlinear-gradient(45deg, #f8f9fa, #e9ecef) !important;
+  background: -o-linear-gradient(45deg, #f8f9fa, #e9ecef) !important;
+  background: linear-gradient(45deg, #f8f9fa, #e9ecef) !important;
 }
 
 /*section banner*/
@@ -18,7 +18,7 @@ section.banner{
   width: 100%;
   padding-top: 150px;
   padding-bottom: 100px;
-  color: #fff;
+  color: #212529;
   
 }
 
