@@ -5,15 +5,16 @@
 }
 
 .footer a:not(.btn) {
-  color: #a7a7a7;
+  color: #6c757d;
 }
 
 .footer .title{
-  color: #ededed;
+  color: #212529;
 }
 
 .footer_top.dark{
-  background-color: #000 !important;
+  background-color: #ffffff !important;
+  border-top: 1px solid #dee2e6;
 }
 
 .footer_top.dark .site-logo img{
@@ -21,15 +22,15 @@
 }
 
 .footer_top.dark .quick-link li a:hover{
-  color: #ff6f61;
+  color: #4a90e2;
 }
 
 .footer_bottom.dark{
-  background-color: #000 !important;
+  background-color: #f8f9fa !important;
 }
 .footer_bottom.dark .container{
   padding: 20px;
-  border-top: 2px solid #a7a7a7;
+  border-top: 2px solid #dee2e6;
 }
 
 .footer-lang-selector {
@@ -37,10 +38,10 @@
   margin-left: 20px;
   padding: 3px;
   display: inline-block;
-  border: 1px solid #6D7784;
+  border: 1px solid #ced4da;
   outline: none;
-  background-color: transparent;
-  color: #a7a7a7;
+  background-color: #ffffff;
+  color: #495057;
   font-size: 14px;
   line-height: 24px;
 }
