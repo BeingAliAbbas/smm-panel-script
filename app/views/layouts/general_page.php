@@ -47,15 +47,14 @@
     <div id="page-overlay" class="visible incoming">
       <div class="loader-wrapper-outer">
         <div class="loader-wrapper-inner">
-          <div class="lds-double-ring">
-            <div></div>
-            <div></div>
-            <div>
-              <div></div>
-            </div>
-            <div>
-              <div></div>
-            </div>
+          <div class="modern-loader">
+            <div class="outer-ring"></div>
+            <div class="middle-ring"></div>
+            <div class="inner-ring"></div>
+            <div class="center-dot"></div>
+          </div>
+          <div class="loading-text" style="color: #667eea; font-size: 18px; font-weight:600; font-family: 'Segoe UI', Arial, sans-serif; margin-top: 25px; text-align: center; letter-spacing: 1px;">
+            <span>Loading...</span>
           </div>
         </div>
       </div>

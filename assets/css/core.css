@@ -18685,138 +18685,119 @@ svg {
 }
 
 
-@keyframes lds-double-ring {
+/* Modern Advanced Loader Animation */
+@keyframes modern-spin {
   0% {
-    -webkit-transform: rotate(0);
-    transform: rotate(0);
+    transform: rotate(0deg);
   }
   100% {
-    -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }
-@-webkit-keyframes lds-double-ring {
-  0% {
-    -webkit-transform: rotate(0);
-    transform: rotate(0);
+
+@keyframes modern-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
   }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@keyframes lds-double-ring_reverse {
-  0% {
-    -webkit-transform: rotate(0);
-    transform: rotate(0);
-  }
-  100% {
-    -webkit-transform: rotate(-360deg);
-    transform: rotate(-360deg);
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
   }
 }
-@-webkit-keyframes lds-double-ring_reverse {
+
+@keyframes modern-gradient-shift {
   0% {
-    -webkit-transform: rotate(0);
-    transform: rotate(0);
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
   }
   100% {
-    -webkit-transform: rotate(-360deg);
-    transform: rotate(-360deg);
+    background-position: 0% 50%;
   }
 }
-#page-overlay .lds-double-ring {
+
+@keyframes modern-inner-spin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(0.95);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+#page-overlay .modern-loader {
   position: relative;
-}
-#page-overlay .lds-double-ring div {
-  box-sizing: border-box;
-}
-#page-overlay .lds-double-ring > div {
-  position: absolute;
-  width: 44px;
-  height: 44px;
-  top: 78px;
-  left: 78px;
-  border-radius: 50%;
-  border: 4px solid #000;
-  border-color: #2196f3 transparent #2196f3 transparent;
-  -webkit-animation: lds-double-ring 1s linear infinite;
-  animation: lds-double-ring 1s linear infinite;
-}
-#page-overlay .lds-double-ring > div:nth-child(2),
-#page-overlay .lds-double-ring > div:nth-child(4) {
-  width: 32px;
-  height: 32px;
-  top: 84px;
-  left: 84px;
-  -webkit-animation: lds-double-ring_reverse 1s linear infinite;
-  animation: lds-double-ring_reverse 1s linear infinite;
-}
-#page-overlay .lds-double-ring > div:nth-child(2) {
-  border-color: transparent #2196f3 transparent #2196f3;
-}
-#page-overlay .lds-double-ring > div:nth-child(3) {
-  border-color: transparent;
-}
-#page-overlay .lds-double-ring > div:nth-child(3) div {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  -webkit-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-#page-overlay .lds-double-ring > div:nth-child(3) div:before,
-#page-overlay .lds-double-ring > div:nth-child(3) div:after {
-  content: "";
-  display: block;
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  top: -4px;
-  left: 16px;
-  background: #2196f3;
-  border-radius: 50%;
-  box-shadow: 0 40px 0 0 #2196f3;
-}
-#page-overlay .lds-double-ring > div:nth-child(3) div:after {
-  left: -4px;
-  top: 16px;
-  box-shadow: 40px 0 0 0 #2196f3;
-}
-#page-overlay .lds-double-ring > div:nth-child(4) {
-  border-color: transparent;
-}
-#page-overlay .lds-double-ring > div:nth-child(4) div {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  -webkit-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-#page-overlay .lds-double-ring > div:nth-child(4) div:before,
-#page-overlay .lds-double-ring > div:nth-child(4) div:after {
-  content: "";
-  display: block;
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  top: -4px;
-  left: 10px;
-  background: #2196f3;
-  border-radius: 50%;
-  box-shadow: 0 28px 0 0 #2196f3;
-}
-#page-overlay .lds-double-ring > div:nth-child(4) div:after {
-  left: -4px;
-  top: 10px;
-  box-shadow: 28px 0 0 0 #2196f3;
-}
-#page-overlay .lds-double-ring {
-  width: 200px !important;
-  height: 200px !important;
+  width: 120px;
+  height: 120px;
   display: inline-block;
-  -webkit-transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
-  transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
+}
+
+#page-overlay .modern-loader .outer-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 6px solid transparent;
+  border-top: 6px solid;
+  border-image: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%) 1;
+  animation: modern-spin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+}
+
+#page-overlay .modern-loader .middle-ring {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 5px solid transparent;
+  border-right: 5px solid;
+  border-image: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%) 1;
+  animation: modern-spin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite reverse;
+  box-shadow: 0 0 15px rgba(245, 87, 108, 0.2);
+}
+
+#page-overlay .modern-loader .inner-ring {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  border-bottom: 4px solid;
+  border-image: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f5576c 100%) 1;
+  animation: modern-inner-spin 2s ease-in-out infinite;
+  box-shadow: 0 0 10px rgba(118, 75, 162, 0.25);
+}
+
+#page-overlay .modern-loader .center-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background-size: 200% 200%;
+  animation: modern-gradient-shift 3s ease infinite, modern-pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 15px rgba(102, 126, 234, 0.6), 0 0 30px rgba(118, 75, 162, 0.4);
+}
+
+/* Webkit support for gradient borders */
+#page-overlay .modern-loader .outer-ring,
+#page-overlay .modern-loader .middle-ring,
+#page-overlay .modern-loader .inner-ring {
+  -webkit-border-image: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%) 1;
 }
 
 
