@@ -115,12 +115,19 @@ $(document).ready(function(){
   $('#importUsersForm').on('submit', function(e){
     e.preventDefault();
     var $form = $(this);
+    var formData = $form.serializeArray();
+    
+    // Add CSRF token if it exists
+    var csrfToken = $('input[name="csrf_test_name"]').val();
+    if (csrfToken) {
+      formData.push({name: 'csrf_test_name', value: csrfToken});
+    }
     
     $.ajax({
       url: $form.attr('action'),
       type: 'POST',
       dataType: 'json',
-      data: $form.serialize(),
+      data: $.param(formData),
       beforeSend: function(){
         $form.find('button').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Importing...');
       },
@@ -129,14 +136,18 @@ $(document).ready(function(){
           show_message(response.message, 'success');
           setTimeout(function(){
             location.reload();
-          }, 1000);
+          }, 500);
         } else {
           show_message(response.message, 'error');
           $form.find('button').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
         }
       },
       error: function(xhr, status, error){
-        show_message('An error occurred while importing users. Please try again.', 'error');
+        var errorMsg = 'An error occurred while importing users. Please try again.';
+        if (xhr.responseJSON && xhr.responseJSON.message) {
+          errorMsg = xhr.responseJSON.message;
+        }
+        show_message(errorMsg, 'error');
         $form.find('button').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
       }
     });
@@ -147,6 +158,12 @@ $(document).ready(function(){
     e.preventDefault();
     var $form = $(this);
     var formData = new FormData($form[0]);
+    
+    // Add CSRF token if it exists
+    var csrfToken = $('input[name="csrf_test_name"]').val();
+    if (csrfToken) {
+      formData.append('csrf_test_name', csrfToken);
+    }
     
     $.ajax({
       url: $form.attr('action'),
@@ -163,14 +180,18 @@ $(document).ready(function(){
           show_message(response.message, 'success');
           setTimeout(function(){
             location.reload();
-          }, 1000);
+          }, 500);
         } else {
           show_message(response.message, 'error');
           $form.find('button').prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
         }
       },
       error: function(xhr, status, error){
-        show_message('An error occurred while uploading CSV. Please try again.', 'error');
+        var errorMsg = 'An error occurred while uploading CSV. Please try again.';
+        if (xhr.responseJSON && xhr.responseJSON.message) {
+          errorMsg = xhr.responseJSON.message;
+        }
+        show_message(errorMsg, 'error');
         $form.find('button').prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
       }
     });

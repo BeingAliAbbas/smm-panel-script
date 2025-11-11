@@ -585,15 +585,22 @@ class Email_marketing extends MX_Controller {
             ));
         }
         
-        $imported = $this->model->import_from_users($campaign->id);
-        
-        // Update campaign stats
-        $this->model->update_campaign_stats($campaign->id);
-        
-        ms(array(
-            "status" => "success",
-            "message" => "Imported {$imported} users successfully"
-        ));
+        try {
+            $imported = $this->model->import_from_users($campaign->id);
+            
+            // Update campaign stats
+            $this->model->update_campaign_stats($campaign->id);
+            
+            ms(array(
+                "status" => "success",
+                "message" => "Imported {$imported} users successfully"
+            ));
+        } catch (Exception $e) {
+            ms(array(
+                "status" => "error",
+                "message" => "Error importing users: " . $e->getMessage()
+            ));
+        }
     }
     
     public function ajax_import_from_csv(){

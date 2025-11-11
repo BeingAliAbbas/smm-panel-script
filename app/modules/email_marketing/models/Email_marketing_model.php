@@ -343,44 +343,56 @@ class Email_marketing_model extends MY_Model {
     }
     
     public function import_from_users($campaign_id, $filters = []) {
-        // Select only users who have placed at least 1 order
-        $this->db->select('u.id, u.email, u.firstname as name, u.balance, COUNT(o.id) as order_count');
-        $this->db->from(USERS . ' u');
-        $this->db->join(ORDER . ' o', 'u.id = o.uid', 'inner');
-        $this->db->where('u.status', 1);
-        $this->db->group_by('u.id');
-        $this->db->having('order_count >', 0);
-        
-        // Apply filters if provided
-        if (!empty($filters['role'])) {
-            $this->db->where('u.role', $filters['role']);
-        }
-        
-        $query = $this->db->get();
-        $users = $query->result();
-        
-        $imported = 0;
-        foreach ($users as $user) {
-            // Check if already exists
-            $this->db->where('campaign_id', $campaign_id);
-            $this->db->where('email', $user->email);
-            $exists = $this->db->count_all_results($this->tb_recipients);
+        try {
+            // Select only users who have placed at least 1 order
+            $this->db->select('u.id, u.email, u.firstname as name, u.balance, COUNT(o.id) as order_count');
+            $this->db->from(USERS . ' u');
+            $this->db->join(ORDER . ' o', 'u.id = o.uid', 'inner');
+            $this->db->where('u.status', 1);
+            $this->db->group_by('u.id');
+            $this->db->having('order_count >', 0);
             
-            if ($exists == 0) {
-                $custom_data = [
-                    'username' => $user->name,
-                    'email' => $user->email,
-                    'balance' => $user->balance,
-                    'total_orders' => $user->order_count
-                ];
+            // Apply filters if provided
+            if (!empty($filters['role'])) {
+                $this->db->where('u.role', $filters['role']);
+            }
+            
+            $query = $this->db->get();
+            
+            // Check for database errors
+            if (!$query) {
+                log_message('error', 'Email Marketing: Failed to query users - ' . $this->db->error()['message']);
+                return 0;
+            }
+            
+            $users = $query->result();
+            
+            $imported = 0;
+            foreach ($users as $user) {
+                // Check if already exists
+                $this->db->where('campaign_id', $campaign_id);
+                $this->db->where('email', $user->email);
+                $exists = $this->db->count_all_results($this->tb_recipients);
                 
-                if ($this->add_recipient($campaign_id, $user->email, $user->name, $user->id, $custom_data)) {
-                    $imported++;
+                if ($exists == 0) {
+                    $custom_data = [
+                        'username' => $user->name,
+                        'email' => $user->email,
+                        'balance' => $user->balance,
+                        'total_orders' => $user->order_count
+                    ];
+                    
+                    if ($this->add_recipient($campaign_id, $user->email, $user->name, $user->id, $custom_data)) {
+                        $imported++;
+                    }
                 }
             }
+            
+            return $imported;
+        } catch (Exception $e) {
+            log_message('error', 'Email Marketing: Error in import_from_users - ' . $e->getMessage());
+            return 0;
         }
-        
-        return $imported;
     }
     
     public function import_from_csv($campaign_id, $file_path) {
