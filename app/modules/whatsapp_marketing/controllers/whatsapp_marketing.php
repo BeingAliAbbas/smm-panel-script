@@ -95,10 +95,11 @@ class whatsapp_marketing extends MX_Controller {
      * Edit campaign
      */
     public function edit($id = null) {
-        if (!$id) {
+        if (!$id || !is_numeric($id)) {
             redirect(cn('whatsapp_marketing'));
         }
         
+        $id = (int)$id;
         $campaign = $this->model->get_campaign($id);
         if (!$campaign) {
             redirect(cn('whatsapp_marketing'));
@@ -128,18 +129,28 @@ class whatsapp_marketing extends MX_Controller {
      * Save campaign (create or update)
      */
     private function _save_campaign($id = null) {
-        $campaign_name = $this->input->post('campaign_name');
-        $message_content = $this->input->post('message_content');
-        $api_config_id = $this->input->post('api_config_id');
-        $recipient_source = $this->input->post('recipient_source');
-        $limit_per_hour = $this->input->post('limit_per_hour');
-        $limit_per_day = $this->input->post('limit_per_day');
+        $campaign_name = $this->input->post('campaign_name', true);
+        $message_content = $this->input->post('message_content', true);
+        $api_config_id = (int)$this->input->post('api_config_id');
+        $recipient_source = $this->input->post('recipient_source', true);
+        $limit_per_hour = $this->input->post('limit_per_hour') ? (int)$this->input->post('limit_per_hour') : null;
+        $limit_per_day = $this->input->post('limit_per_day') ? (int)$this->input->post('limit_per_day') : null;
         $retry_failed = $this->input->post('retry_failed') ? 1 : 0;
         
+        // Validate required fields
         if (empty($campaign_name) || empty($message_content) || empty($api_config_id)) {
             ms([
                 'status' => 'error',
                 'message' => 'Please fill all required fields'
+            ]);
+        }
+        
+        // Validate API config exists
+        $api_config = $this->model->get_api_config($api_config_id);
+        if (!$api_config) {
+            ms([
+                'status' => 'error',
+                'message' => 'Invalid API configuration selected'
             ]);
         }
         
@@ -185,6 +196,26 @@ class whatsapp_marketing extends MX_Controller {
             } elseif ($recipient_source == 'import') {
                 // Handle file upload
                 if (isset($_FILES['import_file']) && $_FILES['import_file']['error'] == 0) {
+                    // Validate file type
+                    $allowed_types = ['text/plain', 'text/csv', 'application/csv', 'text/comma-separated-values'];
+                    $file_type = $_FILES['import_file']['type'];
+                    $file_ext = strtolower(pathinfo($_FILES['import_file']['name'], PATHINFO_EXTENSION));
+                    
+                    if (!in_array($file_ext, ['csv', 'txt'])) {
+                        ms([
+                            'status' => 'error',
+                            'message' => 'Invalid file type. Only CSV and TXT files are allowed.'
+                        ]);
+                    }
+                    
+                    // Validate file size (max 5MB)
+                    if ($_FILES['import_file']['size'] > 5 * 1024 * 1024) {
+                        ms([
+                            'status' => 'error',
+                            'message' => 'File size exceeds 5MB limit.'
+                        ]);
+                    }
+                    
                     $file_content = file_get_contents($_FILES['import_file']['tmp_name']);
                     $lines = explode("\n", $file_content);
                     
@@ -197,12 +228,12 @@ class whatsapp_marketing extends MX_Controller {
                         $parts = str_getcsv($line);
                         $phone = preg_replace('/[^0-9]/', '', $parts[0]);
                         
-                        if (!empty($phone) && !in_array($phone, $seen_numbers)) {
+                        if (!empty($phone) && strlen($phone) >= 10 && !in_array($phone, $seen_numbers)) {
                             $seen_numbers[] = $phone;
                             $recipients[] = [
                                 'phone_number' => $phone,
-                                'username' => isset($parts[1]) ? $parts[1] : '',
-                                'email' => isset($parts[2]) ? $parts[2] : '',
+                                'username' => isset($parts[1]) ? strip_tags($parts[1]) : '',
+                                'email' => isset($parts[2]) ? filter_var($parts[2], FILTER_SANITIZE_EMAIL) : '',
                                 'balance' => 0,
                                 'source' => 'import'
                             ];
@@ -232,10 +263,11 @@ class whatsapp_marketing extends MX_Controller {
      * View campaign details
      */
     public function view($id = null) {
-        if (!$id) {
+        if (!$id || !is_numeric($id)) {
             redirect(cn('whatsapp_marketing'));
         }
         
+        $id = (int)$id;
         $campaign = $this->model->get_campaign($id);
         if (!$campaign) {
             redirect(cn('whatsapp_marketing'));
@@ -287,10 +319,11 @@ class whatsapp_marketing extends MX_Controller {
      * Start campaign
      */
     public function start($id = null) {
-        if (!$id) {
+        if (!$id || !is_numeric($id)) {
             ms(['status' => 'error', 'message' => 'Invalid campaign ID']);
         }
         
+        $id = (int)$id;
         $campaign = $this->model->get_campaign($id);
         if (!$campaign) {
             ms(['status' => 'error', 'message' => 'Campaign not found']);
@@ -319,10 +352,11 @@ class whatsapp_marketing extends MX_Controller {
      * Pause campaign
      */
     public function pause($id = null) {
-        if (!$id) {
+        if (!$id || !is_numeric($id)) {
             ms(['status' => 'error', 'message' => 'Invalid campaign ID']);
         }
         
+        $id = (int)$id;
         $this->model->update_campaign($id, ['status' => 'paused']);
         
         ms([
@@ -336,10 +370,11 @@ class whatsapp_marketing extends MX_Controller {
      * Resume campaign
      */
     public function resume($id = null) {
-        if (!$id) {
+        if (!$id || !is_numeric($id)) {
             ms(['status' => 'error', 'message' => 'Invalid campaign ID']);
         }
         
+        $id = (int)$id;
         $this->model->update_campaign($id, ['status' => 'running']);
         
         ms([
@@ -411,12 +446,17 @@ class whatsapp_marketing extends MX_Controller {
      */
     public function api_config_create() {
         if ($this->input->post()) {
-            $profile_name = $this->input->post('profile_name');
-            $api_endpoint = $this->input->post('api_endpoint');
-            $api_key = $this->input->post('api_key');
+            $profile_name = $this->input->post('profile_name', true);
+            $api_endpoint = $this->input->post('api_endpoint', true);
+            $api_key = $this->input->post('api_key', true);
             
             if (empty($profile_name) || empty($api_key)) {
                 ms(['status' => 'error', 'message' => 'Please fill all required fields']);
+            }
+            
+            // Validate URL format
+            if (!empty($api_endpoint) && !filter_var($api_endpoint, FILTER_VALIDATE_URL)) {
+                ms(['status' => 'error', 'message' => 'Invalid API endpoint URL']);
             }
             
             $this->model->create_api_config([
@@ -446,22 +486,28 @@ class whatsapp_marketing extends MX_Controller {
      * Edit API config
      */
     public function api_config_edit($id = null) {
-        if (!$id) {
+        if (!$id || !is_numeric($id)) {
             redirect(cn('whatsapp_marketing/api_config'));
         }
         
+        $id = (int)$id;
         $config = $this->model->get_api_config($id);
         if (!$config) {
             redirect(cn('whatsapp_marketing/api_config'));
         }
         
         if ($this->input->post()) {
-            $profile_name = $this->input->post('profile_name');
-            $api_endpoint = $this->input->post('api_endpoint');
-            $api_key = $this->input->post('api_key');
+            $profile_name = $this->input->post('profile_name', true);
+            $api_endpoint = $this->input->post('api_endpoint', true);
+            $api_key = $this->input->post('api_key', true);
             
             if (empty($profile_name) || empty($api_key)) {
                 ms(['status' => 'error', 'message' => 'Please fill all required fields']);
+            }
+            
+            // Validate URL format
+            if (!empty($api_endpoint) && !filter_var($api_endpoint, FILTER_VALIDATE_URL)) {
+                ms(['status' => 'error', 'message' => 'Invalid API endpoint URL']);
             }
             
             $this->model->update_api_config($id, [
@@ -491,10 +537,11 @@ class whatsapp_marketing extends MX_Controller {
      * Delete API config
      */
     public function api_config_delete($id = null) {
-        if (!$id) {
+        if (!$id || !is_numeric($id)) {
             ms(['status' => 'error', 'message' => 'Invalid configuration ID']);
         }
         
+        $id = (int)$id;
         $this->model->delete_api_config($id);
         
         ms([
@@ -684,10 +731,11 @@ class whatsapp_marketing extends MX_Controller {
      * Export campaign logs
      */
     public function export($id = null, $format = 'csv') {
-        if (!$id) {
+        if (!$id || !is_numeric($id)) {
             redirect(cn('whatsapp_marketing'));
         }
         
+        $id = (int)$id;
         $campaign = $this->model->get_campaign($id);
         if (!$campaign) {
             redirect(cn('whatsapp_marketing'));
