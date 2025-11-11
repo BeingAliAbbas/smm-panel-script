@@ -121,6 +121,9 @@ $route['cron/email_marketing'] = 'Email_cron/run';
 // Email Marketing tracking (public endpoint)
 $route['email_marketing/track/(:any)'] = 'email_marketing/track/$1';
 
+// WhatsApp Marketing cron
+$route['cron/whatsapp_marketing'] = 'Whatsapp_cron/index';
+
 // client area
 $route['faq']               = 'client/faq';
 $route['terms']             = 'client/terms';
