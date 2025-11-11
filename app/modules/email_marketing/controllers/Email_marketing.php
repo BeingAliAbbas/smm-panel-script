@@ -575,6 +575,10 @@ class Email_marketing extends MX_Controller {
     public function ajax_import_from_users(){
         _is_ajax($this->module);
         
+        // Increase PHP timeout for this operation
+        @set_time_limit(120);
+        @ini_set('max_execution_time', 120);
+        
         $campaign_ids = post("campaign_ids");
         $campaign = $this->model->get_campaign($campaign_ids);
         
@@ -586,16 +590,25 @@ class Email_marketing extends MX_Controller {
         }
         
         try {
-            $imported = $this->model->import_from_users($campaign->id);
+            // Import with limit to prevent timeout (max 1000 users)
+            $imported = $this->model->import_from_users($campaign->id, [], 1000);
             
             // Update campaign stats
             $this->model->update_campaign_stats($campaign->id);
             
-            ms(array(
-                "status" => "success",
-                "message" => "Imported {$imported} users successfully"
-            ));
+            if ($imported > 0) {
+                ms(array(
+                    "status" => "success",
+                    "message" => "Successfully imported {$imported} users with order history"
+                ));
+            } else {
+                ms(array(
+                    "status" => "error",
+                    "message" => "No users found with order history or all users already imported"
+                ));
+            }
         } catch (Exception $e) {
+            log_message('error', 'Email Marketing Import Error: ' . $e->getMessage());
             ms(array(
                 "status" => "error",
                 "message" => "Error importing users: " . $e->getMessage()

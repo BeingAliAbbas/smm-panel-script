@@ -128,6 +128,7 @@ $(document).ready(function(){
       type: 'POST',
       dataType: 'json',
       data: $.param(formData),
+      timeout: 60000, // 60 seconds timeout
       beforeSend: function(){
         $form.find('button').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Importing...');
       },
@@ -143,10 +144,23 @@ $(document).ready(function(){
         }
       },
       error: function(xhr, status, error){
-        var errorMsg = 'An error occurred while importing users. Please try again.';
-        if (xhr.responseJSON && xhr.responseJSON.message) {
+        var errorMsg = 'An error occurred while importing users.';
+        
+        if (status === 'timeout') {
+          errorMsg = 'Request timed out. The import may be taking too long. Please check if users have been imported or try again with fewer users.';
+        } else if (xhr.responseJSON && xhr.responseJSON.message) {
           errorMsg = xhr.responseJSON.message;
+        } else if (xhr.responseText) {
+          try {
+            var response = JSON.parse(xhr.responseText);
+            if (response.message) {
+              errorMsg = response.message;
+            }
+          } catch(e) {
+            // Not JSON, show generic error
+          }
         }
+        
         show_message(errorMsg, 'error');
         $form.find('button').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
       }
@@ -172,6 +186,7 @@ $(document).ready(function(){
       data: formData,
       processData: false,
       contentType: false,
+      timeout: 60000, // 60 seconds timeout
       beforeSend: function(){
         $form.find('button').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Uploading...');
       },
@@ -187,10 +202,14 @@ $(document).ready(function(){
         }
       },
       error: function(xhr, status, error){
-        var errorMsg = 'An error occurred while uploading CSV. Please try again.';
-        if (xhr.responseJSON && xhr.responseJSON.message) {
+        var errorMsg = 'An error occurred while uploading CSV.';
+        
+        if (status === 'timeout') {
+          errorMsg = 'Request timed out. The upload may be taking too long. Please try with a smaller file.';
+        } else if (xhr.responseJSON && xhr.responseJSON.message) {
           errorMsg = xhr.responseJSON.message;
         }
+        
         show_message(errorMsg, 'error');
         $form.find('button').prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
       }

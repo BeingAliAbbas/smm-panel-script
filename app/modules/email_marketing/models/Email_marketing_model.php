@@ -342,19 +342,26 @@ class Email_marketing_model extends MY_Model {
         return $this->db->insert($this->tb_recipients, $data);
     }
     
-    public function import_from_users($campaign_id, $filters = []) {
+    public function import_from_users($campaign_id, $filters = [], $limit = 1000) {
         try {
-            // Select only users who have placed at least 1 order
-            $this->db->select('u.id, u.email, u.firstname as name, u.balance, COUNT(o.id) as order_count');
+            // More efficient approach: Use WHERE EXISTS instead of JOIN + GROUP BY
+            // This will be much faster for large datasets
+            // Also add LIMIT to prevent timeout on very large datasets
+            $this->db->select('u.id, u.email, u.firstname as name, u.balance');
             $this->db->from(USERS . ' u');
-            $this->db->join(ORDER . ' o', 'u.id = o.uid', 'inner');
             $this->db->where('u.status', 1);
-            $this->db->group_by('u.id');
-            $this->db->having('order_count >', 0);
             
             // Apply filters if provided
             if (!empty($filters['role'])) {
                 $this->db->where('u.role', $filters['role']);
+            }
+            
+            // Only get users who have at least one order
+            $this->db->where("EXISTS (SELECT 1 FROM " . ORDER . " o WHERE o.uid = u.id LIMIT 1)", NULL, FALSE);
+            
+            // Limit to prevent timeout - max 1000 users at a time
+            if ($limit > 0) {
+                $this->db->limit($limit);
             }
             
             $query = $this->db->get();
@@ -375,11 +382,15 @@ class Email_marketing_model extends MY_Model {
                 $exists = $this->db->count_all_results($this->tb_recipients);
                 
                 if ($exists == 0) {
+                    // Get order count for this user (with limit to prevent slow queries)
+                    $this->db->where('uid', $user->id);
+                    $order_count = $this->db->count_all_results(ORDER);
+                    
                     $custom_data = [
                         'username' => $user->name,
                         'email' => $user->email,
                         'balance' => $user->balance,
-                        'total_orders' => $user->order_count
+                        'total_orders' => $order_count
                     ];
                     
                     if ($this->add_recipient($campaign_id, $user->email, $user->name, $user->id, $custom_data)) {
