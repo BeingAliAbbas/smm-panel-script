@@ -347,9 +347,12 @@ class Email_marketing_model extends MY_Model {
             // More efficient approach: Use WHERE EXISTS instead of JOIN + GROUP BY
             // This will be much faster for large datasets
             // Also add LIMIT to prevent timeout on very large datasets
-            $this->db->select('u.id, u.email, u.firstname as name, u.balance');
+            // Note: Using first_name (with underscore) as per actual database schema
+            $this->db->select('u.id, u.email, u.first_name as name, u.balance');
             $this->db->from(USERS . ' u');
             $this->db->where('u.status', 1);
+            $this->db->where('u.email IS NOT NULL', NULL, FALSE);
+            $this->db->where('u.email !=', '');
             
             // Apply filters if provided
             if (!empty($filters['role'])) {
@@ -357,6 +360,7 @@ class Email_marketing_model extends MY_Model {
             }
             
             // Only get users who have at least one order
+            // Using uid column from orders table as per schema
             $this->db->where("EXISTS (SELECT 1 FROM " . ORDER . " o WHERE o.uid = u.id LIMIT 1)", NULL, FALSE);
             
             // Limit to prevent timeout - max 1000 users at a time
@@ -376,6 +380,11 @@ class Email_marketing_model extends MY_Model {
             
             $imported = 0;
             foreach ($users as $user) {
+                // Skip if email is invalid
+                if (empty($user->email) || !filter_var($user->email, FILTER_VALIDATE_EMAIL)) {
+                    continue;
+                }
+                
                 // Check if already exists
                 $this->db->where('campaign_id', $campaign_id);
                 $this->db->where('email', $user->email);
@@ -387,9 +396,9 @@ class Email_marketing_model extends MY_Model {
                     $order_count = $this->db->count_all_results(ORDER);
                     
                     $custom_data = [
-                        'username' => $user->name,
+                        'username' => $user->name ? $user->name : 'User',
                         'email' => $user->email,
-                        'balance' => $user->balance,
+                        'balance' => $user->balance ? $user->balance : 0,
                         'total_orders' => $order_count
                     ];
                     
