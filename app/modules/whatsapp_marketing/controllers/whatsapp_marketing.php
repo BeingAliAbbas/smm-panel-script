@@ -19,19 +19,18 @@ class Whatsapp_marketing extends MX_Controller
         
         // Check if user is admin
         if (!get_role("admin")) {
-            redirect(admin_url());
+            _validation('error', "Permission Denied!");
         }
     }
 
     public function index()
     {
-        $data = [
-            'title' => 'WhatsApp Marketing Dashboard',
-            'module' => $this->module
-        ];
-        
-        $this->template->set_layout('default');
-        $this->template->build($this->module . '/index', $data);
+        $data = array(
+            "module" => $this->module,
+            "module_name" => $this->module_name,
+            "module_icon" => $this->module_icon
+        );
+        $this->template->build("index", $data);
     }
 
     // ===========================
@@ -40,14 +39,13 @@ class Whatsapp_marketing extends MX_Controller
 
     public function campaigns()
     {
-        $data = [
-            'title' => 'WhatsApp Campaigns',
-            'module' => $this->module,
+        $data = array(
+            "module" => $this->module,
+            "module_name" => $this->module_name,
+            "module_icon" => $this->module_icon,
             'campaigns' => $this->model->get_campaigns()
-        ];
-        
-        $this->template->set_layout('default');
-        $this->template->build($this->module . '/campaigns/index', $data);
+        );
+        $this->template->build("campaigns/index", $data);
     }
 
     public function campaign_create()
@@ -56,20 +54,19 @@ class Whatsapp_marketing extends MX_Controller
             try {
                 $campaign_id = $this->model->create_campaign($this->input->post());
                 
-                _msgbox_redirect(lang('Created successfully'), site_url($this->module . '/campaigns'));
+                _msgbox_redirect(lang('Created successfully'), cn($this->module . '/campaigns'));
             } catch (Exception $e) {
                 _msgbox_error($e->getMessage());
             }
         }
         
-        $data = [
-            'title' => 'Create WhatsApp Campaign',
-            'module' => $this->module,
+        $data = array(
+            "module" => $this->module,
+            "module_name" => $this->module_name,
+            "module_icon" => $this->module_icon,
             'api_configs' => $this->model->get_api_configs()
-        ];
-        
-        $this->template->set_layout('');
-        $this->template->build($this->module . '/campaigns/create', $data);
+        );
+        $this->template->build("campaigns/create", $data);
     }
 
     public function campaign_edit($id)
@@ -77,28 +74,27 @@ class Whatsapp_marketing extends MX_Controller
         $campaign = $this->model->get_campaign($id);
         
         if (!$campaign) {
-            _msgbox_redirect(lang('Campaign not found'), site_url($this->module . '/campaigns'));
+            _msgbox_redirect(lang('Campaign not found'), cn($this->module . '/campaigns'));
         }
         
         if ($this->input->post()) {
             try {
                 $this->model->update_campaign($id, $this->input->post());
                 
-                _msgbox_redirect(lang('Updated successfully'), site_url($this->module . '/campaigns'));
+                _msgbox_redirect(lang('Updated successfully'), cn($this->module . '/campaigns'));
             } catch (Exception $e) {
                 _msgbox_error($e->getMessage());
             }
         }
         
-        $data = [
-            'title' => 'Edit WhatsApp Campaign',
-            'module' => $this->module,
+        $data = array(
+            "module" => $this->module,
+            "module_name" => $this->module_name,
+            "module_icon" => $this->module_icon,
             'campaign' => $campaign,
             'api_configs' => $this->model->get_api_configs()
-        ];
-        
-        $this->template->set_layout('');
-        $this->template->build($this->module . '/campaigns/edit', $data);
+        );
+        $this->template->build("campaigns/edit", $data);
     }
 
     public function campaign_details($id)
@@ -106,43 +102,42 @@ class Whatsapp_marketing extends MX_Controller
         $campaign = $this->model->get_campaign($id);
         
         if (!$campaign) {
-            _msgbox_redirect(lang('Campaign not found'), site_url($this->module . '/campaigns'));
+            _msgbox_redirect(lang('Campaign not found'), cn($this->module . '/campaigns'));
         }
         
-        $data = [
-            'title' => 'Campaign Details',
-            'module' => $this->module,
+        $data = array(
+            "module" => $this->module,
+            "module_name" => $this->module_name,
+            "module_icon" => $this->module_icon,
             'campaign' => $campaign,
             'recipients' => $this->model->get_recipients($id),
             'logs' => $this->model->get_logs($id, 50)
-        ];
-        
-        $this->template->set_layout('default');
-        $this->template->build($this->module . '/campaigns/details', $data);
+        );
+        $this->template->build("campaigns/details", $data);
     }
 
     public function campaign_delete($id)
     {
         $this->model->delete_campaign($id);
-        _msgbox_redirect(lang('Deleted successfully'), site_url($this->module . '/campaigns'));
+        _msgbox_redirect(lang('Deleted successfully'), cn($this->module . '/campaigns'));
     }
 
     public function campaign_start($id)
     {
         $this->model->update_campaign($id, ['sending_status' => 'Started']);
-        _msgbox_redirect(lang('Campaign started'), site_url($this->module . '/campaigns'));
+        _msgbox_redirect(lang('Campaign started'), cn($this->module . '/campaigns'));
     }
 
     public function campaign_pause($id)
     {
         $this->model->update_campaign($id, ['sending_status' => 'Paused']);
-        _msgbox_redirect(lang('Campaign paused'), site_url($this->module . '/campaigns'));
+        _msgbox_redirect(lang('Campaign paused'), cn($this->module . '/campaigns'));
     }
 
     public function campaign_resume($id)
     {
         $this->model->update_campaign($id, ['sending_status' => 'Started']);
-        _msgbox_redirect(lang('Campaign resumed'), site_url($this->module . '/campaigns'));
+        _msgbox_redirect(lang('Campaign resumed'), cn($this->module . '/campaigns'));
     }
 
     // ===========================
@@ -151,14 +146,13 @@ class Whatsapp_marketing extends MX_Controller
 
     public function api_configs()
     {
-        $data = [
-            'title' => 'WhatsApp API Configurations',
-            'module' => $this->module,
+        $data = array(
+            "module" => $this->module,
+            "module_name" => $this->module_name,
+            "module_icon" => $this->module_icon,
             'configs' => $this->model->get_api_configs()
-        ];
-        
-        $this->template->set_layout('default');
-        $this->template->build($this->module . '/api_configs/index', $data);
+        );
+        $this->template->build("api_configs/index", $data);
     }
 
     public function api_config_create()
@@ -167,19 +161,18 @@ class Whatsapp_marketing extends MX_Controller
             try {
                 $this->model->create_api_config($this->input->post());
                 
-                _msgbox_redirect(lang('Created successfully'), site_url($this->module . '/api_configs'));
+                _msgbox_redirect(lang('Created successfully'), cn($this->module . '/api_configs'));
             } catch (Exception $e) {
                 _msgbox_error($e->getMessage());
             }
         }
         
-        $data = [
-            'title' => 'Create API Configuration',
-            'module' => $this->module
-        ];
-        
-        $this->template->set_layout('');
-        $this->template->build($this->module . '/api_configs/create', $data);
+        $data = array(
+            "module" => $this->module,
+            "module_name" => $this->module_name,
+            "module_icon" => $this->module_icon
+        );
+        $this->template->build("api_configs/create", $data);
     }
 
     public function api_config_edit($id)
@@ -187,33 +180,32 @@ class Whatsapp_marketing extends MX_Controller
         $config = $this->model->get_api_config($id);
         
         if (!$config) {
-            _msgbox_redirect(lang('Configuration not found'), site_url($this->module . '/api_configs'));
+            _msgbox_redirect(lang('Configuration not found'), cn($this->module . '/api_configs'));
         }
         
         if ($this->input->post()) {
             try {
                 $this->model->update_api_config($id, $this->input->post());
                 
-                _msgbox_redirect(lang('Updated successfully'), site_url($this->module . '/api_configs'));
+                _msgbox_redirect(lang('Updated successfully'), cn($this->module . '/api_configs'));
             } catch (Exception $e) {
                 _msgbox_error($e->getMessage());
             }
         }
         
-        $data = [
-            'title' => 'Edit API Configuration',
-            'module' => $this->module,
+        $data = array(
+            "module" => $this->module,
+            "module_name" => $this->module_name,
+            "module_icon" => $this->module_icon,
             'config' => $config
-        ];
-        
-        $this->template->set_layout('');
-        $this->template->build($this->module . '/api_configs/edit', $data);
+        );
+        $this->template->build("api_configs/edit", $data);
     }
 
     public function api_config_delete($id)
     {
         $this->model->delete_api_config($id);
-        _msgbox_redirect(lang('Deleted successfully'), site_url($this->module . '/api_configs'));
+        _msgbox_redirect(lang('Deleted successfully'), cn($this->module . '/api_configs'));
     }
 
     // ===========================
@@ -225,18 +217,17 @@ class Whatsapp_marketing extends MX_Controller
         $campaign = $this->model->get_campaign($campaign_id);
         
         if (!$campaign) {
-            _msgbox_redirect(lang('Campaign not found'), site_url($this->module . '/campaigns'));
+            _msgbox_redirect(lang('Campaign not found'), cn($this->module . '/campaigns'));
         }
         
-        $data = [
-            'title' => 'Campaign Recipients',
-            'module' => $this->module,
+        $data = array(
+            "module" => $this->module,
+            "module_name" => $this->module_name,
+            "module_icon" => $this->module_icon,
             'campaign' => $campaign,
             'recipients' => $this->model->get_recipients($campaign_id)
-        ];
-        
-        $this->template->set_layout('default');
-        $this->template->build($this->module . '/recipients/index', $data);
+        );
+        $this->template->build("recipients/index", $data);
     }
 
     public function import_from_users()
@@ -291,14 +282,13 @@ class Whatsapp_marketing extends MX_Controller
 
     public function reports()
     {
-        $data = [
-            'title' => 'WhatsApp Campaign Reports',
-            'module' => $this->module,
+        $data = array(
+            "module" => $this->module,
+            "module_name" => $this->module_name,
+            "module_icon" => $this->module_icon,
             'campaigns' => $this->model->get_campaigns()
-        ];
-        
-        $this->template->set_layout('default');
-        $this->template->build($this->module . '/reports/index', $data);
+        );
+        $this->template->build("reports/index", $data);
     }
 
     public function export_report($campaign_id)
@@ -306,7 +296,7 @@ class Whatsapp_marketing extends MX_Controller
         $campaign = $this->model->get_campaign($campaign_id);
         
         if (!$campaign) {
-            _msgbox_redirect(lang('Campaign not found'), site_url($this->module . '/reports'));
+            _msgbox_redirect(lang('Campaign not found'), cn($this->module . '/reports'));
         }
         
         $report_data = $this->model->export_campaign_report($campaign_id);
