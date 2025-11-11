@@ -138,6 +138,31 @@
       .select2-container--default .select2-results__option{ margin:3px 6px; padding:10px 10px; }
       .select2-container--default .select2-results > .select2-results__options{ max-height: 360px !important; }
     }
+    .youtube-btn {
+  display: inline-block;
+  padding: 0.92em 2em;
+  font-size: 1.22em;
+  font-weight: 700;
+  color: #fff !important;
+  background: #e52d27;
+  border-radius: 44px;
+  border: none;
+  text-decoration: none !important;
+  box-shadow: 0 2px 12px rgba(229,45,39,.18);
+  transition: background .21s cubic-bezier(.4,0,.2,1), box-shadow .19s;
+  outline: none;
+}
+.youtube-btn:hover,
+.youtube-btn:focus {
+  background: #b31217;
+  color: #fff;
+  box-shadow: 0 4px 24px rgba(229,45,39,.27);
+  text-decoration: none;
+}
+.youtube-btn i.fa-youtube-play {
+  font-size: 1.1em;
+  vertical-align: middle;
+}
   </style>
 </head>
 
@@ -151,34 +176,14 @@
     </div></div>
   <?php endif; ?>
 
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="accordion" id="faqAddFunds">
-        <div class="card" style="background:transparent; border:none;">
-          <div class="card-header" id="headingAddFunds" style="background:transparent; border:none; padding-left:0;">
-            <h2 class="mb-0">
-              <button class="btn btn-link text-white d-flex align-items-center" type="button"
-                      data-toggle="collapse" data-target="#collapseAddFunds"
-                      aria-expanded="false" aria-controls="collapseAddFunds"
-                      style="font-size:1.3rem; text-decoration:none;">
-                <span class="mr-2 arrow-icon" style="transition:transform .3s;"><i class="fa fa-chevron-down"></i></span>
-                <i class="fa fa-question-circle mr-2"></i> How to add funds?
-              </button>
-            </h2>
-          </div>
-          <div id="collapseAddFunds" class="collapse" aria-labelledby="headingAddFunds" data-parent="#faqAddFunds">
-            <div class="card-body" style="text-align:center;">
-              <div style="display:inline-block; padding:4px; border-radius:24px; background:linear-gradient(to right,#05cbfd 0%,#203d9d 100%); margin-left:-26px;">
-                <iframe width="315" height="570" src="https://www.youtube.com/embed/wnCQolxg7OY?si=IHJBmRhhcZPAlbHr"
-                        title="YouTube Shorts" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen
-                        style="border-radius:20px; background:#fff; border:none; display:block;"></iframe>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div><!-- /accordion -->
+<!-- Red rounded YouTube button instead of accordion -->
+  <div class="row mb-3">
+    <div class="col-sm-12 text-center">
+      <a href="https://www.youtube.com/embed/wnCQolxg7OY?si=IHJBmRhhcZPAlbHr"
+         target="_blank"
+         class="youtube-btn">
+        <i class="fa fa-youtube-play mr-2"></i> Watch Tutorial on YouTube
+      </a>
     </div>
   </div>
 

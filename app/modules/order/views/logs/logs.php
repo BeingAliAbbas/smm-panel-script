@@ -267,7 +267,7 @@
                     if (get_role('admin') && $row->status == 'error') {
                     ?>
                       <!-- Single order resend as anchor (no JS, follows original) -->
-                      <a href="<?=cn("$module/change_status/resend_order/".$row->id)?>" class="">
+                      <a href="<?=cn("$module/change_status/resend_order/".$row->ids)?>" class="">
                         <i class="btn btn-success fe fe-send"> Resend</i>
                       </a>
                       <br><br>
