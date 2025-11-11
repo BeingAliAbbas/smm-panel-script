@@ -122,7 +122,7 @@ INSERT INTO `whatsapp_settings` (`setting_key`, `setting_value`) VALUES
 ('retry_failed_attempts', '3'),
 ('retry_delay_minutes', '5'),
 ('enable_delivery_tracking', '1')
-ON DUPLICATE KEY UPDATE `setting_value` = VALUES(`setting_value`);
+ON DUPLICATE KEY UPDATE `setting_value` = `setting_value`;
 
 -- =====================================================
 -- Insert sample WhatsApp API configuration (must be updated)
@@ -131,7 +131,7 @@ INSERT INTO `whatsapp_api_configs`
 (`ids`, `name`, `api_key`, `api_endpoint`, `is_default`, `status`) 
 VALUES
 (MD5(CONCAT('whatsapp_default', NOW())), 'Default WhatsApp API', 'YOUR_API_KEY', 'http://waapi.beastsmm.pk/send-message', 1, 0)
-ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
+ON DUPLICATE KEY UPDATE `name` = 'Default WhatsApp API';
 
 -- =====================================================
 -- Add foreign key constraints (optional, for data integrity)

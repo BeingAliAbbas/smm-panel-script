@@ -11,7 +11,7 @@
       </h1>
       <div class="page-subtitle">
         <a href="<?php echo cn($module); ?>" class="btn btn-sm btn-secondary">
-          <i class="fa fa-arrow-left"></i> Back to Dashboard
+          <i class="fe fe-arrow-left"></i> Back to Dashboard
         </a>
       </div>
     </div>
@@ -25,7 +25,7 @@
       <div class="card-header">
         <h3 class="card-title">Campaign List</h3>
         <div class="card-options">
-          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fa fa-chevron-up"></i></a>
+          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
         </div>
       </div>
       <div class="table-responsive">
@@ -97,54 +97,84 @@
                 </div>
               </td>
               <td>
-                <div class="small">
-                  <span class="badge badge-success" title="Sent"><?php echo $campaign->sent_messages; ?></span>
-                  <span class="badge badge-danger" title="Failed"><?php echo $campaign->failed_messages; ?></span>
-                  <span class="badge badge-info" title="Delivered"><?php echo $campaign->delivered_messages; ?></span>
-                </div>
+                <small>
+                  <i class="fe fe-check-circle text-success"></i> <?php echo $campaign->sent_messages; ?> sent<br>
+                  <i class="fe fe-message-square text-info"></i> <?php echo $campaign->delivered_messages; ?> delivered<br>
+                  <i class="fe fe-x-circle text-danger"></i> <?php echo $campaign->failed_messages; ?> failed
+                </small>
               </td>
               <td>
-                <div class="item-action dropdown">
-                  <a href="javascript:void(0)" data-toggle="dropdown" class="icon">
-                    <i class="fa fa-ellipsis-v"></i>
+                <div class="btn-group">
+                  <a href="<?php echo cn($module . '/recipients/' . $campaign->ids); ?>" 
+                    class="btn btn-sm btn-icon" 
+                    data-toggle="tooltip" 
+                    title="Recipients">
+                    <i class="fe fe-users"></i>
                   </a>
-                  <div class="dropdown-menu dropdown-menu-right">
-                    <?php if($campaign->status == 'pending' || $campaign->status == 'paused'){ ?>
-                    <a href="javascript:void(0)" class="dropdown-item actionCampaignStatus" data-ids="<?php echo $campaign->ids; ?>" data-action="start">
-                      <i class="dropdown-icon fa fa-play text-success"></i> Start Sending
-                    </a>
-                    <?php } ?>
-                    
-                    <?php if($campaign->status == 'running'){ ?>
-                    <a href="javascript:void(0)" class="dropdown-item actionCampaignStatus" data-ids="<?php echo $campaign->ids; ?>" data-action="pause">
-                      <i class="dropdown-icon fa fa-pause text-warning"></i> Pause
-                    </a>
-                    <?php } ?>
-                    
-                    <?php if($campaign->status == 'paused'){ ?>
-                    <a href="javascript:void(0)" class="dropdown-item actionCampaignStatus" data-ids="<?php echo $campaign->ids; ?>" data-action="resume">
-                      <i class="dropdown-icon fa fa-play text-success"></i> Resume
-                    </a>
-                    <?php } ?>
-                    
-                    <a href="<?php echo cn($module . '/recipients/' . $campaign->ids); ?>" class="dropdown-item">
-                      <i class="dropdown-icon fa fa-users"></i> Recipients
-                    </a>
-                    
-                    <a href="<?php echo cn($module . '/logs/' . $campaign->ids); ?>" class="dropdown-item">
-                      <i class="dropdown-icon fa fa-file-text"></i> View Logs
-                    </a>
-                    
-                    <div class="dropdown-divider"></div>
-                    
-                    <a href="<?php echo cn($module . '/campaign_edit/' . $campaign->ids); ?>" class="dropdown-item ajaxModal">
-                      <i class="dropdown-icon fa fa-edit"></i> Edit
-                    </a>
-                    
-                    <a href="javascript:void(0)" class="dropdown-item actionCampaignDelete" data-ids="<?php echo $campaign->ids; ?>">
-                      <i class="dropdown-icon fa fa-trash text-danger"></i> Delete
-                    </a>
-                  </div>
+                  
+                  <a href="<?php echo cn($module . '/logs/' . $campaign->ids); ?>" 
+                    class="btn btn-sm btn-icon" 
+                    data-toggle="tooltip" 
+                    title="View Logs">
+                    <i class="fe fe-file-text"></i>
+                  </a>
+                  
+                  <?php if($campaign->status == 'pending' || $campaign->status == 'paused'){ ?>
+                  <a href="<?php echo cn($module . '/campaign_edit/' . $campaign->ids); ?>" 
+                    class="btn btn-sm btn-icon ajaxModal" 
+                    data-toggle="tooltip" 
+                    title="Edit">
+                    <i class="fe fe-edit"></i>
+                  </a>
+                  <?php } ?>
+                  
+                  <?php if($campaign->status == 'pending'){ ?>
+                  <a href="javascript:void(0)" 
+                    class="btn btn-sm btn-icon btn-success actionItem" 
+                    data-id="<?php echo $campaign->ids; ?>" 
+                    data-action="<?php echo cn($module . '/ajax_campaign_status'); ?>" 
+                    data-params='{"action": "start"}' 
+                    data-toggle="tooltip" 
+                    title="Start Campaign">
+                    <i class="fe fe-play"></i>
+                  </a>
+                  <?php } ?>
+                  
+                  <?php if($campaign->status == 'running'){ ?>
+                  <a href="javascript:void(0)" 
+                    class="btn btn-sm btn-icon btn-warning actionItem" 
+                    data-id="<?php echo $campaign->ids; ?>" 
+                    data-action="<?php echo cn($module . '/ajax_campaign_status'); ?>" 
+                    data-params='{"action": "pause"}' 
+                    data-toggle="tooltip" 
+                    title="Pause Campaign">
+                    <i class="fe fe-pause"></i>
+                  </a>
+                  <?php } ?>
+                  
+                  <?php if($campaign->status == 'paused'){ ?>
+                  <a href="javascript:void(0)" 
+                    class="btn btn-sm btn-icon btn-success actionItem" 
+                    data-id="<?php echo $campaign->ids; ?>" 
+                    data-action="<?php echo cn($module . '/ajax_campaign_status'); ?>" 
+                    data-params='{"action": "resume"}' 
+                    data-toggle="tooltip" 
+                    title="Resume Campaign">
+                    <i class="fe fe-play"></i>
+                  </a>
+                  <?php } ?>
+                  
+                  <?php if($campaign->status != 'running'){ ?>
+                  <a href="javascript:void(0)" 
+                    class="btn btn-sm btn-icon btn-danger actionItem" 
+                    data-id="<?php echo $campaign->ids; ?>" 
+                    data-action="<?php echo cn($module . '/ajax_campaign_delete'); ?>" 
+                    data-toggle="tooltip" 
+                    title="Delete" 
+                    data-confirm="Are you sure you want to delete this campaign?">
+                    <i class="fe fe-trash"></i>
+                  </a>
+                  <?php } ?>
                 </div>
               </td>
             </tr>
@@ -181,83 +211,3 @@
   </div>
   <?php } ?>
 </div>
-
-<script>
-$(document).ready(function(){
-  
-  // Campaign status actions
-  $(document).on('click', '.actionCampaignStatus', function(e){
-    e.preventDefault();
-    var ids = $(this).data('ids');
-    var action = $(this).data('action');
-    
-    var actionText = action.charAt(0).toUpperCase() + action.slice(1);
-    
-    swal({
-      title: actionText + ' Campaign?',
-      text: "Are you sure you want to " + action + " this campaign?",
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, ' + action + ' it!'
-    }).then((result) => {
-      if (result.value) {
-        $.ajax({
-          url: '<?php echo cn($module . '/ajax_campaign_status'); ?>/' + ids,
-          type: 'POST',
-          dataType: 'json',
-          data: {
-            action: action
-          },
-          success: function(data){
-            if(data.status == 'success'){
-              swal('Success!', data.message, 'success');
-              setTimeout(function(){
-                location.reload();
-              }, 1000);
-            } else {
-              swal('Error!', data.message, 'error');
-            }
-          }
-        });
-      }
-    });
-  });
-  
-  // Delete campaign
-  $(document).on('click', '.actionCampaignDelete', function(e){
-    e.preventDefault();
-    var ids = $(this).data('ids');
-    
-    swal({
-      title: 'Delete Campaign?',
-      text: "This will delete the campaign and all associated data. This action cannot be undone!",
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-      if (result.value) {
-        $.ajax({
-          url: '<?php echo cn($module . '/ajax_campaign_delete'); ?>/' + ids,
-          type: 'POST',
-          dataType: 'json',
-          success: function(data){
-            if(data.status == 'success'){
-              swal('Deleted!', data.message, 'success');
-              setTimeout(function(){
-                location.reload();
-              }, 1000);
-            } else {
-              swal('Error!', data.message, 'error');
-            }
-          }
-        });
-      }
-    });
-  });
-  
-});
-</script>
