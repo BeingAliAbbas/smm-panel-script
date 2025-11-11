@@ -343,13 +343,17 @@ class Email_marketing_model extends MY_Model {
     }
     
     public function import_from_users($campaign_id, $filters = []) {
-        $this->db->select('id, email, firstname as name, balance');
-        $this->db->from(USERS);
-        $this->db->where('status', 1);
+        // Select only users who have placed at least 1 order
+        $this->db->select('u.id, u.email, u.firstname as name, u.balance, COUNT(o.id) as order_count');
+        $this->db->from(USERS . ' u');
+        $this->db->join(ORDER . ' o', 'u.id = o.uid', 'inner');
+        $this->db->where('u.status', 1);
+        $this->db->group_by('u.id');
+        $this->db->having('order_count >', 0);
         
         // Apply filters if provided
         if (!empty($filters['role'])) {
-            $this->db->where('role', $filters['role']);
+            $this->db->where('u.role', $filters['role']);
         }
         
         $query = $this->db->get();
@@ -366,7 +370,8 @@ class Email_marketing_model extends MY_Model {
                 $custom_data = [
                     'username' => $user->name,
                     'email' => $user->email,
-                    'balance' => $user->balance
+                    'balance' => $user->balance,
+                    'total_orders' => $user->order_count
                 ];
                 
                 if ($this->add_recipient($campaign_id, $user->email, $user->name, $user->id, $custom_data)) {

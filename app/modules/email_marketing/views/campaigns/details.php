@@ -148,6 +148,16 @@
             <td><?php echo date('M d, Y H:i', strtotime($campaign->last_sent_at)); ?></td>
           </tr>
           <?php } ?>
+          <tr>
+            <td><strong>Campaign Cron URL:</strong></td>
+            <td>
+              <small class="text-muted">
+                <code><?php echo base_url('cron/email_marketing?token=' . get_option('email_cron_token', 'YOUR_TOKEN') . '&campaign_id=' . $campaign->ids); ?></code>
+              </small>
+              <br>
+              <small class="text-info">Use this URL for campaign-specific cron job</small>
+            </td>
+          </tr>
         </table>
       </div>
     </div>

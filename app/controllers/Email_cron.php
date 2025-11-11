@@ -18,7 +18,7 @@ class Email_cron extends CI_Controller {
     
     /**
      * Main cron entry point
-     * URL: /cron/email_marketing?token=YOUR_TOKEN
+     * URL: /cron/email_marketing?token=YOUR_TOKEN&campaign_id=CAMPAIGN_ID (optional)
      */
     public function run(){
         // Verify token
@@ -28,16 +28,23 @@ class Email_cron extends CI_Controller {
             return;
         }
         
+        // Get optional campaign_id for campaign-specific cron
+        $campaign_id = $this->input->get('campaign_id', true);
+        
         // Rate limiting - prevent running too frequently
+        $lockFileKey = $campaign_id ? 'campaign_' . $campaign_id : 'all';
+        $lockFile = APPPATH.'cache/email_cron_' . $lockFileKey . '.lock';
+        
         $minInterval = 60; // 60 seconds minimum between runs
-        if(file_exists($this->lockFile)){
-            $lastRun = (int)@file_get_contents($this->lockFile);
+        if(file_exists($lockFile)){
+            $lastRun = (int)@file_get_contents($lockFile);
             $now = time();
             if($lastRun && ($now - $lastRun) < $minInterval){
                 $this->respond([
                     'status' => 'rate_limited',
                     'message' => 'Cron is rate limited. Please wait.',
                     'retry_after_sec' => $minInterval - ($now - $lastRun),
+                    'campaign_id' => $campaign_id,
                     'time' => date('c')
                 ]);
                 return;
@@ -45,26 +52,34 @@ class Email_cron extends CI_Controller {
         }
         
         // Update lock file
-        @file_put_contents($this->lockFile, time());
+        @file_put_contents($lockFile, time());
         
         // Process emails
-        $result = $this->process_emails();
+        $result = $this->process_emails($campaign_id);
         
         $this->respond($result);
     }
     
     /**
      * Process pending emails
+     * @param string $campaign_id Optional campaign ID to process specific campaign only
      */
-    private function process_emails(){
-        // Get all running campaigns
+    private function process_emails($campaign_id = null){
+        // Get running campaigns
         $this->email_model->db->where('status', 'running');
+        
+        // If campaign_id specified, filter by it
+        if($campaign_id){
+            $this->email_model->db->where('ids', $campaign_id);
+        }
+        
         $campaigns = $this->email_model->db->get('email_campaigns')->result();
         
         if(empty($campaigns)){
             return [
                 'status' => 'info',
-                'message' => 'No active campaign found',
+                'message' => $campaign_id ? 'No active campaign found with ID: ' . $campaign_id : 'No active campaign found',
+                'campaign_id' => $campaign_id,
                 'campaigns_checked' => 0,
                 'emails_sent' => 0,
                 'time' => date('c')
@@ -113,6 +128,7 @@ class Email_cron extends CI_Controller {
         return [
             'status' => 'success',
             'message' => 'Email processing completed',
+            'campaign_id' => $campaign_id,
             'campaigns_checked' => count($campaigns),
             'campaigns_processed' => $campaignsProcessed,
             'emails_sent' => $totalSent,

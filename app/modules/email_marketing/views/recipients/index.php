@@ -21,7 +21,10 @@
         <h3 class="card-title"><i class="fe fe-database"></i> Import from User Database</h3>
       </div>
       <div class="card-body">
-        <p>Import all active users from your database</p>
+        <p>Import active users who have placed at least 1 order</p>
+        <div class="alert alert-info mb-3">
+          <small><strong>Note:</strong> Only users with order history will be imported to ensure better targeting.</small>
+        </div>
         <form id="importUsersForm" action="<?php echo cn($module . '/ajax_import_from_users'); ?>" method="POST">
           <input type="hidden" name="campaign_ids" value="<?php echo $campaign->ids; ?>">
           <button type="submit" class="btn btn-primary">
@@ -131,6 +134,10 @@ $(document).ready(function(){
           show_message(response.message, 'error');
           $form.find('button').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
         }
+      },
+      error: function(xhr, status, error){
+        show_message('An error occurred while importing users. Please try again.', 'error');
+        $form.find('button').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
       }
     });
   });
@@ -161,6 +168,10 @@ $(document).ready(function(){
           show_message(response.message, 'error');
           $form.find('button').prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
         }
+      },
+      error: function(xhr, status, error){
+        show_message('An error occurred while uploading CSV. Please try again.', 'error');
+        $form.find('button').prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
       }
     });
   });

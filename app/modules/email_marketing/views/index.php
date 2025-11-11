@@ -97,11 +97,17 @@
           </div>
           <div class="col-md-6">
             <h4>Cron Setup</h4>
-            <p>To enable automatic email sending, add this cron job to your server:</p>
+            <p><strong>Option 1: Process All Running Campaigns</strong></p>
             <div class="alert alert-info">
               <code>* * * * * curl "<?php echo base_url('cron/email_marketing?token=' . get_option('email_cron_token', 'YOUR_TOKEN')); ?>"</code>
             </div>
-            <p><small class="text-muted">This runs every minute. Emails are sent one at a time based on campaign limits.</small></p>
+            <p><small class="text-muted">This processes all running campaigns together.</small></p>
+            
+            <p class="mt-3"><strong>Option 2: Campaign-Specific Cron (Recommended)</strong></p>
+            <div class="alert alert-success">
+              <code>* * * * * curl "<?php echo base_url('cron/email_marketing?token=YOUR_TOKEN&campaign_id=CAMPAIGN_ID'); ?>"</code>
+            </div>
+            <p><small class="text-muted">Run separate cron jobs for each campaign to avoid interference. Get campaign-specific URL from campaign details page.</small></p>
             
             <h5 class="mt-3">Template Variables</h5>
             <p><small>Use these variables in your email templates:</small></p>
