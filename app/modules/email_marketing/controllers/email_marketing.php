@@ -13,7 +13,7 @@ class Email_marketing extends MX_Controller {
         
         // Config Module
         $this->module_name = 'Email Marketing';
-        $this->module = get_class($this);
+        $this->module = strtolower(get_class($this));
         $this->module_icon = "fa fa-envelope";
         
         // Check if user is admin
