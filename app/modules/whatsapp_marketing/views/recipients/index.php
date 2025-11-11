@@ -2,69 +2,80 @@
   <div class="col-md-12">
     <div class="page-header">
       <h1 class="page-title">
-        Recipients - <?php echo htmlspecialchars($campaign->name); ?>
+        <i class="fe fe-users"></i> Manage Recipients - <?php echo htmlspecialchars($campaign->name); ?>
       </h1>
       <div class="page-subtitle">
         <a href="<?php echo cn($module . '/campaigns'); ?>" class="btn btn-sm btn-secondary">
-          <i class="fa fa-arrow-left"></i> Back to Campaigns
+          <i class="fe fe-arrow-left"></i> Back to Campaigns
         </a>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Import Options -->
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-6">
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">Import Recipients</h3>
+        <h3 class="card-title"><i class="fe fe-database"></i> Import from User Database</h3>
       </div>
       <div class="card-body">
-        <div class="row">
-          <div class="col-md-6">
-            <form id="formImportDatabase" class="importRecipientsForm" data-campaign-ids="<?php echo $campaign->ids; ?>" data-type="database">
-              <h4><i class="fa fa-database"></i> Import from Database</h4>
-              <p class="text-muted">Import all users with WhatsApp numbers from general_users table</p>
-              <button type="submit" class="btn btn-primary">
-                <i class="fa fa-download"></i> Import from Database
-              </button>
-            </form>
-          </div>
-          
-          <div class="col-md-6">
-            <form id="formImportFile" class="importRecipientsForm" data-campaign-ids="<?php echo $campaign->ids; ?>" data-type="file" enctype="multipart/form-data">
-              <h4><i class="fa fa-file"></i> Import from CSV/TXT</h4>
-              <p class="text-muted">Upload a CSV or TXT file with phone numbers</p>
-              <div class="form-group">
-                <input type="file" class="form-control-file" name="file" accept=".csv,.txt" required>
-                <small class="form-text text-muted">
-                  Format: phone_number, name (optional)<br>
-                  Example: 923001234567, John Doe
-                </small>
-              </div>
-              <button type="submit" class="btn btn-primary">
-                <i class="fa fa-upload"></i> Upload & Import
-              </button>
-            </form>
-          </div>
+        <p>Import all users with WhatsApp numbers from the database</p>
+        <div class="alert alert-info mb-3">
+          <small><strong>Note:</strong> Only active users with valid WhatsApp numbers will be imported.</small>
         </div>
+        <form id="importUsersForm" action="<?php echo cn($module . '/ajax_import_recipients'); ?>" method="POST">
+          <input type="hidden" name="campaign_ids" value="<?php echo $campaign->ids; ?>">
+          <input type="hidden" name="import_type" value="database">
+          <button type="submit" class="btn btn-primary">
+            <i class="fe fe-download"></i> Import Users
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fe fe-upload"></i> Import from CSV/TXT File</h3>
+      </div>
+      <div class="card-body">
+        <p>Upload a CSV or TXT file with phone numbers (format: phone,name)</p>
+        <form id="importCSVForm" action="<?php echo cn($module . '/ajax_import_recipients'); ?>" method="POST" enctype="multipart/form-data">
+          <input type="hidden" name="campaign_ids" value="<?php echo $campaign->ids; ?>">
+          <input type="hidden" name="import_type" value="file">
+          <div class="form-group">
+            <input type="file" class="form-control" name="file" accept=".csv,.txt" required>
+            <small class="text-muted">
+              Example: 923001234567, John Doe
+            </small>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="fe fe-upload"></i> Upload & Import
+          </button>
+        </form>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Recipients List -->
 <div class="row mt-3">
   <?php if(!empty($recipients)){ ?>
   <div class="col-md-12">
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">Recipients List (<?php echo $total; ?> total)</h3>
+        <h3 class="card-title">Recipients List</h3>
+        <div class="card-options">
+          <span class="badge badge-primary">Total: <?php echo number_format($total); ?></span>
+        </div>
       </div>
       <div class="table-responsive">
-        <table class="table table-hover table-vcenter card-table">
+        <table class="table table-hover table-vcenter card-table table-sm">
           <thead>
             <tr>
-              <th class="w-1">No.</th>
               <th>Phone Number</th>
               <th>Name</th>
               <th>Status</th>
@@ -74,10 +85,7 @@
           </thead>
           <tbody>
             <?php 
-            $i = ($page - 1) * $per_page;
             foreach ($recipients as $recipient) {
-              $i++;
-              
               $status_class = 'secondary';
               switch($recipient->status){
                 case 'sent':
@@ -92,7 +100,6 @@
               }
             ?>
             <tr>
-              <td class="w-1"><?php echo $i; ?></td>
               <td><?php echo htmlspecialchars($recipient->phone_number); ?></td>
               <td><?php echo htmlspecialchars($recipient->name ?: '-'); ?></td>
               <td>
@@ -128,7 +135,7 @@
     <div class="card">
       <div class="card-body text-center">
         <div class="empty">
-          <div class="empty-icon"><i class="fa fa-users"></i></div>
+          <div class="empty-icon"><i class="fe fe-users"></i></div>
           <p class="empty-title">No recipients found</p>
           <p class="empty-subtitle text-muted">
             Import recipients using one of the methods above.
@@ -143,23 +150,22 @@
 <script>
 $(document).ready(function(){
   
-  // Import recipients form
-  $('.importRecipientsForm').on('submit', function(e){
+  // Import users form
+  $('#importUsersForm').on('submit', function(e){
     e.preventDefault();
-    
     var form = $(this);
-    var campaignIds = form.data('campaign-ids');
-    var importType = form.data('type');
     var formData = new FormData(this);
-    formData.append('import_type', importType);
     
     $.ajax({
-      url: '<?php echo cn($module . '/ajax_import_recipients'); ?>/' + campaignIds,
+      url: form.attr('action') + '/' + form.find('input[name="campaign_ids"]').val(),
       type: 'POST',
       data: formData,
       processData: false,
       contentType: false,
       dataType: 'json',
+      beforeSend: function(){
+        form.find('button[type="submit"]').prop('disabled', true).html('<i class="fe fe-loader"></i> Importing...');
+      },
       success: function(data){
         if(data.status == 'success'){
           swal('Success!', data.message, 'success');
@@ -168,10 +174,46 @@ $(document).ready(function(){
           }, 1500);
         } else {
           swal('Error!', data.message, 'error');
+          form.find('button[type="submit"]').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
         }
       },
       error: function(){
-        swal('Error!', 'An error occurred while importing recipients', 'error');
+        swal('Error!', 'An error occurred while importing users', 'error');
+        form.find('button[type="submit"]').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
+      }
+    });
+  });
+  
+  // Import CSV form
+  $('#importCSVForm').on('submit', function(e){
+    e.preventDefault();
+    var form = $(this);
+    var formData = new FormData(this);
+    
+    $.ajax({
+      url: form.attr('action') + '/' + form.find('input[name="campaign_ids"]').val(),
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      dataType: 'json',
+      beforeSend: function(){
+        form.find('button[type="submit"]').prop('disabled', true).html('<i class="fe fe-loader"></i> Uploading...');
+      },
+      success: function(data){
+        if(data.status == 'success'){
+          swal('Success!', data.message, 'success');
+          setTimeout(function(){
+            location.reload();
+          }, 1500);
+        } else {
+          swal('Error!', data.message, 'error');
+          form.find('button[type="submit"]').prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
+        }
+      },
+      error: function(){
+        swal('Error!', 'An error occurred while uploading the file', 'error');
+        form.find('button[type="submit"]').prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
       }
     });
   });
