@@ -114,6 +114,16 @@ $route['cron/sync_services'] = 'api_provider/cron/sync_services';
 $route['cron/auto_sync']     = 'api_provider/cron/sync_services'; // optional second alias
 // NEW: service sync
 $route['cron/sync_services'] = 'api_provider/cron/sync_services';
+
+// Email Marketing cron
+$route['cron/email_marketing'] = 'email_cron/run';
+
+// Email Marketing tracking (public endpoint)
+$route['email_marketing/track/(:any)'] = 'email_marketing/track/$1';
+
+// WhatsApp Marketing cron
+$route['cron/whatsapp_marketing'] = 'whatsapp_cron/index';
+
 // client area
 $route['faq']               = 'client/faq';
 $route['terms']             = 'client/terms';

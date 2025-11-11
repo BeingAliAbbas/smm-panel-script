@@ -134,6 +134,21 @@ define("SUBSCRIBERS", "general_subscribers");
 define("PAYMENTS_METHOD", "payments");
 define("PAYMENTS_BONUSES", "payments_bonus");
 
+// Email Marketing
+define("EMAIL_CAMPAIGNS", "email_campaigns");
+define("EMAIL_TEMPLATES", "email_templates");
+define("EMAIL_SMTP_CONFIGS", "email_smtp_configs");
+define("EMAIL_RECIPIENTS", "email_recipients");
+define("EMAIL_LOGS", "email_logs");
+define("EMAIL_SETTINGS", "email_settings");
+
+// WhatsApp Marketing
+define("TABLE_WHATSAPP_CAMPAIGNS", "whatsapp_campaigns");
+define("TABLE_WHATSAPP_API_CONFIGS", "whatsapp_api_configs");
+define("TABLE_WHATSAPP_RECIPIENTS", "whatsapp_recipients");
+define("TABLE_WHATSAPP_LOGS", "whatsapp_logs");
+define("TABLE_WHATSAPP_SETTINGS", "whatsapp_settings");
+
 define("SCRIP_APP_ID", 23595718);
 if (!defined('CUSTOM_PAGE')) {
     define("CUSTOM_PAGE", "general_custom_page");
