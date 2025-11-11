@@ -272,9 +272,14 @@ class Whatsapp_marketing extends MX_Controller {
         $this->template->build("recipients/index", $data);
     }
     
-    public function ajax_import_recipients($campaign_ids = ""){
+    public function ajax_import_recipients(){
         _is_ajax($this->module);
         
+        // Increase PHP timeout for this operation
+        @set_time_limit(120);
+        @ini_set('max_execution_time', 120);
+        
+        $campaign_ids = post("campaign_ids");
         $campaign = $this->model->get_campaign($campaign_ids);
         if(!$campaign){
             ms(array(

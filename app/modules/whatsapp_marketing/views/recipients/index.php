@@ -157,12 +157,13 @@ $(document).ready(function(){
     var formData = new FormData(this);
     
     $.ajax({
-      url: form.attr('action') + '/' + form.find('input[name="campaign_ids"]').val(),
+      url: form.attr('action'),
       type: 'POST',
       data: formData,
       processData: false,
       contentType: false,
       dataType: 'json',
+      timeout: 120000, // 120 seconds timeout for large imports
       beforeSend: function(){
         form.find('button[type="submit"]').prop('disabled', true).html('<i class="fe fe-loader"></i> Importing...');
       },
@@ -177,8 +178,12 @@ $(document).ready(function(){
           form.find('button[type="submit"]').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
         }
       },
-      error: function(){
-        swal('Error!', 'An error occurred while importing users', 'error');
+      error: function(xhr, status, error){
+        var errorMsg = 'An error occurred while importing users';
+        if(status === 'timeout'){
+          errorMsg = 'Import is taking longer than expected. Please refresh the page to check if users were imported.';
+        }
+        swal('Error!', errorMsg, 'error');
         form.find('button[type="submit"]').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
       }
     });
@@ -191,12 +196,13 @@ $(document).ready(function(){
     var formData = new FormData(this);
     
     $.ajax({
-      url: form.attr('action') + '/' + form.find('input[name="campaign_ids"]').val(),
+      url: form.attr('action'),
       type: 'POST',
       data: formData,
       processData: false,
       contentType: false,
       dataType: 'json',
+      timeout: 120000, // 120 seconds timeout for file uploads
       beforeSend: function(){
         form.find('button[type="submit"]').prop('disabled', true).html('<i class="fe fe-loader"></i> Uploading...');
       },
@@ -211,8 +217,12 @@ $(document).ready(function(){
           form.find('button[type="submit"]').prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
         }
       },
-      error: function(){
-        swal('Error!', 'An error occurred while uploading the file', 'error');
+      error: function(xhr, status, error){
+        var errorMsg = 'An error occurred while uploading the file';
+        if(status === 'timeout'){
+          errorMsg = 'Upload is taking longer than expected. Please refresh the page to check if the file was imported.';
+        }
+        swal('Error!', errorMsg, 'error');
         form.find('button[type="submit"]').prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
       }
     });
