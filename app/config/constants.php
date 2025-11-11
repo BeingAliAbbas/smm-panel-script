@@ -131,6 +131,11 @@ define("USER_MAIL_LOGS", "general_user_mail_logs");
 define("BALANCE_LOGS", "general_balance_logs");
 define("SUBSCRIBERS", "general_subscribers");
 
+define("WHATSAPP_CAMPAIGNS", "whatsapp_campaigns");
+define("WHATSAPP_API_CONFIGS", "whatsapp_api_configs");
+define("WHATSAPP_RECIPIENTS", "whatsapp_recipients");
+define("WHATSAPP_MESSAGES", "whatsapp_messages");
+
 define("PAYMENTS_METHOD", "payments");
 define("PAYMENTS_BONUSES", "payments_bonus");
 
