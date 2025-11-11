@@ -1,16 +1,26 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Whatsapp_marketing extends MY_Controller
+class Whatsapp_marketing extends MX_Controller
 {
+    public $module_name;
+    public $module;
+    public $module_icon;
+    
     public function __construct()
     {
         parent::__construct();
-        _is_ajax_login($this);
-        _is_admin($this);
+        $this->load->model(get_class($this).'_model', 'model');
         
-        $this->load->model('whatsapp_marketing_model', 'model');
+        // Config Module
+        $this->module_name = 'WhatsApp Marketing';
         $this->module = strtolower(get_class($this));
+        $this->module_icon = "fa fa-whatsapp";
+        
+        // Check if user is admin
+        if (!get_role("admin")) {
+            redirect(admin_url());
+        }
     }
 
     public function index()
