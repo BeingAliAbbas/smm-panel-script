@@ -130,7 +130,7 @@ Before proceeding, test your WhatsApp API connection:
 
    **Option A: Import from Users**
    - Click "Import from Users"
-   - System imports all users with phone numbers
+   - System imports all users with WhatsApp numbers (from `whatsapp_number` column)
 
    **Option B: Import from CSV**
    - Create a CSV file:

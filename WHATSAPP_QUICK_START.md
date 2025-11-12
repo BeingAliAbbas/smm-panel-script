@@ -45,7 +45,7 @@ Expected: ✅ SUCCESS! Message sent successfully.
 
 ### Step 6: Add Recipients (30 seconds)
 1. Click **Recipients** next to your campaign
-2. Click **Import from Users** (imports users with phone numbers)
+2. Click **Import from Users** (imports users with WhatsApp numbers from `whatsapp_number` column)
    OR
 3. Upload CSV file (format: phone_number,name)
 

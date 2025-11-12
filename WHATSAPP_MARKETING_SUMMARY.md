@@ -135,7 +135,7 @@ Content-Type: application/json
 ✅ In-use template protection  
 
 ### Recipient Management
-✅ Import from user database (with phone numbers)  
+✅ Import from user database (with WhatsApp numbers from `whatsapp_number` column)  
 ✅ Import from CSV files  
 ✅ Automatic duplicate detection  
 ✅ Phone number validation  

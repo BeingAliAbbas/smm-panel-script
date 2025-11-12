@@ -88,7 +88,7 @@ To run cron for a specific campaign only:
 3. **Add Recipients**
    - After creating the campaign, click **Manage Recipients**
    - Import from:
-     - **Users Database**: Imports users with phone numbers and order history
+     - **Users Database**: Imports users with WhatsApp numbers (from `whatsapp_number` column) and order history
      - **CSV File**: Upload a CSV file with phone numbers (format: phone_number, name)
 
 4. **Start Campaign**

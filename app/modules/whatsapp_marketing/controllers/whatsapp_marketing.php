@@ -654,12 +654,12 @@ class Whatsapp_marketing extends MX_Controller {
             if ($imported > 0) {
                 ms(array(
                     "status" => "success",
-                    "message" => "Successfully imported {$imported} users with phone numbers"
+                    "message" => "Successfully imported {$imported} users with WhatsApp numbers"
                 ));
             } else {
                 ms(array(
                     "status" => "error",
-                    "message" => "No users found with phone numbers or all users already imported"
+                    "message" => "No users found with WhatsApp numbers or all users already imported"
                 ));
             }
         } catch (Exception $e) {

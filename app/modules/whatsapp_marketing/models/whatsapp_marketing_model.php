@@ -393,11 +393,11 @@ class Whatsapp_marketing_model extends MY_Model {
     
     public function import_from_users($campaign_id, $filters = [], $limit = 0) {
         try {
-            $this->db->select('u.id, u.email, u.first_name as name, u.balance, u.phone');
+            $this->db->select('u.id, u.email, u.first_name as name, u.balance, u.whatsapp_number');
             $this->db->from(USERS . ' u');
             $this->db->where('u.status', 1);
-            $this->db->where('u.phone IS NOT NULL', NULL, FALSE);
-            $this->db->where('u.phone !=', '');
+            $this->db->where('u.whatsapp_number IS NOT NULL', NULL, FALSE);
+            $this->db->where('u.whatsapp_number !=', '');
             
             if (!empty($filters['role'])) {
                 $this->db->where('u.role', $filters['role']);
@@ -420,11 +420,11 @@ class Whatsapp_marketing_model extends MY_Model {
             
             $imported = 0;
             foreach ($users as $user) {
-                if (empty($user->phone)) {
+                if (empty($user->whatsapp_number)) {
                     continue;
                 }
                 
-                $phone = preg_replace('/[^0-9]/', '', $user->phone);
+                $phone = preg_replace('/[^0-9]/', '', $user->whatsapp_number);
                 if (strlen($phone) < 10) {
                     continue;
                 }
