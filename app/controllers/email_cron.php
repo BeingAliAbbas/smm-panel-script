@@ -176,6 +176,30 @@ class Email_cron extends CI_Controller {
      */
     private function send_email($campaign, $recipient){
         try {
+            // Safety check: Verify recipient status hasn't changed and no duplicate sent
+            // This prevents double-sending even if duplicates exist in the database
+            $this->email_model->db->where('campaign_id', $campaign->id);
+            $this->email_model->db->where('email', $recipient->email);
+            $this->email_model->db->where('id !=', $recipient->id); // Exclude current recipient
+            $this->email_model->db->where_in('status', ['sent', 'opened']);
+            $already_sent_count = $this->email_model->db->count_all_results('email_recipients');
+            
+            if ($already_sent_count > 0) {
+                // Email was already sent to this address in this campaign
+                // Mark this duplicate recipient as failed to avoid processing again
+                $this->log_failed($campaign, $recipient, 'Duplicate recipient - email already sent to this address in this campaign');
+                return false;
+            }
+            
+            // Verify recipient is still pending (status might have changed)
+            $this->email_model->db->where('id', $recipient->id);
+            $current_recipient = $this->email_model->db->get('email_recipients')->row();
+            
+            if (!$current_recipient || $current_recipient->status !== 'pending') {
+                // Status changed, skip this recipient
+                return false;
+            }
+            
             // Get template
             $this->email_model->db->where('id', $campaign->template_id);
             $template = $this->email_model->db->get('email_templates')->row();
