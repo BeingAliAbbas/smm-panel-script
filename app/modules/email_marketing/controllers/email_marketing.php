@@ -814,6 +814,121 @@ class Email_marketing extends MX_Controller {
     }
     
     // ========================================
+    // LOGS
+    // ========================================
+    
+    public function logs($page = 1){
+        $page = max(1, (int)$page);
+        $per_page = 50;
+        $offset = ($page - 1) * $per_page;
+        
+        // Get filters from query string
+        $filters = array();
+        if($this->input->get('campaign_id')){
+            $filters['campaign_id'] = $this->input->get('campaign_id');
+        }
+        if($this->input->get('status')){
+            $filters['status'] = $this->input->get('status');
+        }
+        if($this->input->get('email')){
+            $filters['email'] = $this->input->get('email');
+        }
+        if($this->input->get('date_from')){
+            $filters['date_from'] = $this->input->get('date_from');
+        }
+        if($this->input->get('date_to')){
+            $filters['date_to'] = $this->input->get('date_to');
+        }
+        
+        $logs = $this->model->get_all_logs($per_page, $offset, $filters);
+        $total = $this->model->get_all_logs(-1, -1, $filters);
+        
+        // Get all campaigns for filter dropdown
+        $campaigns = $this->model->get_campaigns(1000, 0);
+        
+        $data = array(
+            "module" => $this->module,
+            "logs" => $logs,
+            "total" => $total,
+            "page" => $page,
+            "per_page" => $per_page,
+            "campaigns" => $campaigns,
+            "filters" => $filters
+        );
+        $this->template->build("logs/index", $data);
+    }
+    
+    public function ajax_delete_log(){
+        _is_ajax($this->module);
+        
+        $ids = post("ids");
+        
+        $this->db->where('ids', $ids);
+        if($this->db->delete('email_logs')){
+            ms(array(
+                "status" => "success",
+                "message" => "Log deleted successfully"
+            ));
+        } else {
+            ms(array(
+                "status" => "error",
+                "message" => "Failed to delete log"
+            ));
+        }
+    }
+    
+    public function export_logs(){
+        // Get filters from query string
+        $filters = array();
+        if($this->input->get('campaign_id')){
+            $filters['campaign_id'] = $this->input->get('campaign_id');
+        }
+        if($this->input->get('status')){
+            $filters['status'] = $this->input->get('status');
+        }
+        if($this->input->get('email')){
+            $filters['email'] = $this->input->get('email');
+        }
+        if($this->input->get('date_from')){
+            $filters['date_from'] = $this->input->get('date_from');
+        }
+        if($this->input->get('date_to')){
+            $filters['date_to'] = $this->input->get('date_to');
+        }
+        
+        // Get all logs with filters
+        $logs = $this->model->get_all_logs(10000, 0, $filters);
+        
+        // Create CSV
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="email_logs_' . date('Y-m-d') . '.csv"');
+        
+        $output = fopen('php://output', 'w');
+        
+        // Headers
+        fputcsv($output, ['Campaign', 'Email', 'Recipient', 'Subject', 'Status', 'Sent At', 'Opened At', 'Error Message', 'IP Address', 'Created At']);
+        
+        // Data
+        foreach($logs as $log){
+            fputcsv($output, [
+                $log->campaign_name,
+                $log->email,
+                $log->recipient_name,
+                $log->subject,
+                $log->status,
+                $log->sent_at,
+                $log->opened_at,
+                $log->error_message,
+                $log->ip_address,
+                $log->created_at
+            ]);
+        }
+        
+        fclose($output);
+        exit;
+    }
+    
+    // ========================================
     // REPORTS
     // ========================================
     

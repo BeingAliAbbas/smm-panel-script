@@ -604,6 +604,63 @@ class Email_marketing_model extends MY_Model {
         return ($limit == -1) ? 0 : [];
     }
     
+    /**
+     * Get all logs with advanced filtering and pagination
+     * @param int $limit Number of logs per page (-1 for count)
+     * @param int $page Offset for pagination
+     * @param array $filters Filters (campaign_id, status, email, date_from, date_to)
+     * @return mixed Array of logs or count
+     */
+    public function get_all_logs($limit = -1, $page = -1, $filters = []) {
+        if ($limit == -1) {
+            $this->db->select('count(*) as sum');
+        } else {
+            $this->db->select('l.*, c.name as campaign_name, r.name as recipient_name');
+        }
+        
+        $this->db->from($this->tb_logs . ' l');
+        $this->db->join($this->tb_campaigns . ' c', 'l.campaign_id = c.id', 'left');
+        $this->db->join($this->tb_recipients . ' r', 'l.recipient_id = r.id', 'left');
+        
+        // Apply filters
+        if (!empty($filters['campaign_id'])) {
+            $this->db->where('l.campaign_id', $filters['campaign_id']);
+        }
+        
+        if (!empty($filters['status'])) {
+            $this->db->where('l.status', $filters['status']);
+        }
+        
+        if (!empty($filters['email'])) {
+            $this->db->like('l.email', $filters['email']);
+        }
+        
+        if (!empty($filters['date_from'])) {
+            $this->db->where('l.created_at >=', $filters['date_from']);
+        }
+        
+        if (!empty($filters['date_to'])) {
+            $this->db->where('l.created_at <=', $filters['date_to'] . ' 23:59:59');
+        }
+        
+        if ($limit != -1) {
+            $this->db->limit($limit, $page);
+        }
+        
+        $this->db->order_by('l.created_at', 'DESC');
+        $query = $this->db->get();
+        
+        if ($query->num_rows() > 0) {
+            if ($limit == -1) {
+                return $query->row()->sum;
+            } else {
+                return $query->result();
+            }
+        }
+        
+        return ($limit == -1) ? 0 : [];
+    }
+    
     // ========================================
     // SETTINGS METHODS
     // ========================================
