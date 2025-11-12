@@ -131,6 +131,85 @@ class Email_marketing_model extends MY_Model {
         return false;
     }
     
+    /**
+     * Reset failed recipients to pending for resending
+     * @param int $campaign_id Campaign ID
+     * @return int Number of recipients reset
+     */
+    public function reset_failed_recipients($campaign_id) {
+        $this->db->where('campaign_id', $campaign_id);
+        $this->db->where('status', 'failed');
+        $this->db->update($this->tb_recipients, [
+            'status' => 'pending',
+            'sent_at' => null,
+            'error_message' => null,
+            'updated_at' => NOW
+        ]);
+        
+        return $this->db->affected_rows();
+    }
+    
+    /**
+     * Get overall email marketing statistics
+     * @return object Statistics object
+     */
+    public function get_overall_stats() {
+        // Get campaign stats
+        $this->db->select("
+            COUNT(*) as total_campaigns,
+            SUM(CASE WHEN status = 'running' THEN 1 ELSE 0 END) as running_campaigns,
+            SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_campaigns,
+            SUM(CASE WHEN status = 'paused' THEN 1 ELSE 0 END) as paused_campaigns,
+            SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_campaigns
+        ");
+        $campaign_stats = $this->db->get($this->tb_campaigns)->row();
+        
+        // Get email stats from all campaigns
+        $this->db->select("
+            SUM(total_emails) as total_emails,
+            SUM(sent_emails) as total_sent,
+            SUM(failed_emails) as total_failed,
+            SUM(opened_emails) as total_opened,
+            SUM(bounced_emails) as total_bounced
+        ");
+        $email_stats = $this->db->get($this->tb_campaigns)->row();
+        
+        // Calculate remaining emails
+        $remaining = ($email_stats->total_emails - $email_stats->total_sent - $email_stats->total_failed);
+        
+        return (object) [
+            'total_campaigns' => $campaign_stats->total_campaigns ?: 0,
+            'running_campaigns' => $campaign_stats->running_campaigns ?: 0,
+            'completed_campaigns' => $campaign_stats->completed_campaigns ?: 0,
+            'paused_campaigns' => $campaign_stats->paused_campaigns ?: 0,
+            'pending_campaigns' => $campaign_stats->pending_campaigns ?: 0,
+            'total_emails' => $email_stats->total_emails ?: 0,
+            'total_sent' => $email_stats->total_sent ?: 0,
+            'total_failed' => $email_stats->total_failed ?: 0,
+            'total_opened' => $email_stats->total_opened ?: 0,
+            'total_bounced' => $email_stats->total_bounced ?: 0,
+            'total_remaining' => max(0, $remaining),
+            'open_rate' => $email_stats->total_sent > 0 ? round(($email_stats->total_opened / $email_stats->total_sent) * 100, 1) : 0,
+            'failure_rate' => $email_stats->total_emails > 0 ? round(($email_stats->total_failed / $email_stats->total_emails) * 100, 1) : 0
+        ];
+    }
+    
+    /**
+     * Get recent activity logs across all campaigns
+     * @param int $limit Number of logs to fetch
+     * @return array Array of log objects
+     */
+    public function get_recent_logs($limit = 20) {
+        $this->db->select('l.*, c.name as campaign_name');
+        $this->db->from($this->tb_logs . ' l');
+        $this->db->join($this->tb_campaigns . ' c', 'l.campaign_id = c.id', 'left');
+        $this->db->order_by('l.created_at', 'DESC');
+        $this->db->limit($limit);
+        $query = $this->db->get();
+        
+        return $query->num_rows() > 0 ? $query->result() : [];
+    }
+    
     // ========================================
     // TEMPLATE METHODS
     // ========================================
@@ -342,11 +421,11 @@ class Email_marketing_model extends MY_Model {
         return $this->db->insert($this->tb_recipients, $data);
     }
     
-    public function import_from_users($campaign_id, $filters = [], $limit = 1000) {
+    public function import_from_users($campaign_id, $filters = [], $limit = 0) {
         try {
             // More efficient approach: Use WHERE EXISTS instead of JOIN + GROUP BY
             // This will be much faster for large datasets
-            // Also add LIMIT to prevent timeout on very large datasets
+            // $limit = 0 means no limit (import all available users)
             // Note: Using first_name (with underscore) as per actual database schema
             $this->db->select('u.id, u.email, u.first_name as name, u.balance');
             $this->db->from(USERS . ' u');
@@ -363,7 +442,7 @@ class Email_marketing_model extends MY_Model {
             // Using uid column from orders table as per schema
             $this->db->where("EXISTS (SELECT 1 FROM " . ORDER . " o WHERE o.uid = u.id LIMIT 1)", NULL, FALSE);
             
-            // Limit to prevent timeout - max 1000 users at a time
+            // Apply limit if specified (0 = no limit)
             if ($limit > 0) {
                 $this->db->limit($limit);
             }

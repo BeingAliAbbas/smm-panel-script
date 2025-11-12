@@ -159,6 +159,79 @@
             </td>
           </tr>
         </table>
+        
+        <!-- Campaign Health Indicator -->
+        <div class="mt-4">
+          <h5>Campaign Health</h5>
+          <?php 
+          $health_score = 100;
+          $health_class = 'success';
+          $health_issues = array();
+          
+          // Check failure rate
+          if($campaign->total_emails > 0){
+            $failure_rate = ($campaign->failed_emails / $campaign->total_emails) * 100;
+            if($failure_rate > 20){
+              $health_score -= 30;
+              $health_issues[] = 'High failure rate (' . round($failure_rate, 1) . '%)';
+            } elseif($failure_rate > 10){
+              $health_score -= 15;
+              $health_issues[] = 'Moderate failure rate (' . round($failure_rate, 1) . '%)';
+            }
+          }
+          
+          // Check open rate
+          if($campaign->sent_emails > 0){
+            $open_rate = ($campaign->opened_emails / $campaign->sent_emails) * 100;
+            if($open_rate < 10){
+              $health_score -= 20;
+              $health_issues[] = 'Low open rate (' . round($open_rate, 1) . '%)';
+            } elseif($open_rate < 20){
+              $health_score -= 10;
+              $health_issues[] = 'Below average open rate (' . round($open_rate, 1) . '%)';
+            }
+          }
+          
+          // Check if campaign is stalled
+          if($campaign->status == 'running' && $campaign->last_sent_at){
+            $hours_since_last = (strtotime(NOW) - strtotime($campaign->last_sent_at)) / 3600;
+            if($hours_since_last > 24){
+              $health_score -= 25;
+              $health_issues[] = 'No emails sent in last 24 hours';
+            }
+          }
+          
+          // Set health class based on score
+          if($health_score >= 80){
+            $health_class = 'success';
+          } elseif($health_score >= 60){
+            $health_class = 'warning';
+          } else {
+            $health_class = 'danger';
+          }
+          ?>
+          
+          <div class="progress mb-2" style="height: 25px;">
+            <div class="progress-bar bg-<?php echo $health_class; ?>" role="progressbar" style="width: <?php echo $health_score; ?>%" aria-valuenow="<?php echo $health_score; ?>" aria-valuemin="0" aria-valuemax="100">
+              <strong><?php echo $health_score; ?>%</strong>
+            </div>
+          </div>
+          
+          <?php if(!empty($health_issues)){ ?>
+          <div class="alert alert-<?php echo $health_class; ?> mb-0">
+            <strong>Issues Detected:</strong>
+            <ul class="mb-0 pl-3">
+              <?php foreach($health_issues as $issue){ ?>
+              <li><?php echo $issue; ?></li>
+              <?php } ?>
+            </ul>
+          </div>
+          <?php } else { ?>
+          <div class="alert alert-success mb-0">
+            <i class="fe fe-check-circle"></i> Campaign is performing well!
+          </div>
+          <?php } ?>
+        </div>
       </div>
     </div>
   </div>
@@ -209,6 +282,12 @@
           <a href="<?php echo cn($module . '/recipients/' . $campaign->ids); ?>" class="btn btn-primary btn-block">
             <i class="fe fe-users"></i> Manage Recipients
           </a>
+          
+          <?php if($campaign->failed_emails > 0){ ?>
+          <button class="btn btn-warning btn-block mt-2 actionCampaignResendFailed" data-ids="<?php echo $campaign->ids; ?>">
+            <i class="fe fe-refresh-cw"></i> Resend Failed Emails (<?php echo $campaign->failed_emails; ?>)
+          </button>
+          <?php } ?>
         </div>
       </div>
     </div>
@@ -221,6 +300,15 @@
     <div class="card">
       <div class="card-header">
         <h3 class="card-title">Recent Recipients (Last 100)</h3>
+        <div class="card-options">
+          <div class="btn-group btn-group-sm" role="group">
+            <button type="button" class="btn btn-secondary filter-recipients active" data-filter="all">All</button>
+            <button type="button" class="btn btn-secondary filter-recipients" data-filter="pending">Pending</button>
+            <button type="button" class="btn btn-secondary filter-recipients" data-filter="sent">Sent</button>
+            <button type="button" class="btn btn-secondary filter-recipients" data-filter="failed">Failed</button>
+            <button type="button" class="btn btn-secondary filter-recipients" data-filter="opened">Opened</button>
+          </div>
+        </div>
       </div>
       <div class="table-responsive">
         <table class="table table-hover table-vcenter card-table table-sm">
@@ -232,9 +320,10 @@
               <th>Sent At</th>
               <th>Opened At</th>
               <th>Error</th>
+              <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="recipients-table-body">
             <?php if(!empty($recipients)){ 
               foreach($recipients as $recipient){
                 $status_badge = 'secondary';
@@ -245,17 +334,26 @@
                   case 'bounced': $status_badge = 'warning'; break;
                 }
             ?>
-            <tr>
+            <tr class="recipient-row" data-status="<?php echo $recipient->status; ?>">
               <td><?php echo htmlspecialchars($recipient->email); ?></td>
               <td><?php echo htmlspecialchars($recipient->name ?: '-'); ?></td>
               <td><span class="badge badge-<?php echo $status_badge; ?>"><?php echo ucfirst($recipient->status); ?></span></td>
               <td><?php echo $recipient->sent_at ? date('M d, H:i', strtotime($recipient->sent_at)) : '-'; ?></td>
               <td><?php echo $recipient->opened_at ? date('M d, H:i', strtotime($recipient->opened_at)) : '-'; ?></td>
-              <td class="text-danger small"><?php echo $recipient->error_message ? htmlspecialchars(substr($recipient->error_message, 0, 50)) . '...' : '-'; ?></td>
+              <td class="text-danger small"><?php echo $recipient->error_message ? htmlspecialchars(substr($recipient->error_message, 0, 50)) . (strlen($recipient->error_message) > 50 ? '...' : '') : '-'; ?></td>
+              <td>
+                <?php if($recipient->status == 'failed'){ ?>
+                <button class="btn btn-sm btn-warning actionResendSingleEmail" data-recipient-id="<?php echo $recipient->id; ?>" title="Resend this email">
+                  <i class="fe fe-refresh-cw"></i>
+                </button>
+                <?php } else { ?>
+                <span class="text-muted">-</span>
+                <?php } ?>
+              </td>
             </tr>
             <?php }} else { ?>
             <tr>
-              <td colspan="6" class="text-center">No recipients yet. <a href="<?php echo cn($module . '/recipients/' . $campaign->ids); ?>">Add recipients</a></td>
+              <td colspan="7" class="text-center">No recipients yet. <a href="<?php echo cn($module . '/recipients/' . $campaign->ids); ?>">Add recipients</a></td>
             </tr>
             <?php } ?>
           </tbody>
@@ -264,6 +362,27 @@
     </div>
   </div>
 </div>
+
+<script>
+$(document).ready(function(){
+  // Filter recipients by status
+  $('.filter-recipients').on('click', function(){
+    var filter = $(this).data('filter');
+    
+    // Update active button
+    $('.filter-recipients').removeClass('active');
+    $(this).addClass('active');
+    
+    // Filter rows
+    if(filter === 'all'){
+      $('.recipient-row').show();
+    } else {
+      $('.recipient-row').hide();
+      $('.recipient-row[data-status="' + filter + '"]').show();
+    }
+  });
+});
+</script>
 
 <!-- Recent Logs -->
 <div class="row mt-3">
@@ -281,6 +400,7 @@
               <th>Status</th>
               <th>Timestamp</th>
               <th>Error</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -299,10 +419,19 @@
               <td><span class="badge badge-<?php echo $status_badge; ?>"><?php echo ucfirst($log->status); ?></span></td>
               <td><?php echo date('M d, Y H:i:s', strtotime($log->created_at)); ?></td>
               <td class="text-danger small"><?php echo $log->error_message ? htmlspecialchars(substr($log->error_message, 0, 50)) . '...' : '-'; ?></td>
+              <td>
+                <?php if($log->status == 'failed'){ ?>
+                <button class="btn btn-sm btn-warning actionResendSingleEmail" data-recipient-id="<?php echo $log->recipient_id; ?>" title="Resend this email">
+                  <i class="fe fe-refresh-cw"></i>
+                </button>
+                <?php } else { ?>
+                <span class="text-muted">-</span>
+                <?php } ?>
+              </td>
             </tr>
             <?php }} else { ?>
             <tr>
-              <td colspan="5" class="text-center">No activity logs yet</td>
+              <td colspan="6" class="text-center">No activity logs yet</td>
             </tr>
             <?php } ?>
           </tbody>
@@ -311,3 +440,88 @@
     </div>
   </div>
 </div>
+
+<script>
+$(document).ready(function(){
+  // Handle resend failed emails for campaign
+  $(document).on('click', '.actionCampaignResendFailed', function(e){
+    e.preventDefault();
+    var ids = $(this).data('ids');
+    
+    if(!confirm('Are you sure you want to resend all failed emails for this campaign?')){
+      return;
+    }
+    
+    $.ajax({
+      url: '<?php echo cn($module . '/ajax_campaign_resend_failed'); ?>',
+      type: 'POST',
+      dataType: 'JSON',
+      data: {
+        ids: ids
+      },
+      success: function(data){
+        if(data.status == 'success'){
+          _notif({
+            message: data.message,
+            type: data.status
+          });
+          setTimeout(function(){
+            location.reload();
+          }, 1500);
+        } else {
+          _notif({
+            message: data.message,
+            type: data.status
+          });
+        }
+      }
+    });
+  });
+  
+  // Handle resend single email
+  $(document).on('click', '.actionResendSingleEmail', function(e){
+    e.preventDefault();
+    var recipient_id = $(this).data('recipient-id');
+    var $btn = $(this);
+    
+    if(!confirm('Are you sure you want to resend this email?')){
+      return;
+    }
+    
+    $btn.prop('disabled', true);
+    
+    $.ajax({
+      url: '<?php echo cn($module . '/ajax_resend_single_email'); ?>',
+      type: 'POST',
+      dataType: 'JSON',
+      data: {
+        recipient_id: recipient_id
+      },
+      success: function(data){
+        $btn.prop('disabled', false);
+        if(data.status == 'success'){
+          _notif({
+            message: data.message,
+            type: data.status
+          });
+          setTimeout(function(){
+            location.reload();
+          }, 1500);
+        } else {
+          _notif({
+            message: data.message,
+            type: data.status
+          });
+        }
+      },
+      error: function(){
+        $btn.prop('disabled', false);
+        _notif({
+          message: 'An error occurred',
+          type: 'error'
+        });
+      }
+    });
+  });
+});
+</script>
