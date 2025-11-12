@@ -27,13 +27,20 @@ class Email_marketing extends MX_Controller {
     // ========================================
     
     public function index(){
+        // Get overall statistics
+        $stats = $this->model->get_overall_stats();
+        $recent_logs = $this->model->get_recent_logs(10);
+        
         $data = array(
             "module" => $this->module,
             "module_name" => $this->module_name,
-            "module_icon" => $this->module_icon
+            "module_icon" => $this->module_icon,
+            "stats" => $stats,
+            "recent_logs" => $recent_logs
         );
         $this->template->build("index", $data);
     }
+    
     
     // ========================================
     // CAMPAIGNS
@@ -241,6 +248,102 @@ class Email_marketing extends MX_Controller {
                 "message" => "Campaign resumed successfully"
             ));
         }
+    }
+    
+    public function ajax_campaign_resend_failed(){
+        _is_ajax($this->module);
+        
+        $ids = post("ids");
+        $campaign = $this->model->get_campaign($ids);
+        
+        if(!$campaign){
+            ms(array(
+                "status" => "error",
+                "message" => "Campaign not found"
+            ));
+        }
+        
+        // Reset failed recipients to pending
+        $reset_count = $this->model->reset_failed_recipients($campaign->id);
+        
+        if($reset_count > 0){
+            // Update campaign stats
+            $this->model->update_campaign_stats($campaign->id);
+            
+            // If campaign is completed, set it back to running
+            if($campaign->status == 'completed'){
+                $this->model->update_campaign($ids, array('status' => 'running'));
+            }
+            
+            ms(array(
+                "status" => "success",
+                "message" => "Reset {$reset_count} failed email(s) for resending"
+            ));
+        } else {
+            ms(array(
+                "status" => "error",
+                "message" => "No failed emails found to resend"
+            ));
+        }
+    }
+    
+    public function ajax_resend_single_email(){
+        _is_ajax($this->module);
+        
+        $recipient_id = post("recipient_id");
+        
+        if(!$recipient_id){
+            ms(array(
+                "status" => "error",
+                "message" => "Recipient ID is required"
+            ));
+        }
+        
+        // Get recipient
+        $this->db->where('id', $recipient_id);
+        $recipient = $this->db->get('email_recipients')->row();
+        
+        if(!$recipient){
+            ms(array(
+                "status" => "error",
+                "message" => "Recipient not found"
+            ));
+        }
+        
+        // Only allow resending failed emails
+        if($recipient->status != 'failed'){
+            ms(array(
+                "status" => "error",
+                "message" => "Only failed emails can be resent"
+            ));
+        }
+        
+        // Reset recipient to pending
+        $this->db->where('id', $recipient_id);
+        $this->db->update('email_recipients', [
+            'status' => 'pending',
+            'sent_at' => null,
+            'error_message' => null,
+            'updated_at' => NOW
+        ]);
+        
+        // Update campaign stats
+        $this->model->update_campaign_stats($recipient->campaign_id);
+        
+        // Get campaign
+        $this->db->where('id', $recipient->campaign_id);
+        $campaign = $this->db->get('email_campaigns')->row();
+        
+        // If campaign is completed, set it back to running
+        if($campaign && $campaign->status == 'completed'){
+            $this->db->where('id', $recipient->campaign_id);
+            $this->db->update('email_campaigns', array('status' => 'running'));
+        }
+        
+        ms(array(
+            "status" => "success",
+            "message" => "Email reset for resending"
+        ));
     }
     
     public function campaign_details($ids = ""){

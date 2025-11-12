@@ -209,6 +209,12 @@
           <a href="<?php echo cn($module . '/recipients/' . $campaign->ids); ?>" class="btn btn-primary btn-block">
             <i class="fe fe-users"></i> Manage Recipients
           </a>
+          
+          <?php if($campaign->failed_emails > 0){ ?>
+          <button class="btn btn-warning btn-block mt-2 actionCampaignResendFailed" data-ids="<?php echo $campaign->ids; ?>">
+            <i class="fe fe-refresh-cw"></i> Resend Failed Emails (<?php echo $campaign->failed_emails; ?>)
+          </button>
+          <?php } ?>
         </div>
       </div>
     </div>
@@ -281,6 +287,7 @@
               <th>Status</th>
               <th>Timestamp</th>
               <th>Error</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -299,10 +306,19 @@
               <td><span class="badge badge-<?php echo $status_badge; ?>"><?php echo ucfirst($log->status); ?></span></td>
               <td><?php echo date('M d, Y H:i:s', strtotime($log->created_at)); ?></td>
               <td class="text-danger small"><?php echo $log->error_message ? htmlspecialchars(substr($log->error_message, 0, 50)) . '...' : '-'; ?></td>
+              <td>
+                <?php if($log->status == 'failed'){ ?>
+                <button class="btn btn-sm btn-warning actionResendSingleEmail" data-recipient-id="<?php echo $log->recipient_id; ?>" title="Resend this email">
+                  <i class="fe fe-refresh-cw"></i>
+                </button>
+                <?php } else { ?>
+                <span class="text-muted">-</span>
+                <?php } ?>
+              </td>
             </tr>
             <?php }} else { ?>
             <tr>
-              <td colspan="5" class="text-center">No activity logs yet</td>
+              <td colspan="6" class="text-center">No activity logs yet</td>
             </tr>
             <?php } ?>
           </tbody>
@@ -311,3 +327,88 @@
     </div>
   </div>
 </div>
+
+<script>
+$(document).ready(function(){
+  // Handle resend failed emails for campaign
+  $(document).on('click', '.actionCampaignResendFailed', function(e){
+    e.preventDefault();
+    var ids = $(this).data('ids');
+    
+    if(!confirm('Are you sure you want to resend all failed emails for this campaign?')){
+      return;
+    }
+    
+    $.ajax({
+      url: '<?php echo cn($module . '/ajax_campaign_resend_failed'); ?>',
+      type: 'POST',
+      dataType: 'JSON',
+      data: {
+        ids: ids
+      },
+      success: function(data){
+        if(data.status == 'success'){
+          _notif({
+            message: data.message,
+            type: data.status
+          });
+          setTimeout(function(){
+            location.reload();
+          }, 1500);
+        } else {
+          _notif({
+            message: data.message,
+            type: data.status
+          });
+        }
+      }
+    });
+  });
+  
+  // Handle resend single email
+  $(document).on('click', '.actionResendSingleEmail', function(e){
+    e.preventDefault();
+    var recipient_id = $(this).data('recipient-id');
+    var $btn = $(this);
+    
+    if(!confirm('Are you sure you want to resend this email?')){
+      return;
+    }
+    
+    $btn.prop('disabled', true);
+    
+    $.ajax({
+      url: '<?php echo cn($module . '/ajax_resend_single_email'); ?>',
+      type: 'POST',
+      dataType: 'JSON',
+      data: {
+        recipient_id: recipient_id
+      },
+      success: function(data){
+        $btn.prop('disabled', false);
+        if(data.status == 'success'){
+          _notif({
+            message: data.message,
+            type: data.status
+          });
+          setTimeout(function(){
+            location.reload();
+          }, 1500);
+        } else {
+          _notif({
+            message: data.message,
+            type: data.status
+          });
+        }
+      },
+      error: function(){
+        $btn.prop('disabled', false);
+        _notif({
+          message: 'An error occurred',
+          type: 'error'
+        });
+      }
+    });
+  });
+});
+</script>

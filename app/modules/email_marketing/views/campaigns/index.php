@@ -156,6 +156,18 @@
                   </a>
                   <?php } ?>
                   
+                  <?php if($campaign->failed_emails > 0){ ?>
+                  <a href="javascript:void(0)" 
+                    class="btn btn-sm btn-icon btn-warning actionItem" 
+                    data-id="<?php echo $campaign->ids; ?>" 
+                    data-action="<?php echo cn($module . '/ajax_campaign_resend_failed'); ?>" 
+                    data-toggle="tooltip" 
+                    title="Resend Failed Emails (<?php echo $campaign->failed_emails; ?>)" 
+                    data-confirm="Are you sure you want to resend <?php echo $campaign->failed_emails; ?> failed email(s)?">
+                    <i class="fe fe-refresh-cw"></i>
+                  </a>
+                  <?php } ?>
+                  
                   <?php if($campaign->status != 'running'){ ?>
                   <a href="javascript:void(0)" 
                     class="btn btn-sm btn-icon btn-danger actionItem" 
