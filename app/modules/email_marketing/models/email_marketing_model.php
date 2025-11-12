@@ -421,11 +421,11 @@ class Email_marketing_model extends MY_Model {
         return $this->db->insert($this->tb_recipients, $data);
     }
     
-    public function import_from_users($campaign_id, $filters = [], $limit = 1000) {
+    public function import_from_users($campaign_id, $filters = [], $limit = 0) {
         try {
             // More efficient approach: Use WHERE EXISTS instead of JOIN + GROUP BY
             // This will be much faster for large datasets
-            // Also add LIMIT to prevent timeout on very large datasets
+            // $limit = 0 means no limit (import all available users)
             // Note: Using first_name (with underscore) as per actual database schema
             $this->db->select('u.id, u.email, u.first_name as name, u.balance');
             $this->db->from(USERS . ' u');
@@ -442,7 +442,7 @@ class Email_marketing_model extends MY_Model {
             // Using uid column from orders table as per schema
             $this->db->where("EXISTS (SELECT 1 FROM " . ORDER . " o WHERE o.uid = u.id LIMIT 1)", NULL, FALSE);
             
-            // Limit to prevent timeout - max 1000 users at a time
+            // Apply limit if specified (0 = no limit)
             if ($limit > 0) {
                 $this->db->limit($limit);
             }

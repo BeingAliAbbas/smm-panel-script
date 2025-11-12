@@ -678,9 +678,10 @@ class Email_marketing extends MX_Controller {
     public function ajax_import_from_users(){
         _is_ajax($this->module);
         
-        // Increase PHP timeout for this operation
-        @set_time_limit(120);
-        @ini_set('max_execution_time', 120);
+        // Increase PHP timeout for this operation (importing all users may take longer)
+        @set_time_limit(300);
+        @ini_set('max_execution_time', 300);
+        @ini_set('memory_limit', '256M');
         
         $campaign_ids = post("campaign_ids");
         $campaign = $this->model->get_campaign($campaign_ids);
@@ -693,8 +694,8 @@ class Email_marketing extends MX_Controller {
         }
         
         try {
-            // Import with limit to prevent timeout (max 1000 users)
-            $imported = $this->model->import_from_users($campaign->id, [], 1000);
+            // Import all available users (no limit)
+            $imported = $this->model->import_from_users($campaign->id, [], 0);
             
             // Update campaign stats
             $this->model->update_campaign_stats($campaign->id);
