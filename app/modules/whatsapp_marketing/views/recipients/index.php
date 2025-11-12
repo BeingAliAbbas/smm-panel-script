@@ -26,7 +26,7 @@
         <div class="alert alert-info mb-3">
           <small><strong>Note:</strong> Only users with WhatsApp numbers and order history will be imported to ensure better targeting.</small>
         </div>
-        <form id="importUsersForm" action="<?php echo cn($module . '/ajax_import_from_users'); ?>" method="POST">
+        <form id="importUsersForm" action="<?php echo cn($module . '/ajax_import_from_users'); ?>" method="POST" class="actionForm">
           <input type="hidden" name="campaign_ids" value="<?php echo $campaign->ids; ?>">
           <button type="submit" class="btn btn-primary">
             <i class="fe fe-download"></i> Import Users
@@ -110,43 +110,54 @@
 
 <script>
 $(document).ready(function(){
+  // Define toast notification helper
+  function showToast(message, type) {
+    if (typeof $.toast === 'function') {
+      $.toast({
+        heading: type == 'success' ? 'Success' : 'Error',
+        text: message,
+        position: 'top-right',
+        loaderBg: type == 'success' ? '#5ba035' : '#c9302c',
+        icon: type,
+        hideAfter: 3500
+      });
+    } else {
+      alert(message);
+    }
+  }
+
   // Handle import from users
   $('#importUsersForm').on('submit', function(e){
     e.preventDefault();
     var $form = $(this);
-    var formData = $form.serializeArray();
-    
-    // Add CSRF token if it exists
-    var csrfToken = $('input[name="csrf_test_name"]').val();
-    if (csrfToken) {
-      formData.push({name: 'csrf_test_name', value: csrfToken});
-    }
+    var $button = $form.find('button[type="submit"]');
+    var formData = $form.serialize();
     
     $.ajax({
       url: $form.attr('action'),
       type: 'POST',
       dataType: 'json',
-      data: $.param(formData),
-      timeout: 60000, // 60 seconds timeout
+      data: formData,
+      timeout: 60000,
       beforeSend: function(){
-        $form.find('button').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Importing...');
+        $button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Importing...');
       },
       success: function(response){
         if(response.status == 'success'){
-          show_message(response.message, 'success');
+          showToast(response.message, 'success');
           setTimeout(function(){
             location.reload();
-          }, 500);
+          }, 1000);
         } else {
-          show_message(response.message, 'error');
-          $form.find('button').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
+          showToast(response.message, 'error');
+          $button.prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
         }
       },
       error: function(xhr, status, error){
         var errorMsg = 'An error occurred while importing users.';
         
         if (status === 'timeout') {
-          errorMsg = 'Request timed out. The import may be taking too long. Please check if users have been imported or try again with fewer users.';
+          errorMsg = 'Request timed out. The import may be taking too long. Please check if users have been imported or try again.';
         } else if (xhr.responseJSON && xhr.responseJSON.message) {
           errorMsg = xhr.responseJSON.message;
         } else if (xhr.responseText) {
@@ -156,12 +167,12 @@ $(document).ready(function(){
               errorMsg = response.message;
             }
           } catch(e) {
-            // Not JSON, show generic error
+            errorMsg = 'Error: ' + xhr.status + ' - ' + error;
           }
         }
         
-        show_message(errorMsg, 'error');
-        $form.find('button').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
+        showToast(errorMsg, 'error');
+        $button.prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
       }
     });
   });
@@ -170,13 +181,8 @@ $(document).ready(function(){
   $('#importCSVForm').on('submit', function(e){
     e.preventDefault();
     var $form = $(this);
+    var $button = $form.find('button[type="submit"]');
     var formData = new FormData($form[0]);
-    
-    // Add CSRF token if it exists
-    var csrfToken = $('input[name="csrf_test_name"]').val();
-    if (csrfToken) {
-      formData.append('csrf_test_name', csrfToken);
-    }
     
     $.ajax({
       url: $form.attr('action'),
@@ -185,32 +191,32 @@ $(document).ready(function(){
       data: formData,
       processData: false,
       contentType: false,
-      timeout: 60000, // 60 seconds timeout
+      timeout: 60000,
       beforeSend: function(){
-        $form.find('button').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Uploading...');
+        $button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Uploading...');
       },
       success: function(response){
         if(response.status == 'success'){
-          show_message(response.message, 'success');
+          showToast(response.message, 'success');
           setTimeout(function(){
             location.reload();
-          }, 500);
+          }, 1000);
         } else {
-          show_message(response.message, 'error');
-          $form.find('button').prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
+          showToast(response.message, 'error');
+          $button.prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
         }
       },
       error: function(xhr, status, error){
         var errorMsg = 'An error occurred while uploading CSV.';
         
         if (status === 'timeout') {
-          errorMsg = 'Request timed out. The upload may be taking too long. Please try with a smaller file.';
+          errorMsg = 'Request timed out. Please try with a smaller file.';
         } else if (xhr.responseJSON && xhr.responseJSON.message) {
           errorMsg = xhr.responseJSON.message;
         }
         
-        show_message(errorMsg, 'error');
-        $form.find('button').prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
+        showToast(errorMsg, 'error');
+        $button.prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
       }
     });
   });
