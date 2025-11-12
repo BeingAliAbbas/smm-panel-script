@@ -66,7 +66,7 @@ if(file_exists($theme_config)){
 if (!defined('CUSTOM_PAGE')) {
     define("CUSTOM_PAGE", "general_custom_page");
 }
-$route['imap-auto-verify'] = 'Imap_cron/run';
+$route['imap-auto-verify'] = 'imap_cron/run';
 // $route['imap-auto-verify'] = 'add_funds/Imap_auto_verify/index';
 $route['order/change_status/resend_order/(:num)'] = 'order/change_status/resend_order/$1';
 $route['default_controller']                    = $theme;
@@ -116,7 +116,7 @@ $route['cron/auto_sync']     = 'api_provider/cron/sync_services'; // optional se
 $route['cron/sync_services'] = 'api_provider/cron/sync_services';
 
 // Email Marketing cron
-$route['cron/email_marketing'] = 'Email_cron/run';
+$route['cron/email_marketing'] = 'email_cron/run';
 
 // Email Marketing tracking (public endpoint)
 $route['email_marketing/track/(:any)'] = 'email_marketing/track/$1';
