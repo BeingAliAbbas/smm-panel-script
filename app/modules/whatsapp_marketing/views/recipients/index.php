@@ -156,6 +156,12 @@ $(document).ready(function(){
     var form = $(this);
     var formData = new FormData(this);
     
+    // Add CSRF token if it exists
+    var csrfToken = $('input[name="csrf_test_name"]').val();
+    if (csrfToken) {
+      formData.append('csrf_test_name', csrfToken);
+    }
+    
     $.ajax({
       url: form.attr('action'),
       type: 'POST',
@@ -169,12 +175,12 @@ $(document).ready(function(){
       },
       success: function(data){
         if(data.status == 'success'){
-          swal('Success!', data.message, 'success');
+          show_message(data.message, 'success');
           setTimeout(function(){
             location.reload();
           }, 1500);
         } else {
-          swal('Error!', data.message, 'error');
+          show_message(data.message, 'error');
           form.find('button[type="submit"]').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
         }
       },
@@ -192,7 +198,7 @@ $(document).ready(function(){
             errorMsg += ': ' + xhr.responseText.substring(0, 100);
           }
         }
-        swal('Error!', errorMsg, 'error');
+        show_message(errorMsg, 'error');
         form.find('button[type="submit"]').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
       }
     });
@@ -203,6 +209,12 @@ $(document).ready(function(){
     e.preventDefault();
     var form = $(this);
     var formData = new FormData(this);
+    
+    // Add CSRF token if it exists
+    var csrfToken = $('input[name="csrf_test_name"]').val();
+    if (csrfToken) {
+      formData.append('csrf_test_name', csrfToken);
+    }
     
     $.ajax({
       url: form.attr('action'),
@@ -217,12 +229,12 @@ $(document).ready(function(){
       },
       success: function(data){
         if(data.status == 'success'){
-          swal('Success!', data.message, 'success');
+          show_message(data.message, 'success');
           setTimeout(function(){
             location.reload();
           }, 1500);
         } else {
-          swal('Error!', data.message, 'error');
+          show_message(data.message, 'error');
           form.find('button[type="submit"]').prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
         }
       },
@@ -240,7 +252,7 @@ $(document).ready(function(){
             errorMsg += ': ' + xhr.responseText.substring(0, 100);
           }
         }
-        swal('Error!', errorMsg, 'error');
+        show_message(errorMsg, 'error');
         form.find('button[type="submit"]').prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
       }
     });
