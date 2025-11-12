@@ -217,6 +217,9 @@
   <?php } ?>
 </div>
 
+<!-- Hidden CSRF Token Field -->
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+
 <script>
 $(document).ready(function(){
   // Define toast notification helper
@@ -230,6 +233,8 @@ $(document).ready(function(){
         icon: type,
         hideAfter: 3500
       });
+    } else if (typeof show_message === 'function') {
+      show_message(message, type);
     } else {
       alert(message);
     }
@@ -247,11 +252,18 @@ $(document).ready(function(){
       return;
     }
     
+    // Get CSRF token dynamically
+    var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>';
+    var csrfHash = $('input[name="' + csrfName + '"]').val();
+    
+    var postData = {ids: ids};
+    postData[csrfName] = csrfHash;
+    
     $.ajax({
       url: action,
       type: 'POST',
       dataType: 'json',
-      data: {ids: ids, csrf_test_name: $('input[name="csrf_test_name"]').val()},
+      data: postData,
       success: function(response){
         if(response.status == 'success'){
           showToast(response.message, 'success');
@@ -263,7 +275,11 @@ $(document).ready(function(){
         }
       },
       error: function(xhr, status, error){
-        showToast('An error occurred: ' + error, 'error');
+        if(xhr.status == 403){
+          showToast('Permission denied. Please refresh the page and try again.', 'error');
+        } else {
+          showToast('An error occurred: ' + error, 'error');
+        }
       }
     });
   });
