@@ -182,6 +182,15 @@ $(document).ready(function(){
         var errorMsg = 'An error occurred while importing users';
         if(status === 'timeout'){
           errorMsg = 'Import is taking longer than expected. Please refresh the page to check if users were imported.';
+        } else if(xhr.responseText){
+          try {
+            var response = JSON.parse(xhr.responseText);
+            if(response.message){
+              errorMsg = response.message;
+            }
+          } catch(e) {
+            errorMsg += ': ' + xhr.responseText.substring(0, 100);
+          }
         }
         swal('Error!', errorMsg, 'error');
         form.find('button[type="submit"]').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
@@ -221,6 +230,15 @@ $(document).ready(function(){
         var errorMsg = 'An error occurred while uploading the file';
         if(status === 'timeout'){
           errorMsg = 'Upload is taking longer than expected. Please refresh the page to check if the file was imported.';
+        } else if(xhr.responseText){
+          try {
+            var response = JSON.parse(xhr.responseText);
+            if(response.message){
+              errorMsg = response.message;
+            }
+          } catch(e) {
+            errorMsg += ': ' + xhr.responseText.substring(0, 100);
+          }
         }
         swal('Error!', errorMsg, 'error');
         form.find('button[type="submit"]').prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');

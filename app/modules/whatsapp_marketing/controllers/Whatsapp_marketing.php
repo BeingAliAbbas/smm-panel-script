@@ -291,76 +291,92 @@ class Whatsapp_marketing extends MX_Controller {
         $import_type = post("import_type");
         
         if($import_type == 'database'){
-            // Import from general_users
-            $count = $this->model->import_from_general_users($campaign->id);
-            
-            if($count > 0){
-                // Update campaign stats
-                $this->model->update_campaign_stats($campaign->id);
+            try {
+                // Import from general_users
+                $count = $this->model->import_from_general_users($campaign->id);
                 
-                ms(array(
-                    "status" => "success",
-                    "message" => "$count recipients imported successfully"
-                ));
-            } else {
-                ms(array(
-                    "status" => "error",
-                    "message" => "No valid phone numbers found in database"
-                ));
-            }
-            
-        } elseif($import_type == 'file'){
-            // Import from CSV/TXT file
-            if(empty($_FILES['file']['name'])){
-                ms(array(
-                    "status" => "error",
-                    "message" => "Please select a file"
-                ));
-            }
-            
-            $allowed_types = array('csv', 'txt');
-            $file_ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-            
-            if(!in_array(strtolower($file_ext), $allowed_types)){
-                ms(array(
-                    "status" => "error",
-                    "message" => "Only CSV and TXT files are allowed"
-                ));
-            }
-            
-            // Upload file
-            $upload_path = APPPATH . 'cache/whatsapp_imports/';
-            if(!is_dir($upload_path)){
-                mkdir($upload_path, 0755, true);
-            }
-            
-            $file_name = 'import_' . time() . '_' . uniqid() . '.' . $file_ext;
-            $file_path = $upload_path . $file_name;
-            
-            if(move_uploaded_file($_FILES['file']['tmp_name'], $file_path)){
-                $result = $this->model->import_from_csv($campaign->id, $file_path);
-                
-                // Delete uploaded file
-                @unlink($file_path);
-                
-                if($result['success']){
+                if($count > 0){
                     // Update campaign stats
                     $this->model->update_campaign_stats($campaign->id);
                     
                     ms(array(
                         "status" => "success",
-                        "message" => $result['message']
+                        "message" => "$count recipients imported successfully"
                     ));
                 } else {
                     ms(array(
                         "status" => "error",
-                        "message" => $result['message']
+                        "message" => "No valid phone numbers found in database"
                     ));
                 }
-            } else {
+            } catch (Exception $e) {
+                log_message('error', 'WhatsApp Import Error: ' . $e->getMessage());
                 ms(array(
                     "status" => "error",
-                    "message" => "Failed to upload file"
+                    "message" => "Error importing users: " . $e->getMessage()
+                ));
+            }
+            
+        } elseif($import_type == 'file'){
+            try {
+                // Import from CSV/TXT file
+                if(empty($_FILES['file']['name'])){
+                    ms(array(
+                        "status" => "error",
+                        "message" => "Please select a file"
+                    ));
+                }
+                
+                $allowed_types = array('csv', 'txt');
+                $file_ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+                
+                if(!in_array(strtolower($file_ext), $allowed_types)){
+                    ms(array(
+                        "status" => "error",
+                        "message" => "Only CSV and TXT files are allowed"
+                    ));
+                }
+                
+                // Upload file
+                $upload_path = APPPATH . 'cache/whatsapp_imports/';
+                if(!is_dir($upload_path)){
+                    mkdir($upload_path, 0755, true);
+                }
+                
+                $file_name = 'import_' . time() . '_' . uniqid() . '.' . $file_ext;
+                $file_path = $upload_path . $file_name;
+                
+                if(move_uploaded_file($_FILES['file']['tmp_name'], $file_path)){
+                    $result = $this->model->import_from_csv($campaign->id, $file_path);
+                    
+                    // Delete uploaded file
+                    @unlink($file_path);
+                    
+                    if($result['success']){
+                        // Update campaign stats
+                        $this->model->update_campaign_stats($campaign->id);
+                        
+                        ms(array(
+                            "status" => "success",
+                            "message" => $result['message']
+                        ));
+                    } else {
+                        ms(array(
+                            "status" => "error",
+                            "message" => $result['message']
+                        ));
+                    }
+                } else {
+                    ms(array(
+                        "status" => "error",
+                        "message" => "Failed to upload file"
+                    ));
+                }
+            } catch (Exception $e) {
+                log_message('error', 'WhatsApp CSV Import Error: ' . $e->getMessage());
+                ms(array(
+                    "status" => "error",
+                    "message" => "Error importing from file: " . $e->getMessage()
                 ));
             }
         } else {

@@ -278,7 +278,7 @@ class Whatsapp_marketing_model extends MY_Model {
     
     public function import_from_general_users($campaign_id) {
         // Fetch all users with WhatsApp numbers
-        $this->db->select('id, first_name, last_name, whatsapp_number, balance');
+        $this->db->select('id, first_name, last_name, whatsapp_number, balance, email');
         $this->db->from('general_users');
         $this->db->where('whatsapp_number IS NOT NULL');
         $this->db->where('whatsapp_number !=', '');
@@ -286,7 +286,22 @@ class Whatsapp_marketing_model extends MY_Model {
         $query = $this->db->get();
         
         if ($query->num_rows() == 0) {
+            log_message('info', 'WhatsApp Import: No users found with whatsapp numbers');
             return 0;
+        }
+        
+        log_message('info', 'WhatsApp Import: Found ' . $query->num_rows() . ' users with whatsapp numbers');
+        
+        // Get existing recipients for this campaign to skip duplicates
+        $existing = [];
+        $existing_query = $this->db->select('phone_number')
+                                    ->from($this->tb_recipients)
+                                    ->where('campaign_id', $campaign_id)
+                                    ->get();
+        if ($existing_query->num_rows() > 0) {
+            foreach ($existing_query->result() as $row) {
+                $existing[$row->phone_number] = true;
+            }
         }
         
         $recipients = [];
@@ -297,21 +312,32 @@ class Whatsapp_marketing_model extends MY_Model {
                 continue;
             }
             
+            // Skip if already exists in campaign
+            if (isset($existing[$phone])) {
+                continue;
+            }
+            
             $recipients[] = array(
                 'phone_number' => $phone,
                 'name' => trim($user->first_name . ' ' . $user->last_name),
                 'user_id' => $user->id,
                 'custom_data' => array(
                     'username' => trim($user->first_name . ' ' . $user->last_name),
-                    'balance' => $user->balance
+                    'balance' => $user->balance,
+                    'email' => $user->email
                 )
             );
         }
         
+        log_message('info', 'WhatsApp Import: After filtering, ' . count($recipients) . ' recipients to import');
+        
         // Remove duplicates by phone number
         $recipients = $this->remove_duplicate_recipients($recipients);
         
-        return $this->add_recipients($campaign_id, $recipients);
+        $count = $this->add_recipients($campaign_id, $recipients);
+        log_message('info', 'WhatsApp Import: Successfully imported ' . $count . ' recipients');
+        
+        return $count;
     }
     
     public function import_from_csv($campaign_id, $file_path) {
