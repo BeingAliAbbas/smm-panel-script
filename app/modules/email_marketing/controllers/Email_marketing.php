@@ -817,8 +817,16 @@ class Email_marketing extends MX_Controller {
     // ========================================
     
     public function reports(){
+        // Get overall statistics for reports page
+        $stats = $this->model->get_overall_stats();
+        
+        // Get all campaigns with stats
+        $campaigns = $this->model->get_campaigns(1000, 0);
+        
         $data = array(
-            "module" => $this->module
+            "module" => $this->module,
+            "stats" => $stats,
+            "campaigns" => $campaigns
         );
         $this->template->build("reports/index", $data);
     }
