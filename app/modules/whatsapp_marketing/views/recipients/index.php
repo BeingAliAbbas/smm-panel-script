@@ -22,9 +22,9 @@
         <h3 class="card-title"><i class="fe fe-database"></i> Import from User Database</h3>
       </div>
       <div class="card-body">
-        <p>Import active users with WhatsApp numbers who have placed at least 1 order</p>
+        <p>Import all active users with WhatsApp numbers from the database</p>
         <div class="alert alert-info mb-3">
-          <small><strong>Note:</strong> Only users with WhatsApp numbers and order history will be imported to ensure better targeting.</small>
+          <small><strong>Note:</strong> All users with valid WhatsApp numbers will be imported automatically.</small>
         </div>
         <form id="importUsersForm" action="<?php echo cn($module . '/ajax_import_from_users'); ?>" method="POST" class="actionForm">
           <input type="hidden" name="campaign_ids" value="<?php echo $campaign->ids; ?>">

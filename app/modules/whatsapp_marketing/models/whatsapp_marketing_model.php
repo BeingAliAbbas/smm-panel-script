@@ -403,7 +403,8 @@ class Whatsapp_marketing_model extends MY_Model {
                 $this->db->where('u.role', $filters['role']);
             }
             
-            $this->db->where("EXISTS (SELECT 1 FROM " . ORDER . " o WHERE o.uid = u.id LIMIT 1)", NULL, FALSE);
+            // Import ALL users with WhatsApp numbers, not just those with orders
+            // Removed order requirement to import all users from general_users
             
             if ($limit > 0) {
                 $this->db->limit($limit);
@@ -434,6 +435,7 @@ class Whatsapp_marketing_model extends MY_Model {
                 $exists = $this->db->count_all_results($this->tb_recipients);
                 
                 if ($exists == 0) {
+                    // Get order count for this user (optional data)
                     $this->db->where('uid', $user->id);
                     $order_count = $this->db->count_all_results(ORDER);
                     
