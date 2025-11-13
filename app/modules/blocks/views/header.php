@@ -359,6 +359,10 @@
           </div>
         </a>
         
+        <a href="<?=cn('whatsapp_marketing')?>" class="nav-link <?=(segment(1) == 'whatsapp_marketing')?"active":""?>">
+          <div class="nav-item" class="sidenavContent"><i class="fa fa-whatsapp"></i>WhatsApp Marketing</div>
+        </a>
+        
         <a href="<?=cn('subscribers')?>" class="nav-link <?=(segment(1) == 'subscribers')?"active":""?>">
           <div class="nav-item" class="sidenavContent"><i class="fa fa-user-circle-o"></i><?php echo lang("subscribers"); ?></div>
         </a>
