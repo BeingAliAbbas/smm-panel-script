@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Email_marketing extends MX_Controller {
+class Whatsapp_marketing extends MX_Controller {
     
     public $module_name;
     public $module;
@@ -12,9 +12,9 @@ class Email_marketing extends MX_Controller {
         $this->load->model(get_class($this).'_model', 'model');
         
         // Config Module
-        $this->module_name = 'Email Marketing';
+        $this->module_name = 'WhatsApp Marketing';
         $this->module = strtolower(get_class($this));
-        $this->module_icon = "fa fa-envelope";
+        $this->module_icon = "fa fa-whatsapp";
         
         // Check if user is admin
         if (!get_role("admin")) {
@@ -27,7 +27,6 @@ class Email_marketing extends MX_Controller {
     // ========================================
     
     public function index(){
-        // Get overall statistics
         $stats = $this->model->get_overall_stats();
         $recent_logs = $this->model->get_recent_logs(10);
         
@@ -40,7 +39,6 @@ class Email_marketing extends MX_Controller {
         );
         $this->template->build("index", $data);
     }
-    
     
     // ========================================
     // CAMPAIGNS
@@ -66,12 +64,12 @@ class Email_marketing extends MX_Controller {
     
     public function campaign_create(){
         $templates = $this->model->get_templates(1000, 0);
-        $smtp_configs = $this->model->get_smtp_configs(1000, 0);
+        $api_configs = $this->model->get_api_configs(1000, 0);
         
         $data = array(
             "module" => $this->module,
             "templates" => $templates,
-            "smtp_configs" => $smtp_configs
+            "api_configs" => $api_configs
         );
         $this->load->view('campaigns/create', $data);
     }
@@ -81,11 +79,10 @@ class Email_marketing extends MX_Controller {
         
         $name = post("name");
         $template_id = post("template_id");
-        $smtp_config_id = post("smtp_config_id");
+        $api_config_id = post("api_config_id");
         $sending_limit_hourly = post("sending_limit_hourly");
         $sending_limit_daily = post("sending_limit_daily");
         
-        // Validation
         if(empty($name)){
             ms(array(
                 "status" => "error",
@@ -93,17 +90,17 @@ class Email_marketing extends MX_Controller {
             ));
         }
         
-        if(empty($template_id) || empty($smtp_config_id)){
+        if(empty($template_id) || empty($api_config_id)){
             ms(array(
                 "status" => "error",
-                "message" => "Please select template and SMTP configuration"
+                "message" => "Please select template and API configuration"
             ));
         }
         
         $campaign_data = array(
             'name' => $name,
             'template_id' => $template_id,
-            'smtp_config_id' => $smtp_config_id,
+            'api_config_id' => $api_config_id,
             'status' => 'pending',
             'sending_limit_hourly' => $sending_limit_hourly ? (int)$sending_limit_hourly : null,
             'sending_limit_daily' => $sending_limit_daily ? (int)$sending_limit_daily : null
@@ -124,13 +121,13 @@ class Email_marketing extends MX_Controller {
         }
         
         $templates = $this->model->get_templates(1000, 0);
-        $smtp_configs = $this->model->get_smtp_configs(1000, 0);
+        $api_configs = $this->model->get_api_configs(1000, 0);
         
         $data = array(
             "module" => $this->module,
             "campaign" => $campaign,
             "templates" => $templates,
-            "smtp_configs" => $smtp_configs
+            "api_configs" => $api_configs
         );
         $this->load->view('campaigns/edit', $data);
     }
@@ -148,7 +145,7 @@ class Email_marketing extends MX_Controller {
         
         $name = post("name");
         $template_id = post("template_id");
-        $smtp_config_id = post("smtp_config_id");
+        $api_config_id = post("api_config_id");
         $sending_limit_hourly = post("sending_limit_hourly");
         $sending_limit_daily = post("sending_limit_daily");
         
@@ -162,7 +159,7 @@ class Email_marketing extends MX_Controller {
         $update_data = array(
             'name' => $name,
             'template_id' => $template_id,
-            'smtp_config_id' => $smtp_config_id,
+            'api_config_id' => $api_config_id,
             'sending_limit_hourly' => $sending_limit_hourly ? (int)$sending_limit_hourly : null,
             'sending_limit_daily' => $sending_limit_daily ? (int)$sending_limit_daily : null
         );
@@ -200,7 +197,6 @@ class Email_marketing extends MX_Controller {
             ));
         }
         
-        // Check if campaign has recipients
         $recipient_count = $this->model->get_recipients($campaign->id);
         if($recipient_count == 0){
             ms(array(
@@ -263,31 +259,28 @@ class Email_marketing extends MX_Controller {
             ));
         }
         
-        // Reset failed recipients to pending
         $reset_count = $this->model->reset_failed_recipients($campaign->id);
         
         if($reset_count > 0){
-            // Update campaign stats
             $this->model->update_campaign_stats($campaign->id);
             
-            // If campaign is completed, set it back to running
             if($campaign->status == 'completed'){
                 $this->model->update_campaign($ids, array('status' => 'running'));
             }
             
             ms(array(
                 "status" => "success",
-                "message" => "Reset {$reset_count} failed email(s) for resending"
+                "message" => "Reset {$reset_count} failed message(s) for resending"
             ));
         } else {
             ms(array(
                 "status" => "error",
-                "message" => "No failed emails found to resend"
+                "message" => "No failed messages found to resend"
             ));
         }
     }
     
-    public function ajax_resend_single_email(){
+    public function ajax_resend_single_message(){
         _is_ajax($this->module);
         
         $recipient_id = post("recipient_id");
@@ -299,9 +292,8 @@ class Email_marketing extends MX_Controller {
             ));
         }
         
-        // Get recipient
         $this->db->where('id', $recipient_id);
-        $recipient = $this->db->get('email_recipients')->row();
+        $recipient = $this->db->get('whatsapp_recipients')->row();
         
         if(!$recipient){
             ms(array(
@@ -310,39 +302,34 @@ class Email_marketing extends MX_Controller {
             ));
         }
         
-        // Only allow resending failed emails
         if($recipient->status != 'failed'){
             ms(array(
                 "status" => "error",
-                "message" => "Only failed emails can be resent"
+                "message" => "Only failed messages can be resent"
             ));
         }
         
-        // Reset recipient to pending
         $this->db->where('id', $recipient_id);
-        $this->db->update('email_recipients', [
+        $this->db->update('whatsapp_recipients', [
             'status' => 'pending',
             'sent_at' => null,
             'error_message' => null,
             'updated_at' => NOW
         ]);
         
-        // Update campaign stats
         $this->model->update_campaign_stats($recipient->campaign_id);
         
-        // Get campaign
         $this->db->where('id', $recipient->campaign_id);
-        $campaign = $this->db->get('email_campaigns')->row();
+        $campaign = $this->db->get('whatsapp_campaigns')->row();
         
-        // If campaign is completed, set it back to running
         if($campaign && $campaign->status == 'completed'){
             $this->db->where('id', $recipient->campaign_id);
-            $this->db->update('email_campaigns', array('status' => 'running'));
+            $this->db->update('whatsapp_campaigns', array('status' => 'running'));
         }
         
         ms(array(
             "status" => "success",
-            "message" => "Email reset for resending"
+            "message" => "Message reset for resending"
         ));
     }
     
@@ -352,9 +339,8 @@ class Email_marketing extends MX_Controller {
             redirect(cn($this->module . "/campaigns"));
         }
         
-        // Update campaign stats
         $this->model->update_campaign_stats($campaign->id);
-        $campaign = $this->model->get_campaign($ids); // Refresh data
+        $campaign = $this->model->get_campaign($ids);
         
         $recipients = $this->model->get_recipients($campaign->id, 100, 0);
         $logs = $this->model->get_logs($campaign->id, 50, 0);
@@ -401,11 +387,10 @@ class Email_marketing extends MX_Controller {
         _is_ajax($this->module);
         
         $name = post("name");
-        $subject = post("subject");
-        $body = post("body", false); // Don't XSS clean HTML content
+        $message = post("message");
         $description = post("description");
         
-        if(empty($name) || empty($subject) || empty($body)){
+        if(empty($name) || empty($message)){
             ms(array(
                 "status" => "error",
                 "message" => lang("please_fill_in_the_required_fields")
@@ -414,8 +399,7 @@ class Email_marketing extends MX_Controller {
         
         $template_data = array(
             'name' => $name,
-            'subject' => $subject,
-            'body' => $body,
+            'message' => $message,
             'description' => $description,
             'status' => 1
         );
@@ -453,11 +437,10 @@ class Email_marketing extends MX_Controller {
         }
         
         $name = post("name");
-        $subject = post("subject");
-        $body = post("body", false);
+        $message = post("message");
         $description = post("description");
         
-        if(empty($name) || empty($subject) || empty($body)){
+        if(empty($name) || empty($message)){
             ms(array(
                 "status" => "error",
                 "message" => lang("please_fill_in_the_required_fields")
@@ -466,8 +449,7 @@ class Email_marketing extends MX_Controller {
         
         $update_data = array(
             'name' => $name,
-            'subject' => $subject,
-            'body' => $body,
+            'message' => $message,
             'description' => $description
         );
         
@@ -497,115 +479,97 @@ class Email_marketing extends MX_Controller {
     }
     
     // ========================================
-    // SMTP CONFIGURATIONS
+    // API CONFIGURATIONS
     // ========================================
     
-    public function smtp($page = 1){
+    public function api($page = 1){
         $page = max(1, (int)$page);
         $per_page = 20;
         $offset = ($page - 1) * $per_page;
         
-        $smtp_configs = $this->model->get_smtp_configs($per_page, $offset);
-        $total = $this->model->get_smtp_configs();
+        $api_configs = $this->model->get_api_configs($per_page, $offset);
+        $total = $this->model->get_api_configs();
         
         $data = array(
             "module" => $this->module,
-            "smtp_configs" => $smtp_configs,
+            "api_configs" => $api_configs,
             "total" => $total,
             "page" => $page,
             "per_page" => $per_page
         );
-        $this->template->build("smtp/index", $data);
+        $this->template->build("api/index", $data);
     }
     
-    public function smtp_create(){
+    public function api_create(){
         $data = array(
             "module" => $this->module
         );
-        $this->load->view('smtp/create', $data);
+        $this->load->view('api/create', $data);
     }
     
-    public function ajax_smtp_create(){
+    public function ajax_api_create(){
         _is_ajax($this->module);
         
         $name = post("name");
-        $host = post("host");
-        $port = post("port");
-        $username = post("username");
-        $password = post("password");
-        $encryption = post("encryption");
-        $from_name = post("from_name");
-        $from_email = post("from_email");
-        $reply_to = post("reply_to");
+        $api_url = post("api_url");
+        $api_key = post("api_key");
         $is_default = post("is_default");
         $status = post("status");
         
-        if(empty($name) || empty($host) || empty($port) || empty($username) || empty($from_email)){
+        if(empty($name) || empty($api_url) || empty($api_key)){
             ms(array(
                 "status" => "error",
                 "message" => lang("please_fill_in_the_required_fields")
             ));
         }
         
-        $smtp_data = array(
+        $api_data = array(
             'name' => $name,
-            'host' => $host,
-            'port' => (int)$port,
-            'username' => $username,
-            'password' => $password,
-            'encryption' => $encryption,
-            'from_name' => $from_name,
-            'from_email' => $from_email,
-            'reply_to' => $reply_to,
+            'api_url' => $api_url,
+            'api_key' => $api_key,
             'is_default' => $is_default ? 1 : 0,
             'status' => $status ? 1 : 0
         );
         
-        if($this->model->create_smtp_config($smtp_data)){
+        if($this->model->create_api_config($api_data)){
             ms(array(
                 "status" => "success",
-                "message" => "SMTP configuration created successfully"
+                "message" => "API configuration created successfully"
             ));
         }
     }
     
-    public function smtp_edit($ids = ""){
-        $smtp = $this->model->get_smtp_config($ids);
-        if(!$smtp){
-            redirect(cn($this->module . "/smtp"));
+    public function api_edit($ids = ""){
+        $api = $this->model->get_api_config($ids);
+        if(!$api){
+            redirect(cn($this->module . "/api"));
         }
         
         $data = array(
             "module" => $this->module,
-            "smtp" => $smtp
+            "api" => $api
         );
-        $this->load->view('smtp/edit', $data);
+        $this->load->view('api/edit', $data);
     }
     
-    public function ajax_smtp_edit($ids = ""){
+    public function ajax_api_edit($ids = ""){
         _is_ajax($this->module);
         
-        $smtp = $this->model->get_smtp_config($ids);
-        if(!$smtp){
+        $api = $this->model->get_api_config($ids);
+        if(!$api){
             ms(array(
                 "status" => "error",
-                "message" => "SMTP configuration not found"
+                "message" => "API configuration not found"
             ));
         }
         
         $name = post("name");
-        $host = post("host");
-        $port = post("port");
-        $username = post("username");
-        $password = post("password");
-        $encryption = post("encryption");
-        $from_name = post("from_name");
-        $from_email = post("from_email");
-        $reply_to = post("reply_to");
+        $api_url = post("api_url");
+        $api_key = post("api_key");
         $is_default = post("is_default");
         $status = post("status");
         
-        if(empty($name) || empty($host) || empty($port) || empty($username) || empty($from_email)){
+        if(empty($name) || empty($api_url) || empty($api_key)){
             ms(array(
                 "status" => "error",
                 "message" => lang("please_fill_in_the_required_fields")
@@ -614,43 +578,33 @@ class Email_marketing extends MX_Controller {
         
         $update_data = array(
             'name' => $name,
-            'host' => $host,
-            'port' => (int)$port,
-            'username' => $username,
-            'encryption' => $encryption,
-            'from_name' => $from_name,
-            'from_email' => $from_email,
-            'reply_to' => $reply_to,
+            'api_url' => $api_url,
+            'api_key' => $api_key,
             'is_default' => $is_default ? 1 : 0,
             'status' => $status ? 1 : 0
         );
         
-        // Only update password if provided
-        if(!empty($password)){
-            $update_data['password'] = $password;
-        }
-        
-        if($this->model->update_smtp_config($ids, $update_data)){
+        if($this->model->update_api_config($ids, $update_data)){
             ms(array(
                 "status" => "success",
-                "message" => "SMTP configuration updated successfully"
+                "message" => "API configuration updated successfully"
             ));
         }
     }
     
-    public function ajax_smtp_delete(){
+    public function ajax_api_delete(){
         _is_ajax($this->module);
         
         $ids = post("ids");
-        if($this->model->delete_smtp_config($ids)){
+        if($this->model->delete_api_config($ids)){
             ms(array(
                 "status" => "success",
-                "message" => "SMTP configuration deleted successfully"
+                "message" => "API configuration deleted successfully"
             ));
         } else {
             ms(array(
                 "status" => "error",
-                "message" => "Cannot delete SMTP configuration that is in use by active campaigns"
+                "message" => "Cannot delete API configuration that is in use by active campaigns"
             ));
         }
     }
@@ -678,7 +632,6 @@ class Email_marketing extends MX_Controller {
     public function ajax_import_from_users(){
         _is_ajax($this->module);
         
-        // Increase PHP timeout for this operation (importing all users may take longer)
         @set_time_limit(300);
         @ini_set('max_execution_time', 300);
         @ini_set('memory_limit', '256M');
@@ -694,25 +647,23 @@ class Email_marketing extends MX_Controller {
         }
         
         try {
-            // Import all available users (no limit)
             $imported = $this->model->import_from_users($campaign->id, [], 0);
             
-            // Update campaign stats
             $this->model->update_campaign_stats($campaign->id);
             
             if ($imported > 0) {
                 ms(array(
                     "status" => "success",
-                    "message" => "Successfully imported {$imported} users with order history"
+                    "message" => "Successfully imported {$imported} users with WhatsApp numbers"
                 ));
             } else {
                 ms(array(
                     "status" => "error",
-                    "message" => "No users found with order history or all users already imported"
+                    "message" => "No users found with WhatsApp numbers or all users already imported"
                 ));
             }
         } catch (Exception $e) {
-            log_message('error', 'Email Marketing Import Error: ' . $e->getMessage());
+            log_message('error', 'WhatsApp Marketing Import Error: ' . $e->getMessage());
             ms(array(
                 "status" => "error",
                 "message" => "Error importing users: " . $e->getMessage()
@@ -733,11 +684,10 @@ class Email_marketing extends MX_Controller {
             ));
         }
         
-        // Handle file upload
         if(!empty($_FILES['csv_file']['name'])){
             $config['upload_path'] = TEMP_PATH;
             $config['allowed_types'] = 'csv|txt';
-            $config['max_size'] = 5000; // 5MB
+            $config['max_size'] = 5000;
             
             $this->load->library('upload', $config);
             
@@ -747,15 +697,13 @@ class Email_marketing extends MX_Controller {
                 
                 $imported = $this->model->import_from_csv($campaign->id, $file_path);
                 
-                // Delete uploaded file
                 @unlink($file_path);
                 
-                // Update campaign stats
                 $this->model->update_campaign_stats($campaign->id);
                 
                 ms(array(
                     "status" => "success",
-                    "message" => "Imported {$imported} emails successfully"
+                    "message" => "Imported {$imported} phone numbers successfully"
                 ));
             } else {
                 ms(array(
@@ -772,56 +720,11 @@ class Email_marketing extends MX_Controller {
     }
     
     // ========================================
-    // TRACKING
-    // ========================================
-    
-    /**
-     * Track email opens via tracking pixel
-     * Public endpoint - no authentication required
-     */
-    public function track($token = ""){
-        if(empty($token)){
-            show_404();
-            return;
-        }
-        
-        // Find recipient by tracking token
-        $this->db->where('tracking_token', $token);
-        $recipient = $this->db->get('email_recipients')->row();
-        
-        if($recipient && $recipient->status == 'sent'){
-            // Update recipient status to opened
-            $this->model->update_recipient_status($recipient->id, 'opened');
-            
-            // Update log if exists
-            $this->db->where('recipient_id', $recipient->id);
-            $this->db->where('status', 'sent');
-            $this->db->update('email_logs', [
-                'status' => 'opened',
-                'opened_at' => NOW
-            ]);
-            
-            // Update campaign stats
-            $this->model->update_campaign_stats($recipient->campaign_id);
-        }
-        
-        // Return 1x1 transparent pixel
-        header('Content-Type: image/gif');
-        header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-        header('Pragma: no-cache');
-        echo base64_decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
-        exit;
-    }
-    
-    // ========================================
     // REPORTS
     // ========================================
     
     public function reports(){
-        // Get overall statistics for reports page
         $stats = $this->model->get_overall_stats();
-        
-        // Get all campaigns with stats
         $campaigns = $this->model->get_campaigns(1000, 0);
         
         $data = array(
@@ -838,30 +741,24 @@ class Email_marketing extends MX_Controller {
             redirect(cn($this->module . "/campaigns"));
         }
         
-        // Update stats first
         $this->model->update_campaign_stats($campaign->id);
         $campaign = $this->model->get_campaign($ids);
         
-        // Get all recipients
         $recipients = $this->model->get_recipients($campaign->id, 10000, 0);
         
-        // Create CSV
         header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="campaign_' . $campaign->ids . '_report.csv"');
+        header('Content-Disposition: attachment; filename="whatsapp_campaign_' . $campaign->ids . '_report.csv"');
         
         $output = fopen('php://output', 'w');
         
-        // Headers
-        fputcsv($output, ['Email', 'Name', 'Status', 'Sent At', 'Opened At', 'Error Message']);
+        fputcsv($output, ['Phone Number', 'Name', 'Status', 'Sent At', 'Error Message']);
         
-        // Data
         foreach($recipients as $recipient){
             fputcsv($output, [
-                $recipient->email,
+                $recipient->phone_number,
                 $recipient->name,
                 $recipient->status,
                 $recipient->sent_at,
-                $recipient->opened_at,
                 $recipient->error_message
             ]);
         }
