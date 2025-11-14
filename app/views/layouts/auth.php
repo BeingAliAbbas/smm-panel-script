@@ -45,15 +45,11 @@
     <div id="page-overlay" class="visible incoming">
       <div class="loader-wrapper-outer">
         <div class="loader-wrapper-inner">
-          <div class="lds-double-ring">
-            <div></div>
-            <div></div>
-            <div>
-              <div></div>
-            </div>
-            <div>
-              <div></div>
-            </div>
+          <div class="loader">
+            <div class="jimu-primary-loading"></div>
+          </div>
+          <div class="loading-text" style="color: #076fe5; font-size: 16px; font-weight:600; font-family: 'Segoe UI', Arial, sans-serif; margin-top: 60px; text-align: center; letter-spacing: 0.5px;">
+            <span>Loading...</span>
           </div>
         </div>
       </div>
