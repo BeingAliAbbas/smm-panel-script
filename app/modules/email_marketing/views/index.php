@@ -236,6 +236,11 @@
     <div class="card">
       <div class="card-header">
         <h3 class="card-title"><i class="fe fe-activity"></i> Recent Activity</h3>
+        <div class="card-options">
+          <a href="<?php echo cn($module . '/logs'); ?>" class="btn btn-sm btn-primary">
+            <i class="fe fe-list"></i> View All Logs
+          </a>
+        </div>
       </div>
       <div class="table-responsive">
         <table class="table table-hover table-vcenter card-table table-sm">
@@ -339,6 +344,21 @@
             <div>
               <h4 class="m-0"><a href="<?php echo cn($module . '/reports'); ?>" class="text-inherit">Reports</a></h4>
               <small class="text-muted">Analytics & Reports</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Email Logs Card -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="card p-3">
+          <div class="d-flex align-items-center">
+            <span class="stamp stamp-md bg-red mr-3">
+              <i class="fe fe-list"></i>
+            </span>
+            <div>
+              <h4 class="m-0"><a href="<?php echo cn($module . '/logs'); ?>" class="text-inherit">Email Logs</a></h4>
+              <small class="text-muted">View all email logs</small>
             </div>
           </div>
         </div>
