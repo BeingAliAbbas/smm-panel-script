@@ -42,6 +42,12 @@ if (!function_exists('getEmailTemplate')) {
 					$result->content = "<p><strong>Hi Admin!</strong></p><p>Someone have already placed order successfully  in <strong>{{website_name}}</strong> with follow data:</p><ul><li>Email: <strong>{{user_email}}</strong></li><li>OrderID:    <strong>{{order_id}}</strong>  </li><li>Total Charge:  <strong>{{currency_symbol}}{{total_charge}}</strong>    </li></ul>";
 					return $result;
 					break;
+
+				case 'payment_submission':
+					$result->subject = "{{website_name}} - New Payment Submission";
+					$result->content = "<p><strong>Hi Admin!</strong></p><p>A payment submission has been received in <strong>{{website_name}}</strong> with the following details:</p><ul><li>User Email: <strong>{{user_email}}</strong></li><li>User Name: <strong>{{user_firstname}} {{user_lastname}}</strong></li><li>Payment Method: <strong>{{payment_method}}</strong></li><li>Amount: <strong>{{currency_symbol}}{{amount}}</strong></li><li>Transaction ID: <strong>{{transaction_id}}</strong></li><li>Status: <strong>{{status}}</strong></li><li>Submission Time: <strong>{{created_time}}</strong></li></ul><p>Please review and process this payment submission.</p>";
+					return $result;
+					break;
 			}
 		}
 		return $result;
