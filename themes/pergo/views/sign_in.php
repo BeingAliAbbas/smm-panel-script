@@ -37,22 +37,22 @@
           ?>
           <!-- Email Input with Label -->
 <div class="input-group mb-5">
-  <label style="display: block; font-size: 14px; font-weight: 600; color: #ffffff; margin-bottom: 5px;">
+  <label style="display: block; font-size: 14px; font-weight: 600; color: #212529; margin-bottom: 5px;">
     <?=lang("Email")?>
   </label>
   <input type="email" class="form-control1" name="email" 
-         style="width: 100%; height: 40px; padding: 0 15px; border: 1px solid #04a9f4; border-radius: 6px; background: transparent; color: #ffffff; font-size: 14px; outline: none;" 
+         style="width: 100%; height: 40px; padding: 0 15px; border: 1px solid #ced4da; border-radius: 6px; background: #ffffff; color: #495057; font-size: 14px; outline: none;" 
          placeholder="<?=lang("Email")?>" 
          value="<?=(isset($cookie_email) && $cookie_email != "") ? $cookie_email : ""?>" required>
 </div>    
 
 <!-- Password Input with Label -->
 <div class="input-group mb-5">
-  <label style="display: block; font-size: 14px; font-weight: 600; color: #ffffff; margin-bottom: 5px;">
+  <label style="display: block; font-size: 14px; font-weight: 600; color: #212529; margin-bottom: 5px;">
     <?=lang("Password")?>
   </label>
   <input type="password" class="form-control" name="password" 
-         style="width: 100%; height: 40px; padding: 0 15px; border: 1px solid #04a9f4; border-radius: 6px; background: transparent; color: #ffffff; font-size: 14px; outline: none;" 
+         style="width: 100%; height: 40px; padding: 0 15px; border: 1px solid #ced4da; border-radius: 6px; background: #ffffff; color: #495057; font-size: 14px; outline: none;" 
          placeholder="<?=lang("Password")?>" 
          value="<?=(isset($cookie_pass) && $cookie_pass != "") ? $cookie_pass : ""?>" required>
 </div>

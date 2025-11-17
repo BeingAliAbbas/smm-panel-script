@@ -1,12 +1,13 @@
 /* Footer Styling */
 .footer {
-  background-color: #051d2f;
-  color: #a7a7a7;
+  background-color: #ffffff;
+  color: #495057;
   padding: 30px 0;
+  border-top: 1px solid #dee2e6;
 }
 
 .footer a:not(.btn) {
-  color: #a7a7a7;
+  color: #6c757d;
   transition: color 0.3s;
 }
 
@@ -15,7 +16,7 @@
 }
 
 .footer .title {
-  color: #ededed;
+  color: #212529;
   margin-bottom: 20px;
 }
 
@@ -28,17 +29,17 @@
 }
 
 .footer_top .quick-link li a:hover {
-  color: #ff6f61;
+  color: #4a90e2;
 }
 
 .footer_bottom {
-  border-top: 2px solid #a7a7a7;
+  border-top: 2px solid #dee2e6;
   padding: 20px;
-  background-color: #051d2f;
+  background-color: #f8f9fa;
 }
 
 .footer-bottom .list-inline-item a {
-  color: #a7a7a7;
+  color: #6c757d;
   transition: color 0.3s;
 }
 
@@ -50,9 +51,9 @@
   margin-top: 4px;
   margin-left: 20px;
   padding: 5px;
-  border: 1px solid #6D7784;
-  background-color: transparent;
-  color: #a7a7a7;
+  border: 1px solid #ced4da;
+  background-color: #ffffff;
+  color: #495057;
   font-size: 14px;
 }
 
