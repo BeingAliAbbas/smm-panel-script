@@ -12,7 +12,7 @@
               <div class="form-group">
                 <label class="form-label"><?=lang("currency_code")?></label>
                 <small><?=lang("the_paypal_payments_only_supports_these_currencies")?></small>
-                <select  name="currency_code" class="form-control square">
+                <select  name="currency_code" id="currency_code" class="form-control square">
                   <?php 
                     $currency_codes = currency_codes();
                     if(!empty($currency_codes)){
@@ -112,14 +112,32 @@
                     </label>
                     <div class="input-group">
                       <span class="input-group-prepend">
-                        <span class="input-group-text"><?=lang("1_original_currency")?> =</span>
+                        <span class="input-group-text">1 USD =</span>
                       </span>
-                      <input type="text" class="form-control text-right" name="new_currecry_rate" value="<?=get_option('new_currecry_rate', 1)?>">
+                      <input type="text" class="form-control text-right" name="new_currecry_rate" id="new_currecry_rate" value="<?=get_option('new_currecry_rate', 1)?>">
                       <span class="input-group-append">
-                        <span class="input-group-text"><?=lang("new_currency")?></span>
+                        <span class="input-group-text" id="target_currency_display"><?=get_option("currency_code", "USD")?></span>
                       </span>
                     </div>
                     <small class="text-muted"><span class="text-danger">*</span> <?=lang("if_you_dont_want_to_change_currency_rate_then_leave_this_currency_rate_field_to_1")?></small>
+                  </div>
+                  
+                  <div class="form-group">
+                    <button type="button" class="btn btn-success" id="fetchExchangeRateBtn">
+                      <i class="fe fe-download"></i> <span id="fetch_btn_text">Fetch Current Exchange Rate (USD to <?=get_option("currency_code", "USD")?>)</span>
+                    </button>
+                    <button type="button" class="btn btn-info ml-2" id="showCronUrlBtn">
+                      <i class="fe fe-link"></i> Show Cron URL for Auto-Update
+                    </button>
+                  </div>
+                  
+                  <div class="alert alert-warning d-none" id="cronUrlBox">
+                    <strong>Cron URL for Automatic Exchange Rate Updates:</strong><br>
+                    <code id="cronUrlText"></code>
+                    <button type="button" class="btn btn-sm btn-primary ml-2" id="copyCronUrlBtn">
+                      <i class="fe fe-copy"></i> Copy
+                    </button>
+                    <br><small class="text-muted mt-2 d-block">Add this URL to your cron job to automatically update the exchange rate daily. Example: <code>0 0 * * * curl "URL"</code></small>
                   </div>
                 </div>
               </div>
@@ -135,3 +153,140 @@
         </form>
       </div>
     </div>
+
+<script>
+$(document).ready(function() {
+  // Function to update currency display
+  function updateCurrencyDisplay() {
+    var selectedCurrency = $('#currency_code').val() || 'USD';
+    $('#target_currency_display').text(selectedCurrency);
+    $('#fetch_btn_text').text('Fetch Current Exchange Rate (USD to ' + selectedCurrency + ')');
+  }
+  
+  // Update on page load
+  updateCurrencyDisplay();
+  
+  // Update when currency dropdown changes
+  $('#currency_code').on('change', function() {
+    updateCurrencyDisplay();
+  });
+  
+  // Fetch current exchange rate from API
+  $('#fetchExchangeRateBtn').on('click', function() {
+    var btn = $(this);
+    var targetCurrency = $('#currency_code').val() || 'USD';
+    
+    if (targetCurrency === 'USD') {
+      show_message('Exchange rate is not needed when target currency is USD', 'error');
+      return;
+    }
+    
+    btn.prop('disabled', true).html('<i class="fe fe-loader"></i> Fetching...');
+    
+    $.ajax({
+      url: '<?=cn("setting/fetch_exchange_rate")?>',
+      type: 'POST',
+      data: {
+        target_currency: targetCurrency,
+        <?=$this->security->get_csrf_token_name()?>: '<?=$this->security->get_csrf_hash()?>'
+      },
+      dataType: 'json',
+      success: function(response) {
+        btn.prop('disabled', false).html('<i class="fe fe-download"></i> <span id="fetch_btn_text">Fetch Current Exchange Rate (USD to ' + targetCurrency + ')</span>');
+        
+        if (response.status == 'success') {
+          // Update the rate field
+          $('#new_currecry_rate').val(response.data.rate);
+          show_message(response.message + ' (1 USD = ' + response.data.rate + ' ' + targetCurrency + ')', 'success');
+        } else {
+          show_message(response.message, 'error');
+        }
+      },
+      error: function() {
+        btn.prop('disabled', false).html('<i class="fe fe-download"></i> <span id="fetch_btn_text">Fetch Current Exchange Rate (USD to ' + targetCurrency + ')</span>');
+        show_message('Failed to fetch exchange rate', 'error');
+      }
+    });
+  });
+  
+  // Show cron URL
+  $('#showCronUrlBtn').on('click', function() {
+    var cronBox = $('#cronUrlBox');
+    var baseUrl = '<?=base_url()?>';
+    var btn = $(this);
+    
+    btn.prop('disabled', true).html('<i class="fe fe-loader"></i> Loading...');
+    
+    // Generate token server-side for better security
+    $.ajax({
+      url: '<?=cn("setting/generate_cron_token")?>',
+      type: 'POST',
+      data: {
+        <?=$this->security->get_csrf_token_name()?>: '<?=$this->security->get_csrf_hash()?>'
+      },
+      dataType: 'json',
+      success: function(response) {
+        btn.prop('disabled', false).html('<i class="fe fe-link"></i> Show Cron URL for Auto-Update');
+        
+        if (response.status == 'success') {
+          var cronUrl = baseUrl + 'setting/cron_update_exchange_rate?token=' + response.token;
+          $('#cronUrlText').text(cronUrl);
+          cronBox.removeClass('d-none');
+        } else {
+          show_message(response.message || 'Failed to generate cron URL', 'error');
+        }
+      },
+      error: function() {
+        btn.prop('disabled', false).html('<i class="fe fe-link"></i> Show Cron URL for Auto-Update');
+        show_message('Failed to generate cron URL', 'error');
+      }
+    });
+  });
+  
+  // Copy cron URL
+  $('#copyCronUrlBtn').on('click', function() {
+    var cronUrl = $('#cronUrlText').text();
+    
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(cronUrl).then(function() {
+        show_message('Cron URL copied to clipboard!', 'success');
+      }).catch(function() {
+        copyToClipboardFallback(cronUrl);
+      });
+    } else {
+      copyToClipboardFallback(cronUrl);
+    }
+  });
+  
+  // Fallback function for older browsers
+  function copyToClipboardFallback(text) {
+    var tempInput = $('<input>');
+    $('body').append(tempInput);
+    tempInput.val(text).select();
+    try {
+      document.execCommand('copy');
+      show_message('Cron URL copied to clipboard!', 'success');
+    } catch (err) {
+      show_message('Failed to copy. Please copy manually.', 'error');
+    }
+    tempInput.remove();
+  }
+});
+
+function show_message(message, type) {
+  // Check if jQuery Toast plugin is available
+  if (typeof $.toast === 'function') {
+    $.toast({
+      heading: type == 'success' ? 'Success' : 'Error',
+      text: message,
+      position: 'top-right',
+      loaderBg: type == 'success' ? '#5ba035' : '#c9302c',
+      icon: type,
+      hideAfter: 3000
+    });
+  } else {
+    // Fallback to alert if toast plugin is not available
+    alert((type == 'success' ? 'Success: ' : 'Error: ') + message);
+  }
+}
+</script>
