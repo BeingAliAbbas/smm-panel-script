@@ -92,6 +92,9 @@ class add_funds extends MX_Controller {
             return;
         }
         
+        // Sanitize payment type to prevent directory traversal
+        $payment_type = preg_replace('/[^a-z0-9_-]/i', '', $payment_type);
+        
         // Get payment method details
         $payment = $this->model->get('id, type, name, params', $this->tb_payments, ['type' => $payment_type, 'status' => 1]);
         
@@ -115,12 +118,15 @@ class add_funds extends MX_Controller {
             }
         }
         
-        // Load and return the payment form view
-        try {
-            $this->load->view($payment_type.'/index', ['payment_id'=>$payment->id, 'payment_params'=>$payment->params]);
-        } catch (Exception $e) {
-            echo '<div class="alert alert-danger">Failed to load payment form. Please try again.</div>';
+        // Check if view file exists before trying to load it
+        $view_path = APPPATH . 'modules/add_funds/views/' . $payment_type . '/index.php';
+        if (!file_exists($view_path)) {
+            echo '<div class="alert alert-danger">Payment method form not available.</div>';
+            return;
         }
+        
+        // Load and return the payment form view
+        $this->load->view($payment_type.'/index', ['payment_id'=>$payment->id, 'payment_params'=>$payment->params]);
     }
 
     public function process(){

@@ -365,10 +365,34 @@
             payment_type: type
           },
           success: function(response) {
-            $tabPane.html(response);
+            // Check if response is empty or contains error
+            if (!response || response.trim() === '') {
+              $tabPane.html('<div class="alert alert-danger">Payment form is empty. Please contact support.</div>');
+            } else {
+              $tabPane.html(response);
+            }
           },
-          error: function() {
-            $tabPane.html('<div class="alert alert-danger">Failed to load payment method. Please try again.</div>');
+          error: function(xhr, status, error) {
+            // Provide more detailed error message
+            var errorMsg = 'Failed to load payment method. ';
+            if (xhr.status === 404) {
+              errorMsg += 'Payment method not found.';
+            } else if (xhr.status === 500) {
+              errorMsg += 'Server error occurred.';
+            } else if (status === 'timeout') {
+              errorMsg += 'Request timed out.';
+            } else {
+              errorMsg += 'Please try again.';
+            }
+            $tabPane.html('<div class="alert alert-danger">' + errorMsg + '</div>');
+            
+            // Log error for debugging (in browser console)
+            console.error('Payment form load error:', {
+              status: xhr.status,
+              statusText: xhr.statusText,
+              error: error,
+              type: type
+            });
           }
         });
       }
