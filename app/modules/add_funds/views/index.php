@@ -194,8 +194,7 @@
     </div>
   </div>
 
- <?php if (!empty($payments)): ?>
-<section class="add-funds m-t-30">
+ <section class="add-funds m-t-30">
   <div class="row justify-content-md-center" id="result_ajaxSearch">
     <div class="col-md-8">
       <div class="card p-0">
@@ -210,13 +209,9 @@
             <div class="form-group mb-0 w-100">
               <label for="paymentTypeDropdown" class="mb-2"><b>Please select a payment Method</b></label>
               <select id="paymentTypeDropdown" class="form-control">
-                <option value="">Select Payment Type</option>
-                <?php foreach ($payments as $row): ?>
-                  <option value="<?php echo htmlspecialchars($row->type); ?>">
-                    <?php echo htmlspecialchars($row->name); ?>
-                  </option>
-                <?php endforeach; ?>
+                <option value="">Loading payment methods...</option>
               </select>
+              <div id="paymentMethodError" style="display:none; color: red; margin-top: 10px;"></div>
             </div>
           </div>
         </div>
@@ -224,12 +219,8 @@
      
 
             <div class="card-body">
-              <div class="tab-content">
-                <?php foreach ($payments as $row): ?>
-                  <div id="<?php echo htmlspecialchars($row->type); ?>" class="tab-pane fade">
-                    <?php $this->load->view($row->type.'/index', ['payment_id'=>$row->id, 'payment_params'=>$row->params]); ?>
-                  </div>
-                <?php endforeach; ?>
+              <div class="tab-content" id="paymentTabContent">
+                <!-- Payment method tabs will be loaded dynamically -->
               </div>
             </div>
 
@@ -237,7 +228,6 @@
         </div>
       </div>
     </section>
-  <?php endif; ?>
 
   <section class="latest-transactions m-t-30">
     <div class="row justify-content-md-center">
@@ -317,6 +307,10 @@
     var $dd = $('#paymentTypeDropdown');
     if (!$dd.length || typeof $.fn.select2 !== 'function') return;
 
+    var paymentMethods = []; // Store loaded payment methods
+    var isLoading = false;
+    var hasLoaded = false;
+
     // Visuals (no extra metadata)
     function getPaymentVisual(type){
       type = (type||'').toLowerCase();
@@ -347,35 +341,148 @@
       if (type) $('#'+type).addClass('in active show');
     }
 
-    $dd.select2({
-      placeholder: 'Select Payment Type',
-      allowClear: false,
-      width: '100%',
-      minimumResultsForSearch: Infinity,
-      templateResult: templateResult,
-      templateSelection: templateSelection,
-      escapeMarkup: function(m){ return m; },
-      dropdownParent: $(document.body),   // avoid parent width forcing
-      dropdownAutoWidth: true             // natural width, not parent's width
-    })
-    .on('change', function(){
-      var v = $(this).val();
-      activatePane(v);
-      try { localStorage.setItem('selectedPaymentType', v || ''); } catch(e){}
-    })
-    .on('select2:open', function(){
-      // Safety: keep dropdown at least as wide as the trigger
-      var w = $dd.data('select2').$container.outerWidth();
-      $('.select2-container--open .select2-dropdown').css('min-width', w);
+    // Function to load payment method content dynamically
+    function loadPaymentContent(type) {
+      var $tabPane = $('#' + type);
+      if ($tabPane.length === 0) {
+        // Create tab pane if it doesn't exist
+        $tabPane = $('<div>', {
+          id: type,
+          class: 'tab-pane fade'
+        });
+        $('#paymentTabContent').append($tabPane);
+      }
+
+      // Load content only if not already loaded
+      if ($tabPane.html().trim() === '') {
+        // Show loading indicator
+        $tabPane.html('<div class="text-center p-4"><i class="fa fa-spinner fa-spin fa-2x"></i><p class="mt-2">Loading payment form...</p></div>');
+        
+        $.ajax({
+          url: '<?php echo cn("add_funds/get_payment_form"); ?>',
+          type: 'POST',
+          data: { 
+            payment_type: type
+          },
+          success: function(response) {
+            $tabPane.html(response);
+          },
+          error: function() {
+            $tabPane.html('<div class="alert alert-danger">Failed to load payment method. Please try again.</div>');
+          }
+        });
+      }
+    }
+
+    // Function to load payment methods from server
+    function loadPaymentMethods() {
+      if (isLoading || hasLoaded) return;
+      
+      isLoading = true;
+      $('#paymentMethodError').hide();
+      
+      $.ajax({
+        url: '<?php echo cn("add_funds/get_payment_methods"); ?>',
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+          isLoading = false;
+          hasLoaded = true;
+
+          if (response.status === 'success' && response.data && response.data.length > 0) {
+            paymentMethods = response.data;
+            
+            // Clear existing options
+            $dd.empty();
+            $dd.append('<option value="">Select Payment Type</option>');
+            
+            // Add payment methods to dropdown
+            $.each(response.data, function(index, payment) {
+              $dd.append(
+                $('<option>', {
+                  value: payment.type,
+                  text: payment.name,
+                  'data-id': payment.id,
+                  'data-params': JSON.stringify(payment.params)
+                })
+              );
+            });
+
+            // Initialize Select2
+            initializeSelect2();
+            
+          } else if (response.status === 'success' && response.data && response.data.length === 0) {
+            // No payment methods available
+            $dd.empty();
+            $dd.append('<option value="">No payment methods available</option>');
+            $('#paymentMethodError').text('No payment methods available at this time.').show();
+          } else {
+            // Error response
+            showError('Failed to load payment methods. Please try again.');
+          }
+        },
+        error: function(xhr, status, error) {
+          isLoading = false;
+          showError('Failed to load payment methods. Please refresh the page and try again.');
+        }
+      });
+    }
+
+    function showError(message) {
+      $dd.empty();
+      $dd.append('<option value="">Select Payment Type</option>');
+      $('#paymentMethodError').text(message).show();
+    }
+
+    function initializeSelect2() {
+      // Destroy existing select2 if any
+      if ($dd.data('select2')) {
+        $dd.select2('destroy');
+      }
+
+      $dd.select2({
+        placeholder: 'Select Payment Type',
+        allowClear: false,
+        width: '100%',
+        minimumResultsForSearch: Infinity,
+        templateResult: templateResult,
+        templateSelection: templateSelection,
+        escapeMarkup: function(m){ return m; },
+        dropdownParent: $(document.body),
+        dropdownAutoWidth: true
+      })
+      .on('change', function(){
+        var v = $(this).val();
+        if (v) {
+          // Load payment content
+          loadPaymentContent(v);
+        }
+        activatePane(v);
+        try { localStorage.setItem('selectedPaymentType', v || ''); } catch(e){}
+      })
+      .on('select2:open', function(){
+        var w = $dd.data('select2').$container.outerWidth();
+        $('.select2-container--open .select2-dropdown').css('min-width', w);
+      });
+
+      // Restore selection, if any
+      try {
+        var prev = localStorage.getItem('selectedPaymentType');
+        if (prev && $dd.find('option[value="'+prev+'"]').length) {
+          $dd.val(prev).trigger('change');
+        }
+      } catch(e) {}
+    }
+
+    // Load payment methods when user opens the dropdown
+    $dd.on('select2:opening', function() {
+      if (!hasLoaded) {
+        loadPaymentMethods();
+      }
     });
 
-    // Restore selection, if any
-    try {
-      var prev = localStorage.getItem('selectedPaymentType');
-      if (prev && $dd.find('option[value="'+prev+'"]').length) {
-        $dd.val(prev).trigger('change');
-      }
-    } catch(e) {}
+    // Also load payment methods on page load for better UX
+    loadPaymentMethods();
   });
 })(jQuery);
 </script>
