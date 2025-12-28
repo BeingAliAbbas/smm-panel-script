@@ -8,8 +8,13 @@
         ?>
         <form class="form actionForm" action="<?=cn($module."/ajax_bulk_services/$ids")?>" data-redirect="<?=cn($module)?>" method="POST">
           <div class="modal-header bg-pantone">
+<<<<<<< HEAD
             <h4 class="modal-title"><i class="fas fa-edit"></i> <?=lang("bulk_add_all_services")?></h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+=======
+            <h4 class="modal-title"><i class="fa fa-edit"></i> <?=lang("bulk_add_all_services")?></h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </button>
           </div>
           <div class="modal-body">
@@ -67,9 +72,15 @@
 
                 <div class="col-md-12">
                   <div class="form-group">
+<<<<<<< HEAD
                     <label class="form-check">
                       <input type="checkbox" class="form-check-input" name="is_convert_to_new_currency">
                       <span class="form-check-label">Auto convert to new currency with currency rate like in <a href="<?=cn("setting")."?t=currency"?>" target="_blank">Currency Setting page</a></span>
+=======
+                    <label class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" name="is_convert_to_new_currency">
+                      <span class="custom-control-label">Auto convert to new currency with currency rate like in <a href="<?=cn("setting")."?t=currency"?>" target="_blank">Currency Setting page</a></span>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                 </div>
@@ -82,8 +93,13 @@
             </div>
           </div>
           <div class="modal-footer">
+<<<<<<< HEAD
             <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1"><?=lang("Submit")?></button>
             <button type="button" class="btn round btn-default btn-min-width me-1 mb-1" data-bs-dismiss="modal"><?=lang("Cancel")?></button>
+=======
+            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1"><?=lang("Submit")?></button>
+            <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal"><?=lang("Cancel")?></button>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
         </form>
       </div>

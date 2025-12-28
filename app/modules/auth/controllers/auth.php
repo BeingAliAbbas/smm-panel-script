@@ -20,7 +20,11 @@ class auth extends MX_Controller {
 			$this->recaptcha = new \ReCaptcha\ReCaptcha(get_option('google_capcha_secret_key'));
 		}
 
+<<<<<<< HEAD
 		if(session("uid") && segment(2) != 'logout' && segment(2) != 'google_callback'){
+=======
+		if(session("uid") && segment(2) != 'logout'){
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 			redirect(cn("statistics"));
 		}
 	}
@@ -37,6 +41,7 @@ class auth extends MX_Controller {
 		$this->template->build('../../../themes/'.get_theme().'/views/sign_in', $data);
 	}
 
+<<<<<<< HEAD
 	public function google(){
 		// Check if Google login is enabled
 		if (!get_option('enable_google_login')) {
@@ -292,6 +297,8 @@ class auth extends MX_Controller {
 		}
 	}
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 	public function logout(){
 		/*----------  Insert User logs  ----------*/
 		$this->insert_user_activity_logs('logout');
@@ -586,6 +593,7 @@ public function send_signup_alert($user_id) {
     $user_info = $this->model->get("*", $this->tb_users, ['id' => $user_id]);
 
     if (empty($user_info)) {
+<<<<<<< HEAD
         log_message('error', 'WhatsApp Welcome: User not found - ID: ' . $user_id);
         return;
     }
@@ -621,6 +629,75 @@ public function send_signup_alert($user_id) {
         log_message('info', 'WhatsApp Welcome: Sent to user ID: ' . $user_id);
     } else {
         log_message('error', 'WhatsApp Welcome: Failed - ' . $result);
+=======
+        ms(array(
+            "status" => "error",
+            "message" => "User not found"
+        ));
+        return;
+    }
+
+    // Get the WhatsApp configuration from the database
+    $whatsapp_config = $this->model->get("url, api_key, admin_phone", "whatsapp_config", []);
+    if (empty($whatsapp_config) || empty($whatsapp_config->url) || empty($whatsapp_config->api_key)) {
+        ms(array(
+            "status" => "error",
+            "message" => "WhatsApp API URL or API key not configured"
+        ));
+        return;
+    }
+
+    // Get API URL, API key, and admin phone from config
+    $apiUrl = $whatsapp_config->url;
+    $apiKey = $whatsapp_config->api_key;
+    $adminPhone = $whatsapp_config->admin_phone;
+
+    // Get the user's WhatsApp number
+    $user_phone_number = isset($user_info->whatsapp_number) ? $user_info->whatsapp_number : 'N/A';
+
+    // Sanitize the phone number: Remove the leading '+' if it exists
+    $user_phone_number = ltrim($user_phone_number, '+');
+
+    // Prepare the message
+    $message = "*Welcome to BeastSMM! 🎉* \n\n";
+    $message .= "Hello *{$user_info->first_name} {$user_info->last_name}* 👋,\n\n";
+    $message .= "Thank you for signing up with us! 🙏 Your registration has been successfully completed. ✅ \n\n";
+    $message .= "If you need help, just let us know! 😊💬 We're here to assist you! 🛠️";
+
+    // Send the WhatsApp message using cURL to the user's number
+    $data = array(
+        'apiKey' => $apiKey, // Include API key for validation
+        'phoneNumber' => $user_phone_number,
+        'message' => $message
+    );
+
+    // Initialize cURL
+    $ch = curl_init($apiUrl);
+
+    // Set cURL options
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    // Execute the cURL request
+    $response = curl_exec($ch);
+
+    // Close cURL session
+    curl_close($ch);
+
+    // Handle the response (optional)
+    if ($response === false) {
+        ms(array(
+            "status" => "error",
+            "message" => "Failed to send WhatsApp message to user"
+        ));
+    } else {
+        ms(array(
+            "status" => "success",
+            "message" => "Welcome, you have signed up successfully"
+        ));
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     }
 }
 
@@ -907,6 +984,7 @@ public function ajax_sign_in() {
 				));
 			}
 
+<<<<<<< HEAD
 			// Send WhatsApp notification for password reset
 			$this->load->library('whatsapp_notification');
 			if ($this->whatsapp_notification->is_configured() && !empty($user->whatsapp_number)) {
@@ -919,6 +997,8 @@ public function ajax_sign_in() {
 				$this->whatsapp_notification->send('reset_password', $variables, $user->whatsapp_number);
 			}
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 			ms(array(
 				"status"  => "success",
 				"message" => lang("we_have_send_you_a_link_to_reset_password_and_get_back_into_your_account_please_check_your_email"),

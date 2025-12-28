@@ -23,12 +23,21 @@
   <?php if(!empty($order_logs)){
   ?>
   <div class="col-md-12">
+<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><?=lang("Lists")?></h3>
         <div class="card-options">
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
+=======
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><?=lang("Lists")?></h3>
+        <div class="card-options">
+          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="table-responsive">
@@ -120,7 +129,11 @@
     </div>
   </div>
   <div class="col-md-12">
+<<<<<<< HEAD
     <div class="float-end">
+=======
+    <div class="float-right">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       <?=$links?>
     </div>
   </div>

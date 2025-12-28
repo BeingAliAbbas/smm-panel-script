@@ -2,10 +2,18 @@
   <div class="modal-right">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
+<<<<<<< HEAD
         <form class="form actionForm" action="<?php echo cn($module . '/ajax_template_edit/' . $template->ids); ?>" data-redirect="<?php echo cn($module . '/templates'); ?>" method="POST">
           <div class="modal-header bg-pantone">
             <h4 class="modal-title"><i class="fas fa-edit"></i> Edit Email Template</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+=======
+        <form class="form actionForm" action="<?php echo cn($module . '/ajax_template_create'); ?>" data-redirect="<?php echo cn($module . '/templates'); ?>" method="POST">
+          <div class="modal-header bg-pantone">
+            <h4 class="modal-title"><i class="fa fa-file-text"></i> Create New Email Template</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            </button>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
           <div class="modal-body">
             <div class="form-body">
@@ -14,17 +22,26 @@
                   
                   <div class="form-group">
                     <label>Template Name <span class="text-danger">*</span></label>
+<<<<<<< HEAD
                     <input type="text" class="form-control square" name="name" value="<?php echo htmlspecialchars($template->name); ?>" placeholder="e.g., Welcome Email" required>
+=======
+                    <input type="text" class="form-control square" name="name" placeholder="e.g., Welcome Email" required>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   </div>
                   
                   <div class="form-group">
                     <label>Email Subject <span class="text-danger">*</span></label>
+<<<<<<< HEAD
                     <input type="text" class="form-control square" name="subject" value="<?php echo htmlspecialchars($template->subject); ?>" placeholder="e.g., Welcome to {site_name}!" required>
+=======
+                    <input type="text" class="form-control square" name="subject" placeholder="e.g., Welcome to {site_name}!" required>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     <small class="text-muted">You can use variables like {username}, {email}, {site_name}</small>
                   </div>
                   
                   <div class="form-group">
                     <label>Description</label>
+<<<<<<< HEAD
                     <textarea class="form-control square" name="description" rows="2" placeholder="Brief description of this template"><?php echo htmlspecialchars($template->description); ?></textarea>
                   </div>
                   
@@ -37,6 +54,14 @@
                       </div>
                     </div>
                     <textarea class="form-control plugin_editor square" name="body" id="email_body" rows="15" required><?php echo htmlspecialchars($template->body); ?></textarea>
+=======
+                    <textarea class="form-control square" name="description" rows="2" placeholder="Brief description of this template"></textarea>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label>Email Body (HTML) <span class="text-danger">*</span></label>
+                    <textarea class="form-control square" name="body" id="email_body" rows="15" required></textarea>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     <small class="text-muted">HTML content of the email. Use variables: {username}, {email}, {balance}, {site_name}, {site_url}</small>
                   </div>
                   
@@ -57,14 +82,20 @@
             </div>
           </div>
           <div class="modal-footer">
+<<<<<<< HEAD
             <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1">Submit</button>
             <button type="button" class="btn round btn-default btn-min-width me-1 mb-1" data-bs-dismiss="modal">Cancel</button>
+=======
+            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1">Submit</button>
+            <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal">Cancel</button>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
         </form>
       </div>
     </div>
   </div>
 </div>
+<<<<<<< HEAD
 
 <script>
 (function() {
@@ -125,3 +156,5 @@
   });
 })();
 </script>
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98

@@ -176,7 +176,11 @@ class profile extends MX_Controller {
 
 		if($id != ''){
 
+<<<<<<< HEAD
 			$checkUser = $this->model->get('id,ids,api_key,first_name,last_name,whatsapp_number', $this->tb_users,"`id` = '{$id}'");
+=======
+			$checkUser = $this->model->get('id,ids,api_key', $this->tb_users,"`id` = '{$id}'");
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 			$checkApi_key = $this->model->get('id,ids,api_key', $this->tb_users,"`api_key` = '{$api_key}'");
 			if(empty($checkUser) || !empty($checkApi_key)){
 				ms(array(
@@ -186,6 +190,7 @@ class profile extends MX_Controller {
 			}
 
 			if($this->db->update($this->tb_users, $data, "id ='{$id}'")){
+<<<<<<< HEAD
 				// Send WhatsApp notification for API key change
 				$this->load->library('whatsapp_notification');
 				if ($this->whatsapp_notification->is_configured() && !empty($checkUser->whatsapp_number)) {
@@ -198,6 +203,8 @@ class profile extends MX_Controller {
 					$this->whatsapp_notification->send('api_key_changed', $variables, $checkUser->whatsapp_number);
 				}
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 				ms(array(
 					'status'  => 'success',
 					'message' => lang('Update_successfully'),

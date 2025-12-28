@@ -10,6 +10,7 @@ class currencies_model extends MY_Model {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Get all currencies (including inactive)
 	 */
 	public function get_all_currencies(){
@@ -59,6 +60,8 @@ class currencies_model extends MY_Model {
 	}
 
 	/**
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 	 * Get all active currencies
 	 */
 	public function get_active_currencies(){

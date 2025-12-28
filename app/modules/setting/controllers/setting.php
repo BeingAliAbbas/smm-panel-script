@@ -88,8 +88,13 @@ class setting extends MX_Controller {
                     continue;
                 }
 
+<<<<<<< HEAD
                 if (in_array($key, ['embed_javascript', 'embed_head_javascript', 'manual_payment_content', 'seo_header_code', 'seo_footer_code'])) {
                     $value = isset($_POST[$key]) ? htmlspecialchars($_POST[$key], ENT_QUOTES) : '';
+=======
+                if (in_array($key, ['embed_javascript', 'embed_head_javascript', 'manual_payment_content'])) {
+                    $value = htmlspecialchars(@$_POST[$key], ENT_QUOTES);
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 }
 
                 if (in_array($key, ['midtrans_payment_channels', 'coinpayments_acceptance', 'freekassa_acceptance'], true)) {
@@ -113,6 +118,7 @@ class setting extends MX_Controller {
                     $value = $normalized;
                 }
 
+<<<<<<< HEAD
                 // Validate logo and favicon URLs
                 if (in_array($key, ['website_logo', 'website_logo_white', 'website_favicon'], true)) {
                     $value = trim($value);
@@ -128,6 +134,8 @@ class setting extends MX_Controller {
                     }
                 }
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 update_option($key, $value);
             }
         }
@@ -183,6 +191,7 @@ class setting extends MX_Controller {
             ]);
         }
 
+<<<<<<< HEAD
         // Check if table exists
         if (!$this->db->table_exists('whatsapp_config')) {
             ms([
@@ -191,6 +200,8 @@ class setting extends MX_Controller {
             ]);
         }
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         // Ensure single row pattern
         $existing = $this->db->get('whatsapp_config')->row();
         $data = [
@@ -206,6 +217,7 @@ class setting extends MX_Controller {
             $this->db->insert('whatsapp_config', $data);
         }
 
+<<<<<<< HEAD
         ms([
             'status'  => 'success',
             'message' => lang('Update_successfully'),
@@ -739,6 +751,18 @@ class setting extends MX_Controller {
             ms([
                 'status'  => 'error',
                 'message' => lang('Error') . ': ' . $e->getMessage()
+=======
+        if ($this->db->affected_rows() >= 0) {
+            ms([
+                'status'  => 'success',
+                'message' => lang('Update_successfully'),
+                'data'    => $data
+            ]);
+        } else {
+            ms([
+                'status'  => 'error',
+                'message' => 'No changes detected'
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             ]);
         }
     }

@@ -9,7 +9,11 @@
         <form class="form actionSyncApiServices" action="<?=cn($module."/ajax_sync_services/$ids")?>" data-redirect="<?=cn($module)?>" method="POST">
           <div class="modal-header bg-pantone">
             <h4 class="modal-title"><i class="fe fe-refresh-cw"></i> <?=lang("sync_services")?></h4>
+<<<<<<< HEAD
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+=======
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </button>
           </div>
           <div class="modal-body">
@@ -61,36 +65,60 @@
 
                 <div class="col-md-12">
                   <div class="form-group">
+<<<<<<< HEAD
                     <label class=" form-check">
                       <input type="checkbox" class="form-check-input" name="enable_sync_options[new_price]">
                       <span class="form-check-label"> <?php echo lang("sync_new_price"); ?></span>
+=======
+                    <label class=" custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" name="enable_sync_options[new_price]">
+                      <span class="custom-control-label"> <?php echo lang("sync_new_price"); ?></span>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                 </div>
 
                 <div class="col-md-12">
                   <div class="form-group">
+<<<<<<< HEAD
                     <label class=" form-check">
                       <input type="checkbox" class="form-check-input" name="enable_sync_options[original_price]" checked>
                       <span class="form-check-label"> <?php echo lang("sync_original_price"); ?></span>
+=======
+                    <label class=" custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" name="enable_sync_options[original_price]" checked>
+                      <span class="custom-control-label"> <?php echo lang("sync_original_price"); ?></span>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                 </div>
 
                 <div class="col-md-12">
                   <div class="form-group">
+<<<<<<< HEAD
                     <label class=" form-check">
                       <input type="checkbox" class="form-check-input" name="enable_sync_options[min_max_dripfeed]" checked>
                       <span class="form-check-label"> <?php echo lang("sync_min_max_dripfeed"); ?></span>
+=======
+                    <label class=" custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" name="enable_sync_options[min_max_dripfeed]" checked>
+                      <span class="custom-control-label"> <?php echo lang("sync_min_max_dripfeed"); ?></span>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                 </div>
 
                 <div class="col-md-12">
                   <div class="form-group">
+<<<<<<< HEAD
                     <label class="form-check">
                       <input type="checkbox" class="form-check-input" name="is_convert_to_new_currency" <?=(get_option("is_auto_currency_convert", 0) == 1) ? "checked" : ""?> checked>
                       <span class="form-check-label"><?=lang("auto_convert_to_new_currency_with_currency_rate_like_in")?><a href="<?=cn("setting")."?t=currency"?>" target="_blank"><?=lang("currency_setting_page")?></a></span>
+=======
+                    <label class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" name="is_convert_to_new_currency" <?=(get_option("is_auto_currency_convert", 0) == 1) ? "checked" : ""?> checked>
+                      <span class="custom-control-label"><?=lang("auto_convert_to_new_currency_with_currency_rate_like_in")?><a href="<?=cn("setting")."?t=currency"?>" target="_blank"><?=lang("currency_setting_page")?></a></span>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                 </div>
@@ -108,8 +136,13 @@
             </div>
           </div>
           <div class="modal-footer">
+<<<<<<< HEAD
             <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1"><?=lang("Submit")?></button>
             <button type="button" class="btn round btn-default btn-min-width me-1 mb-1" data-bs-dismiss="modal"><?=lang("Cancel")?></button>
+=======
+            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1"><?=lang("Submit")?></button>
+            <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal"><?=lang("Cancel")?></button>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
         </form>
       </div>

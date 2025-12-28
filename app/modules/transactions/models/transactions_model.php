@@ -15,12 +15,17 @@ class transactions_model extends MY_Model {
 		parent::__construct();
 	}
 
+<<<<<<< HEAD
 	function get_transaction_list($total_rows = false, $status = "", $limit = "", $start = "", $filters = []){
+=======
+	function get_transaction_list($total_rows = false, $status = "", $limit = "", $start = ""){
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		$data  = array();
 		if (get_role("user")) {
 			$this->db->where("tl.uid", session('uid'));
 			$this->db->where("tl.status", 1);
 		}
+<<<<<<< HEAD
 		
 		// Apply advanced filters for admin
 		if (get_role("admin") && !empty($filters)) {
@@ -72,6 +77,15 @@ class transactions_model extends MY_Model {
 			$this->db->order_by("tl.id", 'DESC');
 		}
 		
+=======
+		if ($limit != "" && $start >= 0) {
+			$this->db->limit($limit, $start);
+		}
+		$this->db->select("tl.*, u.email");
+		$this->db->from($this->tb_transaction_logs." tl");
+		$this->db->join($this->tb_users." u", "u.id = tl.uid", 'left');
+		$this->db->order_by("tl.id", 'DESC');
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		$query = $this->db->get();
 		if ($total_rows) {
 			$result = $query->num_rows();
@@ -164,7 +178,11 @@ class transactions_model extends MY_Model {
 				break;
 		}
 
+<<<<<<< HEAD
 		$this->db->select("tl.*, u.email, u.first_name, u.last_name");
+=======
+		$this->db->select("tl.*, u.email");
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		$this->db->from($this->tb_transaction_logs." tl");
 		$this->db->join($this->tb_users." u", "u.id = tl.uid", 'left');
 
@@ -176,6 +194,7 @@ class transactions_model extends MY_Model {
 		$result = $query->result();
 		return $result;
 	}
+<<<<<<< HEAD
 
 	/**
 	 * Get transaction summary statistics
@@ -262,4 +281,6 @@ class transactions_model extends MY_Model {
 		$query = $this->db->get();
 		return $query->row();
 	}
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 }

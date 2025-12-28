@@ -17,15 +17,22 @@ class balance_logs_model extends MY_Model {
 	 * @param string $status - filter by status (not used currently)
 	 * @param int $limit - number of records to fetch
 	 * @param int $start - offset for pagination
+<<<<<<< HEAD
 	 * @param array $filters - advanced filters for admin
 	 * @return mixed
 	 */
 	function get_balance_logs_list($total_rows = false, $status = "", $limit = "", $start = "", $filters = []){
+=======
+	 * @return mixed
+	 */
+	function get_balance_logs_list($total_rows = false, $status = "", $limit = "", $start = ""){
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		// For regular users, show only their logs
 		if (get_role("user")) {
 			$this->db->where("bl.uid", session('uid'));
 		}
 		
+<<<<<<< HEAD
 		// Apply advanced filters for admin
 		if (get_role("admin") && !empty($filters)) {
 			// Filter by user email
@@ -59,6 +66,8 @@ class balance_logs_model extends MY_Model {
 			}
 		}
 		
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		if ($limit != "" && $start >= 0) {
 			$this->db->limit($limit, $start);
 		}
@@ -66,6 +75,7 @@ class balance_logs_model extends MY_Model {
 		$this->db->select("bl.*, u.email, u.first_name, u.last_name");
 		$this->db->from($this->tb_balance_logs." bl");
 		$this->db->join($this->tb_users." u", "u.id = bl.uid", 'left');
+<<<<<<< HEAD
 		
 		// Apply sorting if specified
 		if (!empty($filters['sort_by']) && !empty($filters['sort_order'])) {
@@ -77,6 +87,9 @@ class balance_logs_model extends MY_Model {
 			$this->db->order_by("bl.id", 'DESC');
 		}
 		
+=======
+		$this->db->order_by("bl.id", 'DESC');
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		$query = $this->db->get();
 		
 		if ($total_rows) {
@@ -198,6 +211,7 @@ class balance_logs_model extends MY_Model {
 		$result = $query->result();
 		return $result;
 	}
+<<<<<<< HEAD
 
 	/**
 	 * Get balance logs summary statistics
@@ -292,4 +306,6 @@ class balance_logs_model extends MY_Model {
 		$query = $this->db->get();
 		return $query->row();
 	}
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 }

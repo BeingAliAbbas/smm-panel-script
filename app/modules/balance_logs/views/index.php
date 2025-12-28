@@ -7,6 +7,7 @@
   box-shadow: 0 8px 18px -8px rgba(0,0,0,.6), 0 2px 6px -2px rgba(0,0,0,.5);
   overflow: hidden;
 }
+<<<<<<< HEAD
 /* Enable horizontal scrolling for tables on all screen sizes */
 .table-responsive {
   display: block;
@@ -17,12 +18,18 @@
 .table-responsive > .table {
   margin-bottom: 0;
 }
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 .balance-logs-card-header{
   display:flex;
   justify-content:space-between;
   align-items:center;
   padding:18px 22px 14px;
+<<<<<<< HEAD
   background: #003a75;
+=======
+  background:linear-gradient(135deg,#042636,#052d40 55%,#041d28);
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
   border-bottom:1px solid #0e3b4e;
 }
 .balance-logs-card-title{
@@ -30,7 +37,11 @@
   font-size:20px;
   font-weight:600;
   letter-spacing:.5px;
+<<<<<<< HEAD
   color:#fff !important;
+=======
+  color:#e9f6ff;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
   text-shadow:0 1px 2px rgba(0,0,0,.65);
 }
 .badge-action-deduction {
@@ -58,6 +69,7 @@
 }
 </style>
 
+<<<<<<< HEAD
 <?php if (get_role('admin') || get_role('supporter')) { ?>
 <!-- Admin Dashboard Summary Widgets -->
 <?php if (!empty($stats)) { ?>
@@ -235,11 +247,14 @@
 <?php } ?>
 
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 <div class="page-header d-md-none">
   <h1 class="page-title">
     <i class="fe fe-activity" aria-hidden="true"> </i> 
     <?=lang("Balance_Logs")?>
   </h1>
+<<<<<<< HEAD
   <?php if (get_role('admin') || get_role('supporter')): ?>
   <div class="page-options">
     <a href="<?=cn($module.'/view_execution_logs')?>" class="btn btn-info">
@@ -247,6 +262,8 @@
     </a>
   </div>
   <?php endif; ?>
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 </div>
 
 <div class="row" id="result_ajaxSearch">
@@ -257,6 +274,7 @@
     <div class="balance-logs-card-header">
       <h3 class="balance-logs-card-title"><?= lang('Balance_Change_History') ?></h3>
       
+<<<<<<< HEAD
       <div class="d-flex align-items-center gap-2">
         <?php if (get_role('admin') || get_role('supporter')): ?>
           <?php
@@ -273,6 +291,27 @@
           </a>
         <?php endif; ?>
       </div>
+=======
+      <?php if (get_role('admin') || get_role('supporter')): ?>
+        <div class="search-form">
+          <form action="<?=cn($module."/search")?>" method="get" class="form-inline">
+            <div class="form-group mr-2">
+              <select name="search_type" class="form-control">
+                <option value="1"><?=lang('User_Email')?></option>
+                <option value="2"><?=lang('Related_ID')?></option>
+                <option value="3"><?=lang('Action_Type')?></option>
+              </select>
+            </div>
+            <div class="form-group mr-2">
+              <input type="text" name="query" class="form-control" placeholder="<?=lang('Search')?>" value="<?=get('query')?>">
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">
+              <i class="fe fe-search"></i> <?=lang('Search')?>
+            </button>
+          </form>
+        </div>
+      <?php endif; ?>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     </div>
 
     <div class="table-responsive">
@@ -284,9 +323,12 @@
               foreach ($columns as $key => $row) { ?>
                 <th><?=$row?></th>
             <?php }} ?>
+<<<<<<< HEAD
             <?php if (get_role("admin") || get_role("supporter")) { ?>
               <th class="text-center"><?=lang('Action')?></th>
             <?php } ?>
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </tr>
         </thead>
         <tbody>
@@ -351,6 +393,7 @@
             <?php } ?>
             
             <td><?=convert_timezone($row->created, 'user')?></td>
+<<<<<<< HEAD
             
             <?php if (get_role("admin") || get_role("supporter")) { ?>
             <td class="text-center">
@@ -359,6 +402,8 @@
               </a>
             </td>
             <?php } ?>
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </tr>
           <?php }} ?>
         </tbody>
@@ -368,7 +413,11 @@
 </div>
 
 <div class="col-md-12">
+<<<<<<< HEAD
   <div class="float-end">
+=======
+  <div class="float-right">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     <?=$links?>
   </div>
 </div>
@@ -376,4 +425,8 @@
 <?php } else {
   echo Modules::run("blocks/empty_data");
 } ?>
+<<<<<<< HEAD
 </div>
+=======
+</div>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98

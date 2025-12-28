@@ -9,6 +9,7 @@ class Whatsapp_marketing extends MX_Controller {
     
     public function __construct(){
         parent::__construct();
+<<<<<<< HEAD
         
 
         try {
@@ -111,11 +112,27 @@ class Whatsapp_marketing extends MX_Controller {
         exit;
     }
     
+=======
+        $this->load->model(get_class($this).'_model', 'model');
+        
+        // Config Module
+        $this->module_name = 'WhatsApp Marketing';
+        $this->module = strtolower(get_class($this));
+        $this->module_icon = "fa fa-whatsapp";
+        
+        // Check if user is admin
+        if (!get_role("admin")) {
+            _validation('error', "Permission Denied!");
+        }
+    }
+    
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     // ========================================
     // MAIN DASHBOARD
     // ========================================
     
     public function index(){
+<<<<<<< HEAD
         try {
             // Get overall statistics
             $stats = $this->model->get_overall_stats();
@@ -136,6 +153,21 @@ class Whatsapp_marketing extends MX_Controller {
     }
     
     
+=======
+        $stats = $this->model->get_overall_stats();
+        $recent_logs = $this->model->get_recent_logs(10);
+        
+        $data = array(
+            "module" => $this->module,
+            "module_name" => $this->module_name,
+            "module_icon" => $this->module_icon,
+            "stats" => $stats,
+            "recent_logs" => $recent_logs
+        );
+        $this->template->build("index", $data);
+    }
+    
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     // ========================================
     // CAMPAIGNS
     // ========================================
@@ -179,7 +211,10 @@ class Whatsapp_marketing extends MX_Controller {
         $sending_limit_hourly = post("sending_limit_hourly");
         $sending_limit_daily = post("sending_limit_daily");
         
+<<<<<<< HEAD
         // Validation
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         if(empty($name)){
             ms(array(
                 "status" => "error",
@@ -294,7 +329,10 @@ class Whatsapp_marketing extends MX_Controller {
             ));
         }
         
+<<<<<<< HEAD
         // Check if campaign has recipients
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         $recipient_count = $this->model->get_recipients($campaign->id);
         if($recipient_count == 0){
             ms(array(
@@ -357,6 +395,7 @@ class Whatsapp_marketing extends MX_Controller {
             ));
         }
         
+<<<<<<< HEAD
         // Reset failed recipients to pending
         $reset_count = $this->model->reset_failed_recipients($campaign->id);
         
@@ -365,13 +404,24 @@ class Whatsapp_marketing extends MX_Controller {
             $this->model->update_campaign_stats($campaign->id);
             
             // If campaign is completed, set it back to running
+=======
+        $reset_count = $this->model->reset_failed_recipients($campaign->id);
+        
+        if($reset_count > 0){
+            $this->model->update_campaign_stats($campaign->id);
+            
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             if($campaign->status == 'completed'){
                 $this->model->update_campaign($ids, array('status' => 'running'));
             }
             
             ms(array(
                 "status" => "success",
+<<<<<<< HEAD
                 "message" => "Reset {$reset_count} failed phone(s) for resending"
+=======
+                "message" => "Reset {$reset_count} failed message(s) for resending"
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             ));
         } else {
             ms(array(
@@ -381,7 +431,11 @@ class Whatsapp_marketing extends MX_Controller {
         }
     }
     
+<<<<<<< HEAD
     public function ajax_resend_single_phone(){
+=======
+    public function ajax_resend_single_message(){
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         _is_ajax($this->module);
         
         $recipient_id = post("recipient_id");
@@ -393,7 +447,10 @@ class Whatsapp_marketing extends MX_Controller {
             ));
         }
         
+<<<<<<< HEAD
         // Get recipient
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         $this->db->where('id', $recipient_id);
         $recipient = $this->db->get('whatsapp_recipients')->row();
         
@@ -404,7 +461,10 @@ class Whatsapp_marketing extends MX_Controller {
             ));
         }
         
+<<<<<<< HEAD
         // Only allow resending failed messages
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         if($recipient->status != 'failed'){
             ms(array(
                 "status" => "error",
@@ -412,7 +472,10 @@ class Whatsapp_marketing extends MX_Controller {
             ));
         }
         
+<<<<<<< HEAD
         // Reset recipient to pending
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         $this->db->where('id', $recipient_id);
         $this->db->update('whatsapp_recipients', [
             'status' => 'pending',
@@ -421,6 +484,7 @@ class Whatsapp_marketing extends MX_Controller {
             'updated_at' => NOW
         ]);
         
+<<<<<<< HEAD
         // Update campaign stats
         $this->model->update_campaign_stats($recipient->campaign_id);
         
@@ -429,6 +493,13 @@ class Whatsapp_marketing extends MX_Controller {
         $campaign = $this->db->get('whatsapp_campaigns')->row();
         
         // If campaign is completed, set it back to running
+=======
+        $this->model->update_campaign_stats($recipient->campaign_id);
+        
+        $this->db->where('id', $recipient->campaign_id);
+        $campaign = $this->db->get('whatsapp_campaigns')->row();
+        
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         if($campaign && $campaign->status == 'completed'){
             $this->db->where('id', $recipient->campaign_id);
             $this->db->update('whatsapp_campaigns', array('status' => 'running'));
@@ -436,11 +507,16 @@ class Whatsapp_marketing extends MX_Controller {
         
         ms(array(
             "status" => "success",
+<<<<<<< HEAD
             "message" => "Phone reset for resending"
+=======
+            "message" => "Message reset for resending"
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         ));
     }
     
     public function campaign_details($ids = ""){
+<<<<<<< HEAD
         try {
             $this->_log_error('Campaign Details Access', "Accessing campaign: $ids", array('ids' => $ids));
             
@@ -475,6 +551,26 @@ class Whatsapp_marketing extends MX_Controller {
             $this->_log_error('Campaign Details Error', $e, array('ids' => $ids));
             show_error('Campaign Details Error: ' . $e->getMessage() . '<br><br>Campaign ID: ' . $ids . '<br>Check error log at: ' . APPPATH . 'logs/whatsapp_marketing_errors.log');
         }
+=======
+        $campaign = $this->model->get_campaign($ids);
+        if(!$campaign){
+            redirect(cn($this->module . "/campaigns"));
+        }
+        
+        $this->model->update_campaign_stats($campaign->id);
+        $campaign = $this->model->get_campaign($ids);
+        
+        $recipients = $this->model->get_recipients($campaign->id, 100, 0);
+        $logs = $this->model->get_logs($campaign->id, 50, 0);
+        
+        $data = array(
+            "module" => $this->module,
+            "campaign" => $campaign,
+            "recipients" => $recipients,
+            "logs" => $logs
+        );
+        $this->template->build("campaigns/details", $data);
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     }
     
     // ========================================
@@ -510,7 +606,11 @@ class Whatsapp_marketing extends MX_Controller {
         _is_ajax($this->module);
         
         $name = post("name");
+<<<<<<< HEAD
         $message = post("message", false); // Don't XSS clean message content
+=======
+        $message = post("message");
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         $description = post("description");
         
         if(empty($name) || empty($message)){
@@ -560,7 +660,11 @@ class Whatsapp_marketing extends MX_Controller {
         }
         
         $name = post("name");
+<<<<<<< HEAD
         $message = post("message", false);
+=======
+        $message = post("message");
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         $description = post("description");
         
         if(empty($name) || empty($message)){
@@ -755,7 +859,10 @@ class Whatsapp_marketing extends MX_Controller {
     public function ajax_import_from_users(){
         _is_ajax($this->module);
         
+<<<<<<< HEAD
         // Increase PHP timeout for this operation (importing all users may take longer)
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         @set_time_limit(300);
         @ini_set('max_execution_time', 300);
         @ini_set('memory_limit', '256M');
@@ -771,21 +878,34 @@ class Whatsapp_marketing extends MX_Controller {
         }
         
         try {
+<<<<<<< HEAD
             // Import all available users (no limit)
             $imported = $this->model->import_from_users($campaign->id, [], 0);
             
             // Update campaign stats
+=======
+            $imported = $this->model->import_from_users($campaign->id, [], 0);
+            
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             $this->model->update_campaign_stats($campaign->id);
             
             if ($imported > 0) {
                 ms(array(
                     "status" => "success",
+<<<<<<< HEAD
                     "message" => "Successfully imported {$imported} users with order history"
+=======
+                    "message" => "Successfully imported {$imported} users with WhatsApp numbers"
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 ));
             } else {
                 ms(array(
                     "status" => "error",
+<<<<<<< HEAD
                     "message" => "No users found with order history or all users already imported"
+=======
+                    "message" => "No users found with WhatsApp numbers or all users already imported"
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 ));
             }
         } catch (Exception $e) {
@@ -810,11 +930,18 @@ class Whatsapp_marketing extends MX_Controller {
             ));
         }
         
+<<<<<<< HEAD
         // Handle file upload
         if(!empty($_FILES['csv_file']['name'])){
             $config['upload_path'] = TEMP_PATH;
             $config['allowed_types'] = 'csv|txt';
             $config['max_size'] = 5000; // 5MB
+=======
+        if(!empty($_FILES['csv_file']['name'])){
+            $config['upload_path'] = TEMP_PATH;
+            $config['allowed_types'] = 'csv|txt';
+            $config['max_size'] = 5000;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             
             $this->load->library('upload', $config);
             
@@ -824,15 +951,24 @@ class Whatsapp_marketing extends MX_Controller {
                 
                 $imported = $this->model->import_from_csv($campaign->id, $file_path);
                 
+<<<<<<< HEAD
                 // Delete uploaded file
                 @unlink($file_path);
                 
                 // Update campaign stats
+=======
+                @unlink($file_path);
+                
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 $this->model->update_campaign_stats($campaign->id);
                 
                 ms(array(
                     "status" => "success",
+<<<<<<< HEAD
                     "message" => "Imported {$imported} messages successfully"
+=======
+                    "message" => "Imported {$imported} phone numbers successfully"
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 ));
             } else {
                 ms(array(
@@ -849,6 +985,7 @@ class Whatsapp_marketing extends MX_Controller {
     }
     
     // ========================================
+<<<<<<< HEAD
     // TRACKING
     // ========================================
     
@@ -891,14 +1028,20 @@ class Whatsapp_marketing extends MX_Controller {
     }
     
     // ========================================
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     // REPORTS
     // ========================================
     
     public function reports(){
+<<<<<<< HEAD
         // Get overall statistics for reports page
         $stats = $this->model->get_overall_stats();
         
         // Get all campaigns with stats
+=======
+        $stats = $this->model->get_overall_stats();
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         $campaigns = $this->model->get_campaigns(1000, 0);
         
         $data = array(
@@ -915,6 +1058,7 @@ class Whatsapp_marketing extends MX_Controller {
             redirect(cn($this->module . "/campaigns"));
         }
         
+<<<<<<< HEAD
         // Update stats first
         $this->model->update_campaign_stats($campaign->id);
         $campaign = $this->model->get_campaign($ids);
@@ -939,6 +1083,26 @@ class Whatsapp_marketing extends MX_Controller {
                 $recipient->status,
                 $recipient->sent_at,
                 $recipient->opened_at,
+=======
+        $this->model->update_campaign_stats($campaign->id);
+        $campaign = $this->model->get_campaign($ids);
+        
+        $recipients = $this->model->get_recipients($campaign->id, 10000, 0);
+        
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="whatsapp_campaign_' . $campaign->ids . '_report.csv"');
+        
+        $output = fopen('php://output', 'w');
+        
+        fputcsv($output, ['Phone Number', 'Name', 'Status', 'Sent At', 'Error Message']);
+        
+        foreach($recipients as $recipient){
+            fputcsv($output, [
+                $recipient->phone_number,
+                $recipient->name,
+                $recipient->status,
+                $recipient->sent_at,
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 $recipient->error_message
             ]);
         }

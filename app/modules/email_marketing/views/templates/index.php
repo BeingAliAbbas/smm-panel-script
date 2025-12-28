@@ -1,13 +1,21 @@
+<<<<<<< HEAD
 <!-- Include responsive CSS -->
 <link rel="stylesheet" href="<?php echo BASE; ?>assets/css/email_marketing-responsive.css">
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 <div class="row justify-content-md-center">
   <div class="col-md-12">
     <div class="page-header">
       <h1 class="page-title">
         <a href="<?php echo cn($module . '/template_create'); ?>" class="ajaxModal">
+<<<<<<< HEAD
           <span class="add-new" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add New Template">
             <i class="fas fa-plus-square text-primary" aria-hidden="true"></i>
+=======
+          <span class="add-new" data-toggle="tooltip" data-placement="bottom" title="Add New Template">
+            <i class="fa fa-plus-square text-primary" aria-hidden="true"></i>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </span>
         </a>
         Email Templates
@@ -24,11 +32,19 @@
 <div class="row" id="result_ajaxSearch">
   <?php if(!empty($templates)){ ?>
   <div class="col-md-12">
+<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;">Template List</h3>
         <div class="card-options">
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+=======
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Template List</h3>
+        <div class="card-options">
+          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="table-responsive">
@@ -59,7 +75,11 @@
                 <div class="btn-group">
                   <a href="<?php echo cn($module . '/template_edit/' . $template->ids); ?>" 
                     class="btn btn-sm btn-icon ajaxModal" 
+<<<<<<< HEAD
                     data-bs-toggle="tooltip" 
+=======
+                    data-toggle="tooltip" 
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     title="Edit">
                     <i class="fe fe-edit"></i>
                   </a>
@@ -67,7 +87,11 @@
                     class="btn btn-sm btn-icon btn-danger actionItem" 
                     data-id="<?php echo $template->ids; ?>" 
                     data-action="<?php echo cn($module . '/ajax_template_delete'); ?>" 
+<<<<<<< HEAD
                     data-bs-toggle="tooltip" 
+=======
+                    data-toggle="tooltip" 
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     title="Delete" 
                     data-confirm="Are you sure you want to delete this template?">
                     <i class="fe fe-trash"></i>

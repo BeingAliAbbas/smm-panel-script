@@ -8,7 +8,10 @@ class order extends MX_Controller {
 	public $tb_order;
 	public $tb_categories;
 	public $tb_services;
+<<<<<<< HEAD
 	public $tb_api_providers;
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 	public $module;
 	public $module_name;
 	public $module_icon;
@@ -23,7 +26,10 @@ class order extends MX_Controller {
 		$this->tb_order               = ORDER;
 		$this->tb_categories          = CATEGORIES;
 		$this->tb_services            = SERVICES;
+<<<<<<< HEAD
 		$this->tb_api_providers       = API_PROVIDERS;
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		$this->module                 = get_class($this);
 		$this->module_name            = 'Order';
 		$this->module_icon            = "fa ft-users";
@@ -411,6 +417,7 @@ class order extends MX_Controller {
 			));
 		}
 
+<<<<<<< HEAD
 		// Check for duplicate orders (same link in pending/processing/inprogress status, regardless of service)
 		$existing_order = $this->model->check_duplicate_order(session('uid'), $link);
 		if ($existing_order) {
@@ -425,6 +432,8 @@ class order extends MX_Controller {
 			));
 		}
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		if ($is_drip_feed) {
 			$data['runs'] = $runs;
 			$data['interval'] = $interval;
@@ -582,6 +591,7 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
             log_order_deduction(session("uid"), $order_id, $total_charge, $user_balance, $new_balance);
         }
 
+<<<<<<< HEAD
         /*---------- Send Admin WhatsApp Notification ----------*/
         // Load WhatsApp notification library
         $this->load->library('whatsapp_notification');
@@ -631,6 +641,92 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
         $quantity = isset($data_orders['quantity']) ? $data_orders['quantity'] : 0;
         $this->transactional_email->send_new_order_email($order_id, $user_email, $service_name, $total_charge, $quantity);
         
+=======
+        /*---------- Helper Function to Send WhatsApp Notification ----------*/
+        function sendWhatsAppNotification($apiUrl, $apiKey, $phoneNumber, $message) {
+            // Prepare data for the POST request
+            $data = [
+                "apiKey" => $apiKey, // Include API key for validation
+                "phoneNumber" => $phoneNumber,
+                "message" => $message
+            ];
+
+            // Initialize cURL
+            $ch = curl_init($apiUrl);
+
+            // Set the headers
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                "Content-Type: application/json"
+            ]);
+
+            // Set the POST method and attach the data
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            // Set options to return the response
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+
+            // Execute the cURL request
+            $response = curl_exec($ch);
+
+            // Check for errors
+            if (curl_errno($ch)) {
+                error_log("WhatsApp API Error: " . curl_error($ch));
+            }
+
+            // Close cURL session
+            curl_close($ch);
+
+            return $response;
+        }
+
+        /*---------- Send Admin WhatsApp Notification ----------*/
+        // Fetch WhatsApp configuration from the database
+        $whatsapp_config = $this->model->get("url, api_key, admin_phone", "whatsapp_config", []);
+        if (empty($whatsapp_config) || empty($whatsapp_config->url) || empty($whatsapp_config->api_key) || empty($whatsapp_config->admin_phone)) {
+            error_log("WhatsApp API URL, API key, or admin phone not configured.");
+            return false;
+        }
+
+        // Get the API URL, API key, and admin phone from config
+        $apiUrl = $whatsapp_config->url;
+        $apiKey = $whatsapp_config->api_key;
+        $adminPhone = $whatsapp_config->admin_phone;
+
+        // Fetch user details
+        $user = $this->model->get("email", $this->tb_users, "id = '" . session('uid') . "'");
+        $user_email = $user->email;
+
+        // Format link
+        $formatted_link = '';
+        if (!empty($data_orders['link'])) {
+            $formatted_link = filter_var($data_orders['link'], FILTER_VALIDATE_URL) ? 
+                            preg_replace('#^https?://#', '', $data_orders['link']) : 
+                            truncate_string($data_orders['link'], 60);
+        }
+
+        // Define admin message with formatted link and quantity
+        $admin_message = "*🔔 New Order Received*\n\n" .
+            "🔢 *Order ID:* #{$order_id}\n" .
+            "💰 *Total Charge:* " . get_option("currency_symbol", "") . $total_charge . "\n" .
+            "📦 *Quantity:* {$data_orders['quantity']}\n" .
+            "🔗 *Link:* {$formatted_link}\n" .
+            "📧 *User Email:* {$user_email}\n" .
+            "\nPlease review the order details.";
+
+        // Send admin notification
+        // Remove + from phone number if present
+        $adminPhone = ltrim($adminPhone, '+');
+        $response = sendWhatsAppNotification($apiUrl, $apiKey, $adminPhone, $admin_message);
+
+        // Log the response if needed
+        if ($response) {
+            error_log("Admin WhatsApp notification sent successfully: " . $response);
+        } else {
+            error_log("Failed to send admin WhatsApp notification.");
+        }
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         /*---------- Send Order notification email to Admin ----------*/
         if (get_option("is_order_notice_email", '')) {
             $user_email = $this->model->get("email", $this->tb_users, "id = '".session('uid')."'")->email;
@@ -657,6 +753,7 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
             }
         }
 
+<<<<<<< HEAD
         // Get currency info for modal
         $current_currency = get_current_currency();
         $currency_symbol = $current_currency ? $current_currency->symbol : get_option('currency_symbol', "$");
@@ -702,6 +799,11 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
                 "status" => ucfirst($data_orders['status']),
                 "estimated_time" => $estimated_time
             )
+=======
+        ms(array(
+            "status"  => "success",
+            "message" => lang("place_order_successfully")
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         ));
     } else {
         ms(array(
@@ -841,17 +943,23 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 		}
 
 		$number_error_orders = 0;
+<<<<<<< HEAD
 		$total_provider_price = 0;
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		if (get_role('user') && in_array($order_status, ['fail', 'error'])) {
           redirect(cn('order/log/all'));
         }
 
         if (get_role('admin')) {
         	$number_error_orders = $this->model->get_count_orders('error');
+<<<<<<< HEAD
         	// Only calculate total provider price for error orders (optimization)
         	if ($order_status == 'error') {
         		$total_provider_price = $this->model->get_total_provider_price($order_status);
         	}
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         }
 
 		$page        = (int)get("p");
@@ -884,7 +992,10 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 			"order_status"                  => $order_status,
 			"links"                         => $links,
 			"number_error_orders"           => $number_error_orders,
+<<<<<<< HEAD
 			"total_provider_price"          => $total_provider_price,
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		);
 		$this->template->build('logs/logs', $data);
 	}
@@ -976,11 +1087,14 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
         "remains"           => $remains,
         "changed"           => NOW,
     );
+<<<<<<< HEAD
     
     // Set completed_at timestamp when status is changed to 'completed'
     if ($status == 'completed') {
         $data['completed_at'] = NOW;
     }
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
     // ✅ FIX: Now fetching BOTH id (numeric) and ids (hash)
     $check_item = $this->model->get("id, ids, cate_id, service_id, service_type, api_provider_id, api_service_id, charge, uid, quantity, status, formal_charge, profit", $this->tb_order, "ids = '{$ids}'");
@@ -1002,7 +1116,11 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
                 $profit = $check_item->profit * (1 - ($remains / $check_item->quantity ));
             }
 
+<<<<<<< HEAD
             $user = $this->model->get("id, balance, whatsapp_number", $this->tb_users, ["id"=> $check_item->uid]);
+=======
+            $user = $this->model->get("id, balance", $this->tb_users, ["id"=> $check_item->uid]);
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             if (!empty($user) && !in_array($check_item->status, array('partial', 'cancelled', 'refunded'))) {
                 $balance = $user->balance;
                 $refund_amount = $charge - $real_charge;
@@ -1021,6 +1139,7 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
                         $status                     // reason
                     );
                 }
+<<<<<<< HEAD
 
                 // Send WhatsApp notification for order cancellation or partial completion
                 $this->load->library('whatsapp_notification');
@@ -1052,6 +1171,8 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
                         $this->whatsapp_notification->send('order_partial', $variables, $user->whatsapp_number);
                     }
                 }
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             }
             $data['charge'] = $real_charge;
             $data['formal_charge'] = $formal_charge;
@@ -1305,6 +1426,7 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 		}
 	}
 
+<<<<<<< HEAD
 	/**
 	 * Cancel Order - Send cancellation request to API provider
 	 * Uses provider's API configuration from database
@@ -1574,6 +1696,8 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 		return true;
 	}
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 	public function change_status($status = "", $ids = "") {
 		if (!get_role('admin')) {
 			_validation('error', "Permission Denied!");
@@ -1581,6 +1705,7 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 	
 		// Check if it's a bulk action
 		if ($ids == "bulk") {
+<<<<<<< HEAD
 			// Fetch all orders in 'error' status - need full order details for cancellation
 			$orders = $this->model->get_bulk_orders_full('error');
 			if (!empty($orders)) {
@@ -1588,6 +1713,11 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 				$skipped_count = 0;
 				$total_refunded = 0;
 				
+=======
+			// Fetch all orders in 'error' status
+			$orders = $this->model->get_bulk_orders('error');
+			if (!empty($orders)) {
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 				foreach ($orders as $order) {
 					switch ($status) {
 						case 'resend_order':
@@ -1600,6 +1730,7 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 							break;
 	
 						case 'cancel_order':
+<<<<<<< HEAD
 							// Use the shared cancel_order_locally method for proper refund handling
 							$result = $this->cancel_order_locally($order, 'Bulk cancelled by admin');
 							if ($result) {
@@ -1624,6 +1755,13 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 					$this->session->set_flashdata('success', $message);
 				}
 				
+=======
+							$data = ['status' => 'canceled', 'note' => 'Canceled'];
+							$this->db->update($this->tb_order, $data, ['ids' => $order->ids]);
+							break;
+					}
+				}
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 				redirect(cn('order/log/error'));
 			} else {
 				_validation('error', "No orders found in error status!");
@@ -1698,6 +1836,7 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 
 		redirect(cn('order/add'));
 	}
+<<<<<<< HEAD
 
 	/**
 	 * Get API providers list for balance card
@@ -1843,4 +1982,6 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 		curl_close($ch);
 		return $result;
 	}
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 }

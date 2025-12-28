@@ -1,6 +1,10 @@
 <div class="page-header">
   <h1 class="page-title">
+<<<<<<< HEAD
     <a href="<?=cn("$module/update")?>" class=""><span class="add-new" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add new"><i class="fas fa-plus-square text-primary" aria-hidden="true"></i></span></a> 
+=======
+    <a href="<?=cn("$module/update")?>" class=""><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Add new"><i class="fa fa-plus-square text-primary" aria-hidden="true"></i></span></a> 
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     <?=lang("Language")?>
   </h1>
 </div>
@@ -13,8 +17,13 @@
       <div class="card-header">
         <h3 class="card-title"><?=lang("Lists")?></h3>
         <div class="card-options">
+<<<<<<< HEAD
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
+=======
+          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="table-responsive">
@@ -54,7 +63,11 @@
               </td>
               <td class="text-center">
                 <div class="item-action dropdown">
+<<<<<<< HEAD
                   <a href="javascript:void(0)" data-bs-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+=======
+                  <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   <div class="dropdown-menu">
                     <a href="<?=cn("$module/update/".$row->ids)?>" class="dropdown-item"><i class="dropdown-icon fe fe-edit"></i> <?=lang('Edit')?> </a>
                     <?php

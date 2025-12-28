@@ -18,6 +18,7 @@
 </div>
 <?php }?>
 
+<<<<<<< HEAD
 <?php if (get_code_part_by_position('api', 'top', '') != '') { ?>
 <div class="col-sm-12">
   <div class="row">
@@ -28,14 +29,21 @@
 </div>
 <?php }?>
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 <div class="row justify-content-center api-documentation">
   <div class="col-md-8">
     <div class="card">
       <div class="card-header">
         <h3 class="card-title"><?=lang("api_documentation")?></h3>
         <div class="card-options">
+<<<<<<< HEAD
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
+=======
+          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="card-body collapse show">
@@ -80,8 +88,13 @@
       <div class="card-header">
         <h3 class="card-title"><?=lang("place_new_order")?></h3>
         <div class="card-options">
+<<<<<<< HEAD
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
+=======
+          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="card-body">
@@ -666,8 +679,13 @@
       <div class="card-header">
         <h3 class="card-title"><?=lang("status_order")?></h3>
         <div class="card-options">
+<<<<<<< HEAD
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
+=======
+          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="card-body">
@@ -717,8 +735,13 @@
       <div class="card-header">
         <h3 class="card-title"> <?=lang("multiple_orders_status")?></h3>
         <div class="card-options">
+<<<<<<< HEAD
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
+=======
+          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="card-body">
@@ -777,8 +800,13 @@
       <div class="card-header">
         <h3 class="card-title"><?=lang("services_lists")?></h3>
         <div class="card-options">
+<<<<<<< HEAD
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
+=======
+          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="card-body">
@@ -852,8 +880,13 @@
       <div class="card-header">
         <h3 class="card-title"><?=lang("Balance")?></h3>
         <div class="card-options">
+<<<<<<< HEAD
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
+=======
+          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="card-body">
@@ -893,6 +926,7 @@
     </div>
   </div>
 
+<<<<<<< HEAD
   <?php if (get_code_part_by_position('api', 'bottom', '') != '') { ?>
   <div class="col-sm-12">
     <div class="row">
@@ -903,5 +937,7 @@
   </div>
   <?php }?>
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 </div>
 

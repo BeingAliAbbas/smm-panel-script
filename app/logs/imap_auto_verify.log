@@ -32402,6 +32402,7 @@ WHERE `id` = '4860'
 [2025-09-30T21:33:07+05:00] PARSE FAIL uid=10742 subj=[SMSForwarder] New message from easypaisa - 09/30, 1:46 AM
 [2025-09-30T21:33:08+05:00] SUMMARY processed=7 matched=1
 [2025-09-30T21:33:08+05:00] ---- Cron end 2025-09-30T21:33:08+05:00 ----
+<<<<<<< HEAD
 [2025-11-16T16:29:54+05:00] ---- Cron start 2025-11-16T16:29:54+05:00 ----
 [2025-11-16T16:29:56+05:00] No emails in last 180 minutes.
 [2025-11-16T16:29:56+05:00] ---- Cron end 2025-11-16T16:29:56+05:00 ----
@@ -32454,3 +32455,5 @@ WHERE `id` = '4860'
 [2025-11-17T11:52:06+05:00] SUCCESS: txid=42378806831 row_id=5104 updated=yes credited=yes whatsapp=no
 [2025-11-17T11:52:06+05:00] SUMMARY processed=1 matched=1
 [2025-11-17T11:52:06+05:00] ---- Cron end 2025-11-17T11:52:06+05:00 ----
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98

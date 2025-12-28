@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Transaction_model extends CI_Model {
@@ -23,10 +24,29 @@ class Transaction_model extends CI_Model {
         if ($query->num_rows() > 0) {
             $result = $query->row();
             return $result->amount !== null ? (float)$result->amount : 0;
+=======
+
+class Transaction_model extends CI_Model {
+    public function get_total_deposit($uid) {
+        // Query to calculate the total deposit, including all types of deposits (easypaisa, jazzcash, manual)
+        $this->db->select_sum('amount');  // Sum the 'amount' column
+        $this->db->from('general_transaction_logs');
+        $this->db->where('uid', $uid);  // Filter by the user ID
+        $this->db->where('status', 1);  // Only include successful transactions (status 1)
+        
+        // Add any other filters if needed, like deposit type
+        // You can use $this->db->where_in('type', ['easypaisa', 'jazzcash', 'manual']); if you need to filter by specific types
+
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            return $query->row()->amount;  // Return the sum of all amounts
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         }
 
         return false;
     }
+<<<<<<< HEAD
 
     /**
      * Get all transactions for a user
@@ -118,3 +138,6 @@ class Transaction_model extends CI_Model {
         return [];
     }
 }
+=======
+}
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98

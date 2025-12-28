@@ -120,6 +120,7 @@
   });
 }
 
+<<<<<<< HEAD
 /*----------  Configure TinyMCE Editor  ----------*/
 // Store TinyMCE instances globally for access
 window.tinymceEditors = window.tinymceEditors || {};
@@ -238,6 +239,61 @@ function plugin_editor(selector, settings){
 function elFinderBrowser (field_name, url, type, win) {
   // Legacy function - TinyMCE handles file browser internally
   console.log('elFinderBrowser is deprecated - using TinyMCE internal file browser');
+=======
+/*----------  Configure tinymce editor  ----------*/
+function plugin_editor(selector, settings){
+  selector = typeof(selector) == 'undefined' ? '.tinymce' : selector;
+  var _settings = {
+    selector: selector,
+    menubar: false,
+    theme: "modern",
+    branding: false,
+    paste_data_images: true,
+    relative_urls: false,
+    convert_urls: false,
+    inline_styles: true,
+    verify_html: false,
+    cleanup: false,
+    autoresize_bottom_margin: 25,
+    plugins: [
+      "advlist autolink lists link charmap print preview hr anchor pagebreak",
+      "searchreplace wordcount visualblocks visualchars code fullscreen",
+      "insertdatetime nonbreaking save table contextmenu directionality",
+      "emoticons template paste textcolor colorpicker textpattern"
+    ],
+    toolbar1: "forecolor backcolor | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image media | print preview emoticons",
+    // file_browser_callback: elFinderBrowser,
+  }
+
+  if (typeof(settings) != 'undefined') {
+    for (var key in settings) {
+      if (key == 'append_plugins') {
+        _settings['plugins'].push(settings[key]);
+      } else if(key == 'toolbar') {
+        _settings['toolbar1'] = _settings['toolbar1'] + " " + settings[key];
+      }else{
+        _settings[key] = settings[key];
+      }
+    }
+  }
+  var editor = tinymce.init(_settings);
+  return editor;
+}
+
+function elFinderBrowser (field_name, url, type, win) {
+  tinymce.activeEditor.windowManager.open({
+    file: PATH + 'file_manager/elfinder_init',// use an absolute path!
+    title: 'File manager',
+    width: 900,  
+    height: 450,
+    resizable: 'yes',
+    inline:true
+  }, {
+    setUrl: function (url) {
+      win.document.getElementById(field_name).value = url;
+    }
+  });
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
   return false;
 }
 
@@ -260,8 +316,25 @@ function sendXMLPostRequest($url, $params){
 
 /*----------  Upload media and return path to input selector  ----------*/
 function getPathMediaByelFinderBrowser(_this, default_selector){
+<<<<<<< HEAD
   // Legacy function - no longer using TinyMCE file browser
   // Summernote handles image upload via callbacks
   console.log('getPathMediaByelFinderBrowser is deprecated - using Summernote image upload instead');
+=======
+  var _that = _this;
+  var _passToElement = typeof(default_selector) == 'undefined' ? _that.siblings('input')  : default_selector;
+  tinymce.activeEditor.windowManager.open({
+    file: PATH + 'file_manager/elfinder_init',
+    title: 'File manager',
+    width: 900,  
+    height: 450,
+    resizable: 'yes',
+    inline:true
+  }, {
+    setUrl: function (url) {
+      _passToElement.val(url);
+    }
+  });
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
   return false;
 }

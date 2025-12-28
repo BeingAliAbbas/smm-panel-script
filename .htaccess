@@ -11,12 +11,15 @@ RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
+<<<<<<< HEAD
 # Route sitemap.xml to sitemap.xml.php
 RewriteRule ^sitemap\.xml$ sitemap.xml.php [L]
 
 # Route robots.txt to robots.txt.php
 RewriteRule ^robots\.txt$ robots.txt.php [L]
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 # If the file or directory does not exist, route to index.php
 RewriteCond %{SCRIPT_FILENAME} !-d  
 RewriteCond %{SCRIPT_FILENAME} !-f

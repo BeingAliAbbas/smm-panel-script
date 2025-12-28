@@ -14,7 +14,11 @@ class Email_marketing extends MX_Controller {
         // Config Module
         $this->module_name = 'Email Marketing';
         $this->module = strtolower(get_class($this));
+<<<<<<< HEAD
         $this->module_icon = "fas fa-envelope";
+=======
+        $this->module_icon = "fa fa-envelope";
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         
         // Check if user is admin
         if (!get_role("admin")) {
@@ -81,7 +85,11 @@ class Email_marketing extends MX_Controller {
         
         $name = post("name");
         $template_id = post("template_id");
+<<<<<<< HEAD
         $smtp_config_ids = $this->input->post("smtp_config_ids"); // Array of SMTP IDs
+=======
+        $smtp_config_id = post("smtp_config_id");
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         $sending_limit_hourly = post("sending_limit_hourly");
         $sending_limit_daily = post("sending_limit_daily");
         
@@ -93,6 +101,7 @@ class Email_marketing extends MX_Controller {
             ));
         }
         
+<<<<<<< HEAD
         if(empty($template_id) || empty($smtp_config_ids) || !is_array($smtp_config_ids)){
             ms(array(
                 "status" => "error",
@@ -108,15 +117,25 @@ class Email_marketing extends MX_Controller {
             ms(array(
                 "status" => "error",
                 "message" => "Please select at least one valid SMTP configuration"
+=======
+        if(empty($template_id) || empty($smtp_config_id)){
+            ms(array(
+                "status" => "error",
+                "message" => "Please select template and SMTP configuration"
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             ));
         }
         
         $campaign_data = array(
             'name' => $name,
             'template_id' => $template_id,
+<<<<<<< HEAD
             'smtp_config_id' => $smtp_config_ids[0], // Keep first SMTP as primary for backward compatibility
             'smtp_config_ids' => json_encode($smtp_config_ids), // Store all SMTP IDs as JSON
             'smtp_rotation_index' => 0,
+=======
+            'smtp_config_id' => $smtp_config_id,
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             'status' => 'pending',
             'sending_limit_hourly' => $sending_limit_hourly ? (int)$sending_limit_hourly : null,
             'sending_limit_daily' => $sending_limit_daily ? (int)$sending_limit_daily : null
@@ -161,7 +180,11 @@ class Email_marketing extends MX_Controller {
         
         $name = post("name");
         $template_id = post("template_id");
+<<<<<<< HEAD
         $smtp_config_ids = $this->input->post("smtp_config_ids"); // Array of SMTP IDs
+=======
+        $smtp_config_id = post("smtp_config_id");
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         $sending_limit_hourly = post("sending_limit_hourly");
         $sending_limit_daily = post("sending_limit_daily");
         
@@ -172,6 +195,7 @@ class Email_marketing extends MX_Controller {
             ));
         }
         
+<<<<<<< HEAD
         if(empty($smtp_config_ids) || !is_array($smtp_config_ids)){
             ms(array(
                 "status" => "error",
@@ -195,6 +219,12 @@ class Email_marketing extends MX_Controller {
             'template_id' => $template_id,
             'smtp_config_id' => $smtp_config_ids[0], // Keep first SMTP as primary for backward compatibility
             'smtp_config_ids' => json_encode($smtp_config_ids), // Store all SMTP IDs as JSON
+=======
+        $update_data = array(
+            'name' => $name,
+            'template_id' => $template_id,
+            'smtp_config_id' => $smtp_config_id,
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             'sending_limit_hourly' => $sending_limit_hourly ? (int)$sending_limit_hourly : null,
             'sending_limit_daily' => $sending_limit_daily ? (int)$sending_limit_daily : null
         );
@@ -263,9 +293,13 @@ class Email_marketing extends MX_Controller {
         if($this->model->update_campaign($ids, $update_data)){
             ms(array(
                 "status" => "success",
+<<<<<<< HEAD
                 "success" => true,
                 "message" => "Campaign paused successfully",
                 "campaign_status" => "paused"
+=======
+                "message" => "Campaign paused successfully"
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             ));
         }
     }
@@ -279,9 +313,13 @@ class Email_marketing extends MX_Controller {
         if($this->model->update_campaign($ids, $update_data)){
             ms(array(
                 "status" => "success",
+<<<<<<< HEAD
                 "success" => true,
                 "message" => "Campaign resumed successfully",
                 "campaign_status" => "running"
+=======
+                "message" => "Campaign resumed successfully"
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             ));
         }
     }
@@ -395,15 +433,22 @@ class Email_marketing extends MX_Controller {
         $recipients = $this->model->get_recipients($campaign->id, 100, 0);
         $logs = $this->model->get_logs($campaign->id, 50, 0);
         
+<<<<<<< HEAD
         // Get SMTP configs for displaying names
         $smtp_configs = $this->model->get_smtp_configs(1000, 0);
         
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         $data = array(
             "module" => $this->module,
             "campaign" => $campaign,
             "recipients" => $recipients,
+<<<<<<< HEAD
             "logs" => $logs,
             "smtp_configs" => $smtp_configs
+=======
+            "logs" => $logs
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         );
         $this->template->build("campaigns/details", $data);
     }
@@ -811,6 +856,7 @@ class Email_marketing extends MX_Controller {
         }
     }
     
+<<<<<<< HEAD
     public function ajax_import_all_users(){
         _is_ajax($this->module);
         
@@ -904,6 +950,8 @@ class Email_marketing extends MX_Controller {
         }
     }
     
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     // ========================================
     // TRACKING
     // ========================================
@@ -946,6 +994,7 @@ class Email_marketing extends MX_Controller {
         exit;
     }
     
+<<<<<<< HEAD
     /**
      * Unsubscribe endpoint
      * Public endpoint - no authentication required
@@ -1042,6 +1091,8 @@ HTML;
         exit;
     }
     
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     // ========================================
     // REPORTS
     // ========================================
@@ -1098,6 +1149,7 @@ HTML;
         fclose($output);
         exit;
     }
+<<<<<<< HEAD
     
     // ========================================
     // SETTINGS
@@ -1191,4 +1243,6 @@ HTML;
             "message" => "Settings saved successfully"
         ));
     }
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 }

@@ -1,4 +1,8 @@
 <!-- jQuery (Required for Select2) -->
+<<<<<<< HEAD
+=======
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -8,6 +12,17 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <?php
+<<<<<<< HEAD
+=======
+/**
+ * ORDER ADD PAGE - FULLY REFACTORED
+ * All data comes from controller/model - NO HARDCODED DATABASE QUERIES
+ * Date: 2025-11-06 09:04:24
+ * User: BeingAliAbbas
+ */
+
+// Ensure all data is passed from controller
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 $currency_symbol = isset($currency_symbol) ? $currency_symbol : get_option('currency_symbol', "$");
 $user_role = isset($user_role) ? $user_role : 'user';
 $whatsapp_number_exists = isset($whatsapp_number_exists) ? $whatsapp_number_exists : false;
@@ -18,6 +33,7 @@ $services = isset($services) ? $services : array();
 $service_item_default = !empty($services) ? $services[0] : null;
 ?>
 
+<<<<<<< HEAD
 <?php if (get_code_part_by_position('new_order', 'top', '') != '') { ?>
 <div class="col-sm-12">
   <div class="row">
@@ -28,6 +44,8 @@ $service_item_default = !empty($services) ? $services[0] : null;
 </div>
 <?php }?>
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 <div class="container-cards">
 <?php if (isset($_SESSION['message'])): ?>
     <div class="alert alert-<?= $_SESSION['message_type'] ?> mt-3">
@@ -36,6 +54,7 @@ $service_item_default = !empty($services) ? $services[0] : null;
     <?php unset($_SESSION['message']); ?>
 <?php endif; ?>
 
+<<<<<<< HEAD
 <style>
 .cat-icon-filter-bar {
   display: grid;
@@ -82,10 +101,57 @@ $service_item_default = !empty($services) ? $services[0] : null;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 50%);
   pointer-events: none;
   border-radius: 12px;
+=======
+<!-- Card for Updating WhatsApp Number -->
+<?php if (!$whatsapp_number_exists): ?>
+<div class="whatsapp-card mt-3">
+    <div class="text-center">
+        <h5 class="card-title">Update WhatsApp Number</h5>
+        <p class="card-text">We noticed you haven't added a WhatsApp number. Please update it.</p>
+        
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#whatsappUpdateModal">
+            Update Number
+        </button>
+    </div>
+</div>
+<?php endif; ?>
+
+<style>
+.cat-icon-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 15px 0;
+  justify-content: flex-start;
+}
+
+.catf-btn {
+  flex: 1 1 180px;
+  min-width: 140px;
+  max-width: 250px;
+  box-sizing: border-box;
+  position: relative;
+  background: #ffffff08;
+  border: 1px solid #ffffff22;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 0.18s, border-color 0.18s, transform 0.15s;
+  white-space: nowrap;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 }
 
 .catf-btn i { 
   font-size: 16px; 
+<<<<<<< HEAD
   line-height: 1;
   z-index: 2;
   position: relative;
@@ -233,6 +299,44 @@ $service_item_default = !empty($services) ? $services[0] : null;
   .catf-btn.active:hover {
     /* transform: translateY(-1px); */
   }
+=======
+  line-height: 1; 
+}
+
+.catf-btn:hover {
+  background: #005a9f33;
+  border-color: #005a9f66;
+}
+
+.catf-btn.active {
+  background: #005a9f;
+  border-color: #0073cc;
+}
+
+.catf-btn.active:hover {
+  background: #0073cc;
+}
+
+.catf-btn span { 
+  pointer-events: none; 
+}
+
+.catf-btn:focus {
+  outline: 2px solid #005a9f;
+  outline-offset: 2px;
+}
+
+@media (max-width:600px){
+  .catf-btn {
+    flex: 1 1 120px;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 8px;
+  }
+  .catf-btn i { 
+    font-size: 14px; 
+  }
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 }
 
 .announcement-container {
@@ -323,6 +427,7 @@ $service_item_default = !empty($services) ? $services[0] : null;
 label{
   color: #fff;
 }
+<<<<<<< HEAD
 
 /* Global Search Styles */
 #globalServiceSearch {
@@ -368,6 +473,8 @@ label{
 #searchResults::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 </style>
 
 <!-- Announcement from Database -->
@@ -389,13 +496,30 @@ if (!empty($announcement_text)):
 </div>
 <?php endif; ?>
 
+<<<<<<< HEAD
 
+=======
+<!-- Welcome Card -->
+<div class="info-card">
+    <div class="text-center">
+        <h4 class="m-0 number">
+            <?php 
+                $first_name = get_field(USERS, ["id" => session('uid')], 'first_name'); 
+                $last_name = get_field(USERS, ["id" => session('uid')], 'last_name'); 
+                echo htmlspecialchars($first_name . " " . $last_name); 
+            ?>
+        </h4>
+        <small class="text-muted">❤️Welcome❤️</small>
+    </div>
+</div>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
 <!-- Modal for Updating WhatsApp Number -->
 <div id="whatsappUpdateModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
+<<<<<<< HEAD
                <h5 class="modal-title">Update WhatsApp Number</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <!-- <span aria-hidden="true">&times;</span> -->
@@ -416,16 +540,133 @@ if (!empty($announcement_text)):
                         <button type="submit" class="btn btn-primary">Update</button>
                     </form>
                 </div>
+=======
+                <h5 class="modal-title">Update WhatsApp Number</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="whatsappUpdateForm" action="<?= cn("$module/update_whatsapp_number") ?>" method="POST">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+
+                    <div class="form-group">
+                        <label for="whatsapp_number">WhatsApp Number</label>
+                        <input type="text" id="whatsapp_number" name="whatsapp_number" class="form-control" placeholder="+923XXXXXXXXX" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </div>
         </div>
     </div>
 </div>
 
+<<<<<<< HEAD
+=======
+<!-- Dashboard Cards - Rendered from Controller Data -->
+<?php if (!empty($dashboard_data)): ?>
+
+    <?php if ($user_role === 'admin'): ?>
+        <!-- ADMIN DASHBOARD CARDS -->
+        
+        <!-- Total Amount Received Card -->
+        <div class="card0">
+            <span class="stamp stamp-md bg-success-gradient text-white">
+                <i class="fe fe-dollar-sign"></i>
+            </span>
+            <div class="ml-2 d-lg-block text-right">
+                <h4 class="m-0 text-right number">
+                    <?= $currency_symbol . (isset($dashboard_data['total_received']) ? $dashboard_data['total_received'] : '0.0000') ?>
+                </h4>
+                <small class="text-muted"><?= lang("total_received") ?></small>
+            </div>
+        </div>
+
+        <!-- Total Users Card -->
+        <div class="card0">
+            <span class="stamp stamp-md bg-info-gradient text-white">
+                <i class="fe fe-users"></i>
+            </span>
+            <div class="ml-2 d-lg-block text-right">
+                <h4 class="m-0 text-right number">
+                    <?= number_format(isset($dashboard_data['total_users']) ? $dashboard_data['total_users'] : 0) ?>
+                </h4>
+                <small class="text-muted"><?= lang("total_users") ?></small>
+            </div>
+        </div>
+
+        <!-- Total Orders Card -->
+        <div class="card0">
+            <span class="stamp stamp-md bg-warning-gradient text-white">
+                <i class="fe fe-shopping-cart"></i>
+            </span>
+            <div class="ml-2 d-lg-block text-right">
+                <h4 class="m-0 text-right number">
+                    <?= number_format(isset($dashboard_data['total_orders']) ? $dashboard_data['total_orders'] : 0) ?>
+                </h4>
+                <small class="text-muted"><?= lang("total_orders_all") ?></small>
+            </div>
+        </div>
+
+    <?php else: ?>
+        <!-- USER DASHBOARD CARDS -->
+        
+        <!-- Account Balance Card -->
+        <div class="card0">
+            <span class="stamp stamp-md bg-success-gradient text-white">
+                <i class="fe fe-dollar-sign"></i>
+            </span>
+            <div class="ml-2 d-lg-block text-right">
+                <?php if (isset($dashboard_data['show_low_balance_warning']) && $dashboard_data['show_low_balance_warning']): ?>
+                    <h4 class="m-0 text-right number"><?= lang("Low Balance") ?></h4>
+                    <small class="text-muted">
+                        <?= lang("Your balance is low. Please") ?>
+                        <a href="<?= cn('add_funds') ?>" style="text-decoration:underline;" class="text-primary"><?= lang("add funds") ?></a>
+                    </small>
+                <?php else: ?>
+                    <h4 class="m-0 text-right number">
+                        <?= $currency_symbol . (isset($dashboard_data['balance']) ? $dashboard_data['balance'] : '0.0000') ?>
+                    </h4>
+                    <small class="text-muted"><?= lang("account_balance") ?></small>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- Spent Balance Card -->
+        <div class="card0">
+            <span class="stamp stamp-md bg-info-gradient text-white">
+                <i class="fe fe-dollar-sign"></i>
+            </span>
+            <div class="ml-2 d-lg-block text-right">
+                <h4 class="m-0 text-right number">
+                    <?= $currency_symbol . (isset($dashboard_data['spent']) ? $dashboard_data['spent'] : '0.0000') ?>
+                </h4>
+                <small class="text-muted"><?= lang("spent_balance") ?></small>
+            </div>
+        </div>
+
+        <!-- Your Orders Card -->
+        <div class="card0">
+            <span class="stamp stamp-md bg-warning-gradient text-white">
+                <i class="fe fe-shopping-cart"></i>
+            </span>
+            <div class="ml-2 d-lg-block text-right">
+                <h4 class="m-0 text-right number">
+                    <?= number_format(isset($dashboard_data['total_orders']) ? $dashboard_data['total_orders'] : 0) ?>
+                </h4>
+                <small class="text-muted"><?= lang("your_orders") ?></small>
+            </div>
+        </div>
+
+    <?php endif; ?>
+
+<?php endif; ?>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
 </div>
 
 <!-- MAIN ORDER FORM SECTION -->
 <div class="row m-t-5">
+<<<<<<< HEAD
   <div class="col-sm-12 col-lg-12">
     <div class="row">
       <div class="col-sm-7 col-lg-7 item">
@@ -818,6 +1059,388 @@ if (!empty($announcement_text)):
                   </div>
                   </div>
                 
+=======
+  <div class="col-sm-12 col-sm-12">
+    <div class="row">
+	    <div class="col-sm-7 col-lg-7 item">
+            <div class="card">
+                <div class="d-flex align-items-center">
+                    <div class="tabs-list"></div>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content">
+                        <div id="new_order" class="tab-pane fade in active show">
+                            <form class="form actionForm" action="<?=cn($module."/ajax_add_order")?>" data-redirect="<?=cn($module."/order/add")?>" method="POST">
+
+                                <div class="row">
+                                    <div class="">
+                                        <div class="form-group">
+                                            <!-- Platform Filter Bar -->
+                                            <div id="category-icon-filters" class="cat-icon-filter-bar">
+                                                <button type="button" class="catf-btn active" data-platform="all">
+                                                    <i class="fa fa-bars"></i><span>All</span>
+                                                </button>
+                                                <button type="button" class="catf-btn" data-platform="tiktok">
+                                                    <i class="fa-brands fa-tiktok"></i><span>TikTok</span>
+                                                </button>
+                                                <button type="button" class="catf-btn" data-platform="youtube">
+                                                    <i class="fa-brands fa-youtube"></i><span>Youtube</span>
+                                                </button>
+                                                <button type="button" class="catf-btn" data-platform="instagram">
+                                                    <i class="fa-brands fa-instagram"></i><span>Instagram</span>
+                                                </button>
+                                                <button type="button" class="catf-btn" data-platform="telegram">
+                                                    <i class="fa-brands fa-telegram"></i><span>Telegram</span>
+                                                </button>
+                                                <button type="button" class="catf-btn" data-platform="facebook">
+                                                    <i class="fa-brands fa-facebook"></i><span>Facebook</span>
+                                                </button>
+                                                <button type="button" class="catf-btn" data-platform="twitter">
+                                                    <i class="fa-brands fa-x-twitter"></i><span>Twitter</span>
+                                                </button>
+                                                <button type="button" class="catf-btn" data-platform="whatsapp">
+                                                    <i class="fa-brands fa-whatsapp"></i><span>Whatsapp</span>
+                                                </button>
+                                                <button type="button" class="catf-btn" data-platform="snapchat">
+                                                    <i class="fa-brands fa-snapchat"></i><span>Snapchat</span>
+                                                </button>
+                                                <button type="button" class="catf-btn" data-platform="linkedin">
+                                                    <i class="fa-brands fa-linkedin"></i><span>Linkedin</span>
+                                                </button>
+                                                <button type="button" class="catf-btn" data-platform="other">
+                                                    <i class="fa fa-plus"></i><span>Other</span>
+                                                </button>
+                                            </div>
+
+                                            <!-- Category Select -->
+                                            <div class="form-group category-select-wrapper">
+                                                <label for="dropdowncategories"><?=lang("Category")?></label>
+                                                <select id="dropdowncategories"
+                                                        name="category_id"
+                                                        class="form-control square ajaxChangeCategory"
+                                                        data-url="<?=cn($module."/get_services/")?>">
+                                                    <option value="" disabled selected hidden><?=lang("choose_a_category")?></option>
+                                                    <?php if (!empty($categories)):
+                                                        foreach ($categories as $c): ?>
+                                                            <option value="<?=$c->id?>"><?=$c->name?></option>
+                                                        <?php endforeach; 
+                                                    endif; ?>
+                                                </select>
+                                            </div>
+
+                                            <!-- Service Select -->
+                                            <div class="form-group" id="result_onChange">
+                                                <label><?=lang("order_service")?></label>
+                                                <select id="dropdownservices" name="service_id" class="form-control square ajaxChangeService" data-url="<?=cn($module."/get_service/")?>">
+                                                    <option><?=lang("choose_a_service")?></option>
+                                                    <?php
+                                                        if (!empty($services)) {
+                                                            foreach ($services as $key => $service) {
+                                                    ?>
+                                                    <option value="<?=$service->id?>"><?=$service->name?></option>
+                                                    <?php }}?>
+                                                </select>
+                                            </div>
+
+                                            <!-- Order Resume Section -->
+                                            <div id="order_resume">
+                                                <div class="row" id="result_onChangeService">
+                                                    
+                                                    <!-- Service Name -->
+                                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                                        <div class="form-group">
+                                                            <input type="hidden" name="service_id" id="service_id" value="<?=(!empty($service_item_default->id))? $service_item_default->id :''?>">
+                                                            <input class="form-control223344 square" name="service_name" type="text" readonly>
+                                                        </div>
+                                                    </div>   
+
+                                                    <!-- Description -->
+                                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                                        <div class="form-group">
+                                                            <label for="userinput8"><?=lang("Description")?></label>
+                                                            <textarea 
+                                                                style="padding: 10px; 
+                                                                       min-height: 150px; 
+                                                                       max-height: 400px; 
+                                                                       overflow-y: scroll; 
+                                                                       border: 1px solid #ddd; 
+                                                                       border-radius: 5px; 
+                                                                       background: transparent;
+                                                                       font-size: 14px; 
+                                                                       color: #333; 
+                                                                       line-height: 1.5;
+                                                                       width: 100%; 
+                                                                       resize: none;" 
+                                                                name="service_desc" 
+                                                                class="form-control square" 
+                                                                readonly>
+                                                            </textarea>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Min/Max/Price Table -->
+                                                    <table style="width: 100%;">
+                                                        <thead>
+                                                            <th style="background: none !important; border: none !important;">
+                                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                                    <div class="form-group">
+                                                                        <label><?=lang("minimum")?></label>
+                                                                        <input class="form-control2233 square" name="service_min" type="text" readonly>
+                                                                    </div>
+                                                                </div>
+                                                            </th>
+                                                            
+                                                            <th style="background: none !important; border: none !important;">
+                                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                                    <div class="form-group">
+                                                                        <label><?=lang("maximum")?></label>
+                                                                        <input class="form-control2233 square" name="service_max" type="text" readonly>
+                                                                    </div>
+                                                                </div>
+                                                            </th>
+                                                        </thead>
+                                                    </table>
+                                                    
+                                                    <div class="col-md-12 col-sm-12 col-xs-4">
+                                                        <div class="form-group">
+                                                            <input class="form-control223344 square" name="service_price" type="text" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Min/max on responsive d-md-none-->
+                                            <div class="row d-none">
+                                                <div class="col-md-4 col-sm-12 col-xs-12">
+                                                    <div class="form-group">
+                                                        <label><?=lang("minimum_amount")?></label>
+                                                        <input class="form-control square" name="service_min" type="text" value="" readonly>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4 col-sm-12 col-xs-12">
+                                                    <div class="form-group">
+                                                        <label><?=lang("maximum_amount")?></label>
+                                                        <input class="form-control square" name="service_max" type="text" value="" readonly>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4 col-sm-12 col-xs-12">
+                                                    <div class="form-group">
+                                                        <label><?=lang("price_per_1000")?></label>
+                                                        <input class="form-control square" name="service_price" type="text" value="" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Link Input -->
+                                            <div class="form-group order-default-link">
+                                                <label><?=lang("Link")?></label>
+                                                <input class="form-control square" type="text" name="link" placeholder="https://" id="">
+                                            </div>
+
+                                            <!-- Quantity Input -->
+                                            <div class="form-group order-default-quantity">
+                                                <label><?=lang("Quantity")?></label>
+                                                <input class="form-control square ajaxQuantity" name="quantity" type="number">
+                                            </div>
+                                            
+                                            <!-- Comments -->
+                                            <div class="form-group order-comments d-none">
+                                                <label for=""><?=lang("Comments")?> <?php lang('1_per_line')?></label>
+                                                <textarea rows="10" name="comments" class="form-control square ajax_custom_comments"></textarea>
+                                            </div> 
+
+                                            <!-- Comments Custom Package -->
+                                            <div class="form-group order-comments-custom-package d-none">
+                                                <label for=""><?=lang("Comments")?> <?php lang('1_per_line')?></label>
+                                                <textarea rows="10" name="comments_custom_package" class="form-control square"></textarea>
+                                            </div>
+
+                                            <!-- Usernames -->
+                                            <div class="form-group order-usernames d-none">
+                                                <label for=""><?=lang("Usernames")?></label>
+                                                <input type="text" class="form-control input-tags" name="usernames" value="usenameA,usenameB,usenameC,usenameD">
+                                            </div>
+
+                                            <!-- Usernames Custom -->
+                                            <div class="form-group order-usernames-custom d-none">
+                                                <label for=""><?=lang("Usernames")?> <?php lang('1_per_line')?></label>
+                                                <textarea rows="10" name="usernames_custom" class="form-control square ajax_custom_lists"></textarea>
+                                            </div>
+
+                                            <!-- Hashtags -->
+                                            <div class="form-group order-hashtags d-none">
+                                                <label for=""><?=lang("hashtags_format_hashtag")?></label>
+                                                <input type="text" class="form-control input-tags" name="hashtags" value="#goodphoto,#love,#nice,#sunny">
+                                            </div>
+
+                                            <!-- Single Hashtag -->
+                                            <div class="form-group order-hashtag d-none">
+                                                <label for=""><?=lang("Hashtag")?></label>
+                                                <input class="form-control square" type="text" name="hashtag">
+                                            </div>
+
+                                            <!-- Username -->
+                                            <div class="form-group order-username d-none">
+                                                <label for=""><?=lang("Username")?></label>
+                                                <input class="form-control square" name="username" type="text">
+                                            </div>   
+                                            
+                                            <!-- Mentions Media Likers -->
+                                            <div class="form-group order-media d-none">
+                                                <label for=""><?=lang("Media_Url")?></label>
+                                                <input class="form-control square" name="media_url" type="link">
+                                            </div>
+
+                                            <!-- Subscriptions Section -->
+                                            <div class="row order-subscriptions d-none">
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label><?=lang("Username")?></label>
+                                                        <input class="form-control square" type="text" name="sub_username">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label><?=lang("New_posts")?></label>
+                                                        <input class="form-control square" type="number" placeholder="<?=lang("minimum_1_post")?>" name="sub_posts">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label><?=lang("Quantity")?></label>
+                                                        <input class="form-control square" type="number" name="sub_min" placeholder="<?=lang("min")?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>&nbsp;</label>
+                                                        <input class="form-control square" type="number" name="sub_max" placeholder="<?=lang("max")?>">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label><?=lang("Delay")?> (<?=lang("minutes")?>)</label>
+                                                        <select name="sub_delay" class="form-control square">
+                                                            <option value="0"><?=lang("")?><?=lang("No_delay")?></option>
+                                                            <option value="5">5</option>
+                                                            <option value="10">10</option>
+                                                            <option value="15">15</option>
+                                                            <option value="30">30</option>
+                                                            <option value="60">60</option>
+                                                            <option value="90">90</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label><?=lang("Expiry")?></label>
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control datepicker" name="sub_expiry" onkeydown="return false" placeholder="" id="expiry">
+                                                            <span class="input-group-append">
+                                                                <button class="btn btn-info" type="button" onclick="document.getElementById('expiry').value = ''"><i class="fe fe-trash-2"></i></button>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <!-- Drip Feed Option -->
+                                            <?php
+                                                if (get_option("enable_drip_feed","") == 1) {
+                                            ?>
+                                            <div class="row drip-feed-option d-none">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="form-label"><?=lang("dripfeed")?> 
+                                                            <label class="custom-switch">
+                                                                <span class="custom-switch-description m-r-20"><i class="fa fa-question-circle" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="<?=lang("drip_feed_desc")?>" data-title="<?=lang("what_is_dripfeed")?>"></i></span>
+
+                                                                <input type="checkbox" name="is_drip_feed" class="is_drip_feed custom-switch-input" data-toggle="collapse" data-target="#drip-feed" aria-expanded="false" aria-controls="drip-feed">
+                                                                <span class="custom-switch-indicator"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row collapse" id="drip-feed">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label><?=lang("Runs")?></label>
+                                                                <input class="form-control square ajaxDripFeedRuns" type="number" name="runs" value="<?=get_option("default_drip_feed_runs", "")?>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label><?=lang("interval_in_minutes")?></label>
+                                                                <select name="interval" class="form-control square">
+                                                                    <?php
+                                                                        for ($i = 1; $i <= 60; $i++) {
+                                                                            if ($i%10 == 0) {
+                                                                    ?>
+                                                                    <option value="<?=$i?>" <?=(get_option("default_drip_feed_interval", "") == $i)? "selected" : ''?>><?=$i?></option>
+                                                                    <?php }} ?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label><?=lang("total_quantity")?></label>
+                                                                <input class="form-control square" name="total_quantity" type="number" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <?php }?>
+
+                                            <!-- Total Charge -->
+                                            <div class="form-group" id="result_total_charge">
+                                                <input type="hidden" name="total_charge" value="0.00">
+                                                <input type="hidden" name="currency_symbol" value="<?=$currency_symbol?>">
+                                                <br>
+                                                <center><p class="btn btn-info2 total_charge"><?=lang("total_charge")?> <span class="charge_number"><?=$currency_symbol?> 0</span></p></center>
+                                                
+                                                <?php
+                                                    $user = $this->model->get("balance, custom_rate", USERS, ['id' => session('uid')]);
+                                                    if ($user && $user->custom_rate > 0) {
+                                                ?>
+                                                <p class="small text-muted"><?=lang("custom_rate")?>: <span class="charge_number"><?=$user->custom_rate?>%</span></p>
+                                                <?php }?>
+                                                <div class="alert alert-icon alert-danger d-none" role="alert">
+                                                    <i class="fe fe-alert-triangle mr-2" aria-hidden="true"></i><?=lang("order_amount_exceeds_available_funds")?>
+                                                </div>
+                                            </div>
+                                            <br>
+
+                                            <!-- Agreement Checkbox -->
+                                            <div class="form-group">
+                                                <label class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" name="agree">
+                                                    <span class="custom-control-label text-uppercase"><?=lang("yes_i_have_confirmed_the_order")?></span>
+                                                </label>
+                                            </div>
+
+                                            <!-- Submit Button -->
+                                            <div class="form-actions left">
+                                                <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1" style="border-radius: 5px !important; background-color: #04a9f4; color: #fff; min-width: 120px; margin-right: 5px; margin-top: 15px; margin-bottom: 5px;">
+                                                    <?=lang("place_order")?>
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
                         <!-- Mass Order Tab -->
                         <div id="rules" class="tab-pane fade">
@@ -833,6 +1456,7 @@ if (!empty($announcement_text)):
 
         </div>
 
+<<<<<<< HEAD
       <!-- Right Column - Updates -->
 <div class="col-sm-5 col-lg-5 item">
     <div class="card" style="border: none; border-radius: 12px; background: #003a74; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); overflow: hidden;">
@@ -1146,6 +1770,46 @@ if (!empty($announcement_text)):
         box-shadow: 0 6px 12px rgba(4, 169, 244, 0.4) !important;
     }
 </style>          <div class="card-body" style="max-height: calc(80vh - 180px); overflow-y: scroll;">
+=======
+        <!-- Right Column - Updates -->
+        <div class="col-sm-5 col-lg-5 item">
+            <div class="card">
+                <div class=" d-flex align-items-center">
+                    <div class="tabs-list">
+                        <ul class="nav nav-tabs">
+                            <li class="">
+                                <h4><strong>Updates</strong></h4>
+                                <!-- YouTube Embed -->
+                                <div class="mt-3" style="text-align: center;">
+                                    <div style="
+                                        display: inline-block;
+                                        padding: 4px;
+                                        border-radius: 24px;
+                                        background: linear-gradient(to right, #05cbfd 0%, #203d9d 100%);
+                                    ">
+                                        <iframe
+                                            width="315"
+                                            height="570"
+                                            src="https://www.youtube.com/embed/Y_nv63RWNXQ"
+                                            title="YouTube Shorts"
+                                            frameborder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowfullscreen
+                                            style="
+                                                border-radius: 20px;
+                                                background: #fff;
+                                                border: none;
+                                                display: block;
+                                            "
+                                        ></iframe>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body" style="max-height: calc(80vh - 180px); overflow-y: scroll;">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     <div class="tab-content">
                         <div id="Manual_Payments" class="tab-pane fade in active show">
                             <div class="content">
@@ -1161,6 +1825,7 @@ if (!empty($announcement_text)):
   </div>
 </div>
 
+<<<<<<< HEAD
 <?php if (get_code_part_by_position('new_order', 'bottom', '') != '') { ?>
 <div class="col-sm-12">
   <div class="row">
@@ -1171,6 +1836,8 @@ if (!empty($announcement_text)):
 </div>
 <?php }?>
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 <!-- ALL JAVASCRIPT -->
 <script>
   // Initialize datepicker and selectize
@@ -1198,7 +1865,101 @@ if (!empty($announcement_text)):
     });
   });
 
+<<<<<<< HEAD
   
+=======
+  // Store order data and show confirmation modal
+  $(document).ready(function() {
+    $('.actionForm').on('submit', function() {
+      var orderData = {
+        service_name: $('select[name="service_id"] option:selected').text(),
+        link: $('input[name="link"]').val(),
+        quantity: $('input[name="quantity"]').val(),
+        total_charge: $('input[name="total_charge"]').val()
+      };
+      
+      localStorage.setItem('orderData', JSON.stringify(orderData));
+    });
+
+    function getShortServiceName(serviceName) {
+      const lowerServiceName = serviceName.toLowerCase();
+      const platforms = ['tiktok', 'instagram', 'youtube', 'facebook', 'twitter'];
+      const actions = ['views', 'likes', 'followers', 'subscribers', 'comments', 'shares'];
+      
+      let shortServiceName = '';
+      
+      const foundPlatform = platforms.find(platform => lowerServiceName.includes(platform));
+      const foundAction = actions.find(action => lowerServiceName.includes(action));
+
+      if (foundPlatform && foundAction) {
+        shortServiceName = `${foundPlatform.charAt(0).toUpperCase() + foundPlatform.slice(1)} ${foundAction.charAt(0).toUpperCase() + foundAction.slice(1)}`;
+      } else {
+        shortServiceName = serviceName;
+      }
+
+      return shortServiceName;
+    }
+    
+    var savedOrderData = localStorage.getItem('orderData');
+    if (savedOrderData) {
+        savedOrderData = JSON.parse(savedOrderData);
+        var shortServiceName = getShortServiceName(savedOrderData.service_name);
+        
+        var currencySymbol = '<?=$currency_symbol?>';
+        
+        var summaryContent = `
+          <div class="order-summary p-4" style="background-color: ; color: #ecf0f1; animation: fadeIn 1s ease-in-out;">
+            <div class="text-center mb-4">
+              <i class="fa fa-check-circle bounce-icon" style="font-size: 60px; color: #2ecc71; animation: bounce 1.5s infinite;"></i>
+            </div>
+            <h5 class="text-center mb-3" style="color: #ecf0f1; font-size: 24px;">Order Confirmation</h5>
+            <div class="order-details">
+              <p><i class="fa fa-bell" style="color: #2ecc71; margin-right: 8px;"></i><strong>Service Name:</strong> <span style="color: #bdc3c7;">${shortServiceName}</span></p>
+              <p><i class="fa fa-link" style="color: #2ecc71; margin-right: 8px;"></i><strong>Link:</strong> <span style="color: #bdc3c7;">${savedOrderData.link}</span></p>
+              <p><i class="fa fa-long-arrow-up" aria-hidden="true" style="color: #2ecc71; margin-right: 8px;"></i><strong>Quantity:</strong> <span style="color: #bdc3c7;">${savedOrderData.quantity}</span></p>
+              <p><i class="fa fa-usd" style="color: #2ecc71; margin-right: 8px;"></i><strong>Total Charge:</strong> <span style="color: #bdc3c7;">${currencySymbol} ${savedOrderData.total_charge}</span></p>
+            </div>
+          </div>
+
+          <style>
+            @keyframes fadeIn {
+              from {
+                opacity: 0;
+                transform: translateY(20px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
+
+            @keyframes bounce {
+              0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+              }
+              40% {
+                transform: translateY(-10px);
+              }
+              60% {
+                transform: translateY(-5px);
+              }
+            }
+
+            .bounce-icon {
+              animation: bounce 2s infinite;
+            }
+          </style>
+        `;
+
+        $('#orderSummary').html(summaryContent);
+        $('#orderConfirmationModal').modal('show'); 
+
+        $('#closeModalButton').on('click', function() {
+            localStorage.removeItem('orderData');
+        });
+    }
+  });
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 </script>
 
 <!-- Order Confirmation Modal -->
@@ -1212,7 +1973,11 @@ if (!empty($announcement_text)):
         <div id="orderSummary"></div>
       </div>
       <div class="modal-footer">
+<<<<<<< HEAD
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModalButton">Close</button>
+=======
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModalButton">Close</button>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
     </div>
   </div>
@@ -1306,7 +2071,11 @@ $vertical_image_modal_url = get_option('vertical_image_modal_url', 'https://i.ib
     <div class="modal-content p-0">
       <button type="button"
               class="vertical-modal-close"
+<<<<<<< HEAD
               data-bs-dismiss="modal"
+=======
+              data-dismiss="modal"
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
               aria-label="Close vertical image modal">
         &times;
       </button>
@@ -1325,6 +2094,7 @@ $vertical_image_modal_url = get_option('vertical_image_modal_url', 'https://i.ib
 </script>
 <?php endif; ?>
 
+<<<<<<< HEAD
 <?php if (!$whatsapp_number_exists): ?>
 <script>
   $(document).ready(function(){
@@ -1333,6 +2103,8 @@ $vertical_image_modal_url = get_option('vertical_image_modal_url', 'https://i.ib
 </script>
 <?php endif; ?>
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 <!-- Platform Filter and Select2 Initialization -->
 <script>
 (function($){
@@ -1690,6 +2462,7 @@ $vertical_image_modal_url = get_option('vertical_image_modal_url', 'https://i.ib
       $bar.find('.catf-btn').removeClass('active');
       $btn.addClass('active');
       indexCategories();
+<<<<<<< HEAD
       rebuildCategorySelect($btn.data('platform'));
     });
   }
@@ -1882,6 +2655,10 @@ $vertical_image_modal_url = get_option('vertical_image_modal_url', 'https://i.ib
       if (query && query.length >= 1) {
         performGlobalSearch(query);
       }
+=======
+      var plat = $btn.data('platform');
+      rebuildCategorySelect(plat);
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     });
   }
 
@@ -1891,7 +2668,10 @@ $vertical_image_modal_url = get_option('vertical_image_modal_url', 'https://i.ib
   $(function(){
     initCategorySelect();
     initServiceSelect();
+<<<<<<< HEAD
     initGlobalSearch(); // Initialize global search
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     
     var pre = $('#dropdownservices').val();
     if (pre) {

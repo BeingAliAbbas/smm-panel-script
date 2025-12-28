@@ -652,11 +652,18 @@ body.dark .select2-container--default .select2-selection--single:focus-visible {
 
 /* Card Header */
 .card-header {
+<<<<<<< HEAD
     background-color: #003a75 !important;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* 3D shadow effect */
     color: #ffffff !important;
     border-radius: 8px 8px 0px 0px !important;
     border: 1px solid #000;
+=======
+    background-color:rgb(0, 36, 58) !important;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* 3D shadow effect */
+    color: #ffffff !important;
+    border-radius: 8px 8px 0px 0px !important;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     border-bottom: 0.5px solid  !important;
     padding: 15px !important;
 }
@@ -846,7 +853,11 @@ td.order-details {
   .order_btn_group .nav-link {
     padding: 8px 15px !important; /* Smaller padding */
     color: #ffffff !important;
+<<<<<<< HEAD
     background-color: #003a74 !important;
+=======
+    background-color: #051d2f !important;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     border-radius: 6px !important;
     text-align: center !important;
     font-size: 16px !important; /* Smaller font size */
@@ -1100,25 +1111,42 @@ td {
 }
 
 .table-hover tbody tr:hover {
+<<<<<<< HEAD
     background-color: #9f9f9f !important;
+=======
+    background-color: #06324e !important;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     color: #ffffff !important;
 }
 
 th, td {
     
     padding: 12px !important;
+<<<<<<< HEAD
     border: 1px solid #00000065 !important;
 }
 
 th {
   background-color:rgb(255, 255, 255) !important;
+=======
+    border: 1px solid #dddddd65 !important;
+}
+
+th {
+  background-color:rgb(0, 36, 58) !important;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
 
 }
 
 td {
+<<<<<<< HEAD
     background-color: #ffffff !important;
     color: #000000 !important;
+=======
+    background-color: #051d2f !important;
+    color: #ffffff !important;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     font-size: 14px !important;
 }
 .payment-icon {

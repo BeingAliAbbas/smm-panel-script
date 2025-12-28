@@ -14,6 +14,7 @@
   <div class="col-md-12 col-xl-12 tr_<?=$row->ids?>">
     <div class="card card-collapsed">
       <div class="card-header">
+<<<<<<< HEAD
         <h3 class="card-title" data-bs-toggle="card-collapse">
           <span class="bg-question"><i class="fas fa-question-circle" aria-hidden="true"></i></span>
           <?=$row->question?>
@@ -21,6 +22,15 @@
         <div class="card-options">
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
+=======
+        <h3 class="card-title" data-toggle="card-collapse">
+          <span class="bg-question"><i class="fa fa-question-circle" aria-hidden="true"></i></span>
+          <?=$row->question?>
+        </h3>
+        <div class="card-options">
+          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="card-body">

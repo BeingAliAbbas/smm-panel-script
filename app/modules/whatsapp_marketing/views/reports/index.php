@@ -2,7 +2,11 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header">
+<<<<<<< HEAD
             <h3><i class="fas fa-bar-chart"></i> WhatsApp Marketing Reports</h3>
+=======
+            <h3><i class="fa fa-bar-chart"></i> WhatsApp Marketing Reports</h3>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
         <div class="card-body">
             <div class="row mb-4">
@@ -62,7 +66,11 @@
                         <td><?php echo $campaign->failed_messages; ?></td>
                         <td>
                             <a href="<?php echo cn($module . '/export_campaign_report/' . $campaign->ids); ?>" class="btn btn-sm btn-success">
+<<<<<<< HEAD
                                 <i class="fas fa-download"></i> Export CSV
+=======
+                                <i class="fa fa-download"></i> Export CSV
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                             </a>
                         </td>
                     </tr>

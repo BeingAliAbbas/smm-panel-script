@@ -1,20 +1,28 @@
+<<<<<<< HEAD
 
 <!-- Include responsive CSS -->
 <link rel="stylesheet" href="<?php echo BASE; ?>assets/css/email_marketing-responsive.css">
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 <div class="row justify-content-md-center">
   <div class="col-md-12">
     <div class="page-header">
       <h1 class="page-title">
         <i class="fe fe-mail"></i> <?php echo htmlspecialchars($campaign->name); ?>
       </h1>
+<<<<<<< HEAD
       <div class="page-subtitle campaign-controls">
+=======
+      <div class="page-subtitle">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         <a href="<?php echo cn($module . '/campaigns'); ?>" class="btn btn-sm btn-secondary">
           <i class="fe fe-arrow-left"></i> Back to Campaigns
         </a>
         <a href="<?php echo cn($module . '/export_campaign_report/' . $campaign->ids); ?>" class="btn btn-sm btn-success">
           <i class="fe fe-download"></i> Export Report
         </a>
+<<<<<<< HEAD
         <?php if($campaign->status == 'running' || $campaign->status == 'paused'){ ?>
         <button type="button" 
                 class="btn btn-sm campaign-toggle-status campaign-toggle-btn <?php echo ($campaign->status == 'running') ? 'btn-warning' : 'btn-success'; ?>"
@@ -26,13 +34,19 @@
           <i class="fe fe-<?php echo ($campaign->status == 'running') ? 'pause' : 'play'; ?> me-1"></i><?php echo ($campaign->status == 'running') ? 'Pause Campaign' : 'Run Campaign'; ?>
         </button>
         <?php } ?>
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
     </div>
   </div>
 </div>
 
 <!-- Campaign Stats -->
+<<<<<<< HEAD
 <div class="row email-marketing-stats">
+=======
+<div class="row">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
   <div class="col-lg-3 col-sm-6">
     <div class="card">
       <div class="card-body">
@@ -101,6 +115,7 @@
   </div>
 </div>
 
+<<<<<<< HEAD
 <!-- Validation Stats (if email validation is enabled) -->
 <?php 
 $validation_enabled = get_option('email_validation_enabled', 0);
@@ -174,6 +189,17 @@ if($validation_enabled && ($campaign->validated_emails > 0 || $campaign->invalid
       </div>
       <div class="card-body">
         <table class="table table-sm campaign-info-table">
+=======
+<!-- Campaign Info -->
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Campaign Information</h3>
+      </div>
+      <div class="card-body">
+        <table class="table table-sm">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           <tr>
             <td class="w-50"><strong>Status:</strong></td>
             <td>
@@ -186,7 +212,11 @@ if($validation_enabled && ($campaign->validated_emails > 0 || $campaign->invalid
                 case 'cancelled': $status_class = 'danger'; break;
               }
               ?>
+<<<<<<< HEAD
               <span class="badge badge-<?php echo $status_class; ?> campaign-status-badge"><?php echo ucfirst($campaign->status); ?></span>
+=======
+              <span class="badge badge-<?php echo $status_class; ?>"><?php echo ucfirst($campaign->status); ?></span>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </td>
           </tr>
           <tr>
@@ -194,6 +224,7 @@ if($validation_enabled && ($campaign->validated_emails > 0 || $campaign->invalid
             <td><?php echo htmlspecialchars($campaign->template_name); ?></td>
           </tr>
           <tr>
+<<<<<<< HEAD
             <td><strong>SMTP Server(s):</strong></td>
             <td>
               <?php 
@@ -236,6 +267,10 @@ if($validation_enabled && ($campaign->validated_emails > 0 || $campaign->invalid
               }
               ?>
             </td>
+=======
+            <td><strong>SMTP:</strong></td>
+            <td><?php echo htmlspecialchars($campaign->smtp_name); ?></td>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </tr>
           <tr>
             <td><strong>Hourly Limit:</strong></td>
@@ -270,6 +305,7 @@ if($validation_enabled && ($campaign->validated_emails > 0 || $campaign->invalid
           <tr>
             <td><strong>Campaign Cron URL:</strong></td>
             <td>
+<<<<<<< HEAD
               <div class="cron-url-container">
                 <input type="text" 
                        class="cron-url-input" 
@@ -289,6 +325,13 @@ if($validation_enabled && ($campaign->validated_emails > 0 || $campaign->invalid
                 <strong>Linux cron example:</strong><br>
                 <code>* * * * * curl -s "<?php echo base_url('cron/email_marketing?token=YOUR_TOKEN&campaign_id=' . $campaign->ids); ?>" &gt; /dev/null 2&gt;&1</code>
               </small>
+=======
+              <small class="text-muted">
+                <code><?php echo base_url('cron/email_marketing?token=' . get_option('email_cron_token', 'YOUR_TOKEN') . '&campaign_id=' . $campaign->ids); ?></code>
+              </small>
+              <br>
+              <small class="text-info">Use this URL for campaign-specific cron job</small>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </td>
           </tr>
         </table>
@@ -353,7 +396,11 @@ if($validation_enabled && ($campaign->validated_emails > 0 || $campaign->invalid
           <?php if(!empty($health_issues)){ ?>
           <div class="alert alert-<?php echo $health_class; ?> mb-0">
             <strong>Issues Detected:</strong>
+<<<<<<< HEAD
             <ul class="mb-0 ps-3">
+=======
+            <ul class="mb-0 pl-3">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
               <?php foreach($health_issues as $issue){ ?>
               <li><?php echo $issue; ?></li>
               <?php } ?>
@@ -370,9 +417,15 @@ if($validation_enabled && ($campaign->validated_emails > 0 || $campaign->invalid
   </div>
   
   <div class="col-md-6">
+<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;">Progress</h3>
+=======
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Progress</h3>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
       <div class="card-body">
         <?php 
@@ -384,8 +437,13 @@ if($validation_enabled && ($campaign->validated_emails > 0 || $campaign->invalid
         ?>
         <div class="mb-3">
           <div class="clearfix mb-2">
+<<<<<<< HEAD
             <div class="float-start"><strong><?php echo $progress; ?>% Complete</strong></div>
             <div class="float-end"><small class="text-muted"><?php echo $campaign->sent_emails; ?> / <?php echo $campaign->total_emails; ?></small></div>
+=======
+            <div class="float-left"><strong><?php echo $progress; ?>% Complete</strong></div>
+            <div class="float-right"><small class="text-muted"><?php echo $campaign->sent_emails; ?> / <?php echo $campaign->total_emails; ?></small></div>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
           <div class="progress">
             <div class="progress-bar bg-success" role="progressbar" style="width: <?php echo $progress; ?>%"></div>
@@ -430,9 +488,15 @@ if($validation_enabled && ($campaign->validated_emails > 0 || $campaign->invalid
 <!-- Recent Recipients -->
 <div class="row mt-3">
   <div class="col-md-12">
+<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;">Recent Recipients (Last 100)</h3>
+=======
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Recent Recipients (Last 100)</h3>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         <div class="card-options">
           <div class="btn-group btn-group-sm" role="group">
             <button type="button" class="btn btn-secondary filter-recipients active" data-filter="all">All</button>
@@ -520,9 +584,15 @@ $(document).ready(function(){
 <!-- Recent Logs -->
 <div class="row mt-3">
   <div class="col-md-12">
+<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;">Activity Log (Last 50)</h3>
+=======
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Activity Log (Last 50)</h3>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
       <div class="table-responsive">
         <table class="table table-hover table-vcenter card-table table-sm">
@@ -530,7 +600,10 @@ $(document).ready(function(){
             <tr>
               <th>Email</th>
               <th>Subject</th>
+<<<<<<< HEAD
               <th>SMTP Used</th>
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
               <th>Status</th>
               <th>Timestamp</th>
               <th>Error</th>
@@ -546,6 +619,7 @@ $(document).ready(function(){
                   case 'opened': $status_badge = 'info'; break;
                   case 'failed': $status_badge = 'danger'; break;
                 }
+<<<<<<< HEAD
                 
                 // Get SMTP name from log (now comes directly from JOIN)
                 $smtp_name_used = '-';
@@ -560,11 +634,16 @@ $(document).ready(function(){
                     }
                   }
                 }
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             ?>
             <tr>
               <td><?php echo htmlspecialchars($log->email); ?></td>
               <td><?php echo htmlspecialchars($log->subject); ?></td>
+<<<<<<< HEAD
               <td><small class="text-info"><strong><?php echo $smtp_name_used; ?></strong><?php if(!empty($log->smtp_config_id)) echo ' (ID: '.$log->smtp_config_id.')'; ?></small></td>
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
               <td><span class="badge badge-<?php echo $status_badge; ?>"><?php echo ucfirst($log->status); ?></span></td>
               <td><?php echo date('M d, Y H:i:s', strtotime($log->created_at)); ?></td>
               <td class="text-danger small"><?php echo $log->error_message ? htmlspecialchars(substr($log->error_message, 0, 50)) . '...' : '-'; ?></td>
@@ -580,7 +659,11 @@ $(document).ready(function(){
             </tr>
             <?php }} else { ?>
             <tr>
+<<<<<<< HEAD
               <td colspan="7" class="text-center">No activity logs yet</td>
+=======
+              <td colspan="6" class="text-center">No activity logs yet</td>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </tr>
             <?php } ?>
           </tbody>
@@ -674,6 +757,9 @@ $(document).ready(function(){
   });
 });
 </script>
+<<<<<<< HEAD
 
 <!-- Include email marketing interactive features -->
 <script src="<?php echo BASE; ?>assets/js/email_marketing.js"></script>
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98

@@ -1,7 +1,13 @@
 
+<<<<<<< HEAD
     <<div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-edit"></i> <?=lang("email_template")?></h3>
+=======
+    <div class="card content">
+      <div class="" style="border: 0.1px solid #1B78FC; border-radius: 3.5px 3.5px 0px 0px; background: #1B78FC;">
+        <h3 class="card-title"><i class="fe fe-edit"></i> <?=lang("email_template")?></h3>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
       <div class="card-body">
         <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
@@ -91,8 +97,28 @@
     </div>
 
     <script>
+<<<<<<< HEAD
         // Initialize Summernote for email templates
         $(document).ready(function() {
             plugin_editor('.plugin_editor', {height: 400});
         });
+=======
+        tinymce.init({
+    selector: '.plugin_editor',
+    height: 400,
+    plugins:[
+        'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
+        'searchreplace', 'wordcount', 'visualblocks', 'code', 'fullscreen', 'insertdatetime', 'media', 
+        'table', 'emoticons', 'template', 'codesample'
+    ],
+    toolbar: 'undo redo | styles | bold italic underline | alignleft aligncenter alignright alignjustify |' + 
+    'bullist numlist outdent indent | link image | print preview media fullscreen | ' +
+    'forecolor backcolor emoticons',
+    menu: {
+        favs: {title: 'menu', items: 'code visualaid | searchreplace | emoticons'}
+    },
+    menubar: 'favs file edit view insert format tools table',
+    content_style: 'body{font-family:Helvetica,Arial,sans-serif; font-size:16px}'
+});
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     </script>

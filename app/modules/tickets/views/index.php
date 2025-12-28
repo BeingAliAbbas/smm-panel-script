@@ -11,6 +11,7 @@
 </div>
 <?php }?>
 
+<<<<<<< HEAD
 <?php if (get_code_part_by_position('tickets', 'top', '') != '') { ?>
 <div class="col-sm-12">
   <div class="row">
@@ -21,12 +22,19 @@
 </div>
 <?php }?>
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 <section class="page-title">
   <div class="row justify-content-between">
     <div class="col-md-6">
       <h1 class="page-title d-flex">
+<<<<<<< HEAD
         <a href="<?=cn("$module/add")?>" class="d-inline-block d-sm-none ajaxModal "><span class="add-new" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<?=lang("loading...")?>" data-bs-original-title="Add new"><i class="btn btn-info fas fa-plus"> <?=lang("add_new")?></i></span></a> 
         <span class="d-none d-sm-block"><i class="far fa-comments text-primary" aria-hidden="true"></i></span> 
+=======
+        <a href="<?=cn("$module/add")?>" class="d-inline-block d-sm-none ajaxModal "><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="<?=lang("loading...")?>" data-original-title="Add new"><i class="btn btn-info fa fa-plus"> <?=lang("add_new")?></i></span></a> 
+        <span class="d-none d-sm-block"><i class="fa fa-comments-o text-primary" aria-hidden="true"></i></span> 
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </h1>
     </div>
     <div class="col-md-2">
@@ -49,6 +57,7 @@
 
 <div class="row justify-content-end">
   <div class="col-md-5 d-none d-sm-block">
+<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;">
@@ -56,6 +65,15 @@
         </h3>
         <div class="card-options">
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+=======
+    <div class="card">
+      <div class="card-header" style="border: 0.1px solid #05d0a0; border-radius: 3.5px 3.5px 0px 0px; background: #05d0a0;">
+        <h3 class="card-title">
+          <h4 class="modal-title"><i class="fe fe-edit"></i> <?=lang("add_new_ticket")?></h4>
+        </h3>
+        <div class="card-options">
+          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
 
@@ -114,7 +132,11 @@
               </div>
 
               <div class="col-md-12 col-sm-12 col-xs-12">
+<<<<<<< HEAD
                 <button type="submit" class="btn round btn-info btn-min-width me-1 mb-1"><?=lang('Submit')?></button>
+=======
+                <button type="submit" class="btn round btn-info btn-min-width mr-1 mb-1"><?=lang('Submit')?></button>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
               </div>
             </div>
           </div>
@@ -125,12 +147,21 @@
   <div class="col-md-7">
     <div class="row" id="result_ajaxSearch">
       <div class="col-md-12">
+<<<<<<< HEAD
         <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-list"></i> <?=lang("Lists")?>
             </h3>
             <div class="card-options">
               <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+=======
+        <div class="card">
+          <div class="card-header" style="border: 0.1px solid #05d0a0; border-radius: 3.5px 3.5px 0px 0px; background: #05d0a0;">
+            <h3 class="card-title"><i class="fe fe-list"></i> <?=lang("Lists")?>
+            </h3>
+            <div class="card-options">
+              <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </div>
           </div>
 
@@ -168,7 +199,11 @@
                       ?>
                       <?php if($is_unread){
                       ?>
+<<<<<<< HEAD
                       <span class="badge bg-warning text-dark"><?=lang("Unread")?></span>
+=======
+                      <span class="badge badge-warning"><?=lang("Unread")?></span>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                       <?php }?>
                     </div>
                     <div class="email"><?=$row->first_name." ".$row->last_name." - ".$row->user_email?></div>
@@ -201,11 +236,19 @@
                   </a>
                   <?php 
                   if(get_role("admin") || get_role('supporter')) {?>
+<<<<<<< HEAD
                   <a href="javascript:void(0)" data-bs-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
                   <div class="dropdown-menu dropdown-menu-right">
                     <a href="javascript:void(0)" data-url="<?=cn($module."/ajax_change_status/".$row->ids)?>" data-status="new" class="ajaxChangeStatus dropdown-item"> <i class="dropdown-icon fe fe-mail"></i> <?=lang("mark_as_new")?></a>
 
                     <a href="javascript:void(0)" data-url="<?=cn($module."/ajax_change_status/".$row->ids)?>" data-status="pending" class="ajaxChangeStatus dropdown-item"> <i class="dropdown-icon far fa-envelope-open"></i> <?=lang("mark_as_pending")?></a>
+=======
+                  <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <a href="javascript:void(0)" data-url="<?=cn($module."/ajax_change_status/".$row->ids)?>" data-status="new" class="ajaxChangeStatus dropdown-item"> <i class="dropdown-icon fe fe-mail"></i> <?=lang("mark_as_new")?></a>
+
+                    <a href="javascript:void(0)" data-url="<?=cn($module."/ajax_change_status/".$row->ids)?>" data-status="pending" class="ajaxChangeStatus dropdown-item"> <i class="dropdown-icon fa fa-envelope-open"></i> <?=lang("mark_as_pending")?></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
                     <a href="javascript:void(0)" data-url="<?=cn($module."/ajax_change_status/".$row->ids)?>" data-status="closed" class="ajaxChangeStatus dropdown-item"> <i class="dropdown-icon fe fe-unlock"></i> <?=lang("mark_as_closed")?></a>
                     <?php 
@@ -228,7 +271,11 @@
       </div>
       <?php if(!empty($tickets)){?>
       <div class="col-md-12">
+<<<<<<< HEAD
         <div class="float-end">
+=======
+        <div class="float-right">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           <?=$links?>
         </div>
       </div>
@@ -237,6 +284,7 @@
   </div>
 </div>
 
+<<<<<<< HEAD
 <?php if (get_code_part_by_position('tickets', 'bottom', '') != '') { ?>
 <div class="col-sm-12">
   <div class="row">
@@ -247,6 +295,8 @@
 </div>
 <?php }?>
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 <script>
   $(document).ready(function() {
     plugin_editor('.plugin_editor', {height: 200});

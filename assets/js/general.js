@@ -895,6 +895,7 @@ function General(){
 
                 if (is_json(_result)) {
                     _result = JSON.parse(_result);
+<<<<<<< HEAD
                     
                     // Check if this is a duplicate order error
                     if (_result.status == 'error' && _result.order_exists === true) {
@@ -913,6 +914,8 @@ function General(){
                         return;
                     }
                     
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     setTimeout(function(){
                         notify(_result.message, _result.status);
                     },1500)
@@ -1042,6 +1045,7 @@ function General(){
                 url: url,
                 formData: {token:token},
                 dataType: 'json',
+<<<<<<< HEAD
                 maxFileSize: 5000000, // 5MB
                 add: function (e, data) {
                     // Validate file type
@@ -1109,6 +1113,14 @@ function General(){
                         alert('Upload failed. Please try again.');
                     }
                 }
+=======
+                done: function (e, data) {
+                if (data.result.status == "success") {
+                  _img_link = data.result.link;
+                  _closest_div.children('input').val(_img_link);
+                }
+              },
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             });
         });
     }
@@ -1124,6 +1136,7 @@ function General(){
       }
     });
 }
+<<<<<<< HEAD
 
 // Helper function to show duplicate order modal
 function showDuplicateOrderModal(data) {
@@ -1413,6 +1426,8 @@ function showOrderConfirmationModal(orderDetails) {
     });
 }
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 General= new General();
 $(function(){
     General.init();

@@ -17,7 +17,11 @@ class file_manager extends MX_Controller {
 	public function upload_files(){
 		get_upload_folder();
 		$path          = './assets/uploads/user'.sha1(session("uid"));
+<<<<<<< HEAD
 		$allowed_types = 'gif|jpg|jpeg|png|svg|ico|mp4';
+=======
+		$allowed_types = 'gif|jpg|png|mp4';
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		$max_size      = 5*1024;
 		$width         = 1024;
 		$height        = 768;

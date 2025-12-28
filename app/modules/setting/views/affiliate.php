@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-sliders"></i> <?= lang("affiliate_settings") ?></h3>
+=======
+<div class="card content">
+  <div class="card-header">
+    <h3 class="card-title"><i class="fe fe-sliders"></i> <?= lang("affiliate_settings") ?></h3>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
   </div>
   <div class="card-body">
     <form class="actionForm" action="<?= cn("$module/ajax_general_settings") ?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
@@ -29,7 +35,11 @@
 
           <div class="form-group">
             <div class="input-group">
+<<<<<<< HEAD
               <span class="">
+=======
+              <span class="input-group-prepend">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 <span class="input-group-text"><?=get_option('currency_symbol',"$")?></span>
               </span>
               <input class="form-control" name="affiliate_bonus" value="<?= get_option('affiliate_bonus', "10") ?>">

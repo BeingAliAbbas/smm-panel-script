@@ -16,10 +16,16 @@
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
 
+<<<<<<< HEAD
     
     <link rel="stylesheet" href="<?=BASE?>assets/css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/all.min.css">
     <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/v4-shims.min.css">
+=======
+
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
     
     <script src="<?=BASE?>assets/js/vendors/jquery-3.2.1.min.js"></script>
@@ -31,6 +37,7 @@
     <link rel="stylesheet" type="text/css" href="<?=BASE?>assets/plugins/jquery-toast/css/jquery.toast.css">
     <link rel="stylesheet" href="<?=BASE?>assets/plugins/boostrap/colors.css" id="theme-stylesheet">
     <link href="<?=BASE?>assets/css/util.css" rel="stylesheet">
+<<<<<<< HEAD
     
     <!-- Modern Bootstrap 5.3+ Theme -->
     <link href="<?=BASE?>assets/css/modern-bootstrap-theme.css" rel="stylesheet">
@@ -43,6 +50,10 @@
     
     <link href="<?=BASE?>assets/css/general_page.css" rel="stylesheet">
     <link href="<?=BASE?>assets/css/common.css" rel="stylesheet">
+=======
+    <link href="<?=BASE?>assets/css/general_page.css" rel="stylesheet">
+    <link href="<?=BASE?>assets/css/layout.css" rel="stylesheet">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     <link href="<?=BASE?>assets/css/footer.css" rel="stylesheet">
 
     <script type="text/javascript">
@@ -55,7 +66,11 @@
     <?=htmlspecialchars_decode(get_option('embed_head_javascript', ''), ENT_QUOTES)?>
   </head>
   <body>
+<<<<<<< HEAD
     <div id="page-overlay">
+=======
+    <div id="page-overlay" class="visible incoming">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       <div class="loader-wrapper-outer">
         <div class="loader-wrapper-inner">
           <div class="lds-double-ring">
@@ -78,12 +93,20 @@
           <a class="navbar-brand" href="<?=cn()?>">
             <img class="site-logo" src="<?=get_option('website_logo', BASE."assets/images/logo.png")?>" alt="Webstie logo">
           </a>
+<<<<<<< HEAD
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+=======
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             <span><i class="fe fe-menu"></i></span>
           </button>
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
+<<<<<<< HEAD
             <ul class="navbar-nav ms-auto">
+=======
+            <ul class="navbar-nav ml-auto">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
               <li class="nav-item ">
                 <a class="nav-link js-scroll-trigger" href="<?=cn()?>#home"><?=lang("Home")?></a>
@@ -128,12 +151,16 @@
 
     <?=Modules::run("blocks/footer");?>
     <script src="<?=BASE?>assets/js/vendors/bootstrap.bundle.min.js"></script>
+<<<<<<< HEAD
     <script src="<?=BASE?>assets/js/bootstrap-toast.js"></script>
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     <script src="<?=BASE?>assets/js/vendors/jquery.sparkline.min.js"></script>
     <script src="<?=BASE?>assets/js/core.js"></script>
     <!-- general JS -->
     <script src="<?=BASE?>assets/js/process.js"></script>
     <script src="<?=BASE?>assets/js/general.js"></script>
+<<<<<<< HEAD
     
     <!-- Service Worker Registration for Offline Support -->
     <script>
@@ -149,6 +176,8 @@
         });
       }
     </script>
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
   </body>
 </html>
 

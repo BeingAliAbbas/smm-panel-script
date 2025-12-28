@@ -8,7 +8,11 @@
 :root {
   --sel-font-size: clamp(14px, 3.6vw, 16px);
   --sel-line-height: 1.3;
+<<<<<<< HEAD
   --sel-border: #00FFFF;
+=======
+  --sel-border: #04a9f4;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
   --sel-border-focus: #0390cf;
   --sel-bg: #ffffff;
   --sel-bg-alt: #f5fbfe;
@@ -18,7 +22,11 @@
   --sel-highlight-text: #fff;
   --sel-selected-bg: #d3eefc;
   --sel-meta-color: #000000;
+<<<<<<< HEAD
   --sel-scrollbar-thumb: #00FFFF;
+=======
+  --sel-scrollbar-thumb: #04a9f4;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
   --sel-scrollbar-track: #cfe8f5;
 }
 
@@ -668,17 +676,29 @@ body.dark .select2-container--default .select2-selection--single:focus-visible {
 /* Dropdown Menu */
 .dropdown-menu {
     background-color: #06324e !important;
+<<<<<<< HEAD
     border: 1px solid #00FFFF !important;
+=======
+    border: 1px solid #04a9f4 !important;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     border-radius: 4px !important;
 }
 
 .dropdown-item {
+<<<<<<< HEAD
     color: #00FFFF !important;
+=======
+    color: #04a9f4 !important;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     padding: 10px !important;
 }
 
 .dropdown-item:hover {
+<<<<<<< HEAD
     background-color: #00FFFF !important;
+=======
+    background-color: #04a9f4 !important;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     color: #ffffff !important;
 }
 
@@ -706,7 +726,11 @@ th {
 }
 
 td {
+<<<<<<< HEAD
     background-color: #001a1a !important;
+=======
+    background-color: #051d2f !important;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     color: #ffffff !important;
     font-size: 14px !important;
 }
@@ -725,7 +749,11 @@ td.order-details {
 }
 
 .btn-info {
+<<<<<<< HEAD
     background-color: #00FFFF !important;
+=======
+    background-color: #04a9f4 !important;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     color: #ffffff !important;
 }
 
@@ -760,7 +788,11 @@ td.order-details {
 
 /* Refill Buttons */
 .btn-success {
+<<<<<<< HEAD
     background-color: #00FFFF !important;
+=======
+    background-color: #04a9f4 !important;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     color: #ffffff !important;
 }
 
@@ -777,7 +809,11 @@ td.order-details {
 
 /* Modal Button */
 .ajaxModal {
+<<<<<<< HEAD
     color: #00FFFF !important;
+=======
+    color: #04a9f4 !important;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     text-decoration: none !important;
 }
 
@@ -845,7 +881,11 @@ td.order-details {
   .order_btn_group .nav-link {
     padding: 8px 15px !important; /* Smaller padding */
     color: #ffffff !important;
+<<<<<<< HEAD
     background-color: #001a1a !important;
+=======
+    background-color: #051d2f !important;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     border-radius: 6px !important;
     text-align: center !important;
     font-size: 16px !important; /* Smaller font size */
@@ -863,7 +903,11 @@ td.order-details {
   
   /* Hover Effect */
   .order_btn_group .nav-link:hover {
+<<<<<<< HEAD
     background-color: #002a2a !important;
+=======
+    background-color: #063a58 !important;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     text-decoration: none !important;
   }
   
@@ -899,7 +943,11 @@ td.order-details {
     }
   
     .order_btn_group .nav-link.active {
+<<<<<<< HEAD
         color: #00FFFF !important;
+=======
+        color: #04a9f4 !important;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     }
   }
   
@@ -920,7 +968,11 @@ td.order-details {
   }
   /* Add Funds Button */
 .btn-add-funds {
+<<<<<<< HEAD
     background: #00FFFF !important; /* Slightly softer cyan */
+=======
+    background: #04a9f4 !important; /* Slightly softer green */
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     color: #fff !important;
     font-weight: bold !important;
     padding: 11px 18px !important; /* Smaller padding */
@@ -1012,7 +1064,11 @@ th {
 }
 
 td {
+<<<<<<< HEAD
     background-color: #001a1a !important;
+=======
+    background-color: #051d2f !important;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     color: #ffffff !important;
     font-size: 14px !important;
 }
@@ -1116,7 +1172,11 @@ th {
 }
 
 td {
+<<<<<<< HEAD
     background-color: #001a1a !important;
+=======
+    background-color: #051d2f !important;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     color: #ffffff !important;
     font-size: 14px !important;
 }

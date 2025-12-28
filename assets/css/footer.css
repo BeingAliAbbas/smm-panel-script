@@ -32,10 +32,16 @@
 }
 
 .footer_bottom {
+<<<<<<< HEAD
   background: #f5f5f5;
   color: #000;
   border-top: 2px solid #a7a7a7;
   padding: 20px;
+=======
+  border-top: 2px solid #a7a7a7;
+  padding: 20px;
+  background-color: #051d2f;
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 }
 
 .footer-bottom .list-inline-item a {

@@ -75,11 +75,14 @@ class faysalbank extends MX_Controller
 
         if (empty($check_transactionsqr)) {
             $converted_amount = $amount / $this->currency_rate_to_usd;
+<<<<<<< HEAD
             
             // Load pay token helper and generate token for pending transactions
             $this->load->helper('pay_token');
             $pay_token = generate_pay_token();
             
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             $data_tnx_log = array(
                 "ids"               => ids(),
                 "uid"               => session("uid"),
@@ -89,13 +92,20 @@ class faysalbank extends MX_Controller
                 'txn_fee'           => round($converted_amount * ($this->payment_fee / 100), 4),
                 "note"              => $TXN_AMOUNT,
                 "status"            => 0,
+<<<<<<< HEAD
                 "pay_token"         => $pay_token,
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 "created"           => NOW,
             );
             $transaction_log_id = $this->db->insert($this->tb_transaction_logs, $data_tnx_log);
 
             $this->sendTransactionEmail($TXN_AMOUNT, $ORDER_ID, 'Faysal Bank');
+<<<<<<< HEAD
             $this->sendWhatsAppNotification($TXN_AMOUNT, $ORDER_ID, 'new', $pay_token);
+=======
+            $this->sendWhatsAppNotification($TXN_AMOUNT, $ORDER_ID, 'new');
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
             $this->load->view("faysalbank/redirect", $data);
         } else {
@@ -155,7 +165,11 @@ class faysalbank extends MX_Controller
         }
     }
 
+<<<<<<< HEAD
     private function sendWhatsAppNotification($amount, $transaction_id, $type = 'new', $pay_token = null) {
+=======
+    private function sendWhatsAppNotification($amount, $transaction_id, $type = 'new') {
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         try {
             $user_info = session('user_current_info');
             $user_email = $user_info['email'] ?? 'N/A';
@@ -181,12 +195,15 @@ class faysalbank extends MX_Controller
                         . "🔢 *Transaction ID*: {$transaction_id}\n"
                         . "📧 *User Email*: {$user_email}\n\n"
                         . "🔍 New payment submission received. Awaiting verification.";
+<<<<<<< HEAD
                 
                 // Add pay URL for pending transactions (helper already loaded)
                 if ($pay_token) {
                     $pay_url = get_pay_url($pay_token);
                     $message .= "\n\n✅ *Approve Payment:*\n{$pay_url}";
                 }
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             } else {
                 $message = "*✅ Faysal Bank Payment Completed!*\n\n"
                         . "💰 *Amount*: PKR {$amount}\n"

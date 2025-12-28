@@ -23,7 +23,11 @@
 
       <!-- Quick Links -->
       <div class="col-lg-4">
+<<<<<<< HEAD
         <h4 class="title" style="color: #fff !important;"><?=lang("Quick_links")?></h4>
+=======
+        <h4 class="title"><?=lang("Quick_links")?></h4>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         <div class="row">
           <div class="col-6 col-md-3">
             <ul class="list-unstyled quick-link">
@@ -54,7 +58,11 @@
 
       <!-- Contact Info -->
       <div class="col-lg-4">
+<<<<<<< HEAD
         <h4 class="title" style="color: #fff !important;"><?=lang("contact_informations")?></h4>
+=======
+        <h4 class="title"><?=lang("contact_informations")?></h4>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         <ul class="list-unstyled">
           <li><?=lang("Whatsapp Number")?>: <?=get_option('whatsapp_number',"+12345678")?></li>
           <li><?=lang("Email")?>: <?=get_option('contact_email',"do-not-reply@smartpanel.com")?></li>
@@ -73,6 +81,7 @@
       <div class="col-auto">
         <ul class="list-inline mb-0">
           <?php if (get_option('social_facebook_link')): ?>
+<<<<<<< HEAD
             <li class="list-inline-item"><a href="<?=get_option('social_facebook_link')?>" target="_blank" class="btn btn-icon btn-facebook"><i class="fab fa-facebook"></i></a></li>
           <?php endif; ?>
           <?php if (get_option('social_twitter_link')): ?>
@@ -83,10 +92,34 @@
           <?php endif; ?>
           <?php if (get_option('social_youtube_link')): ?>
             <li class="list-inline-item"><a href="<?=get_option('social_youtube_link')?>" target="_blank" class="btn btn-icon btn-youtube"><i class="fab fa-youtube"></i></a></li>
+=======
+            <li class="list-inline-item"><a href="<?=get_option('social_facebook_link')?>" target="_blank" class="btn btn-icon btn-facebook"><i class="fa fa-facebook"></i></a></li>
+          <?php endif; ?>
+          <?php if (get_option('social_twitter_link')): ?>
+            <li class="list-inline-item"><a href="<?=get_option('social_twitter_link')?>" target="_blank" class="btn btn-icon btn-twitter"><i class="fa fa-twitter"></i></a></li>
+          <?php endif; ?>
+          <?php if (get_option('social_instagram_link')): ?>
+            <li class="list-inline-item"><a href="<?=get_option('social_instagram_link')?>" target="_blank" class="btn btn-icon btn-instagram"><i class="fa fa-instagram"></i></a></li>
+          <?php endif; ?>
+          <?php if (get_option('social_youtube_link')): ?>
+            <li class="list-inline-item"><a href="<?=get_option('social_youtube_link')?>" target="_blank" class="btn btn-icon btn-youtube"><i class="fa fa-youtube"></i></a></li>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           <?php endif; ?>
         </ul>
       </div>
 
+<<<<<<< HEAD
       
+=======
+      <!-- Copyright Info -->
+      <div class="col-auto text-center text-lg-right">
+        <span><?=get_option('copy_right_content', "Copyright &copy; 2020 - SmartPanel")?> <?=(get_role("admin")) ? $version : "" ?></span>
+        <?php if(get_role("admin")): ?>
+          <div><a href="https://beastsmm.xyz" target="_blank">Powered By <span>beastsmm.xyz</span></a></div>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 </footer>
 <!-- Footer End -->

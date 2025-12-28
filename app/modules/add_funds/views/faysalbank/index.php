@@ -112,7 +112,11 @@
               <strong>FAYSAL BANK ACCOUNT TITLE:</strong>
               <h2>
                 <span id="holderName"><?php echo $holder_name; ?></span>
+<<<<<<< HEAD
                 <i class="fas fa-copy copy-icon" onclick="copyToClipboard('holderName', this)" title="Copy Title"></i>
+=======
+                <i class="fa fa-copy copy-icon" onclick="copyToClipboard('holderName', this)" title="Copy Title"></i>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 <span class="copy-msg">Copied!</span>
               </h2>
             </div>
@@ -121,7 +125,11 @@
               <strong>FAYSAL BANK ACCOUNT NUMBER:</strong>
               <h2>
                 <span id="accountNumber"><?php echo $account_number; ?></span>
+<<<<<<< HEAD
                 <i class="fas fa-copy copy-icon" onclick="copyToClipboard('accountNumber', this)" title="Copy Number"></i>
+=======
+                <i class="fa fa-copy copy-icon" onclick="copyToClipboard('accountNumber', this)" title="Copy Number"></i>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 <span class="copy-msg">Copied!</span>
               </h2>
             </div>
@@ -161,7 +169,11 @@
         <div class="form-actions left">
           <input type="hidden" name="payment_id" value="<?php echo $payment_id; ?>">
           <input type="hidden" name="payment_method" value="<?php echo $type; ?>">
+<<<<<<< HEAD
           <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1" style="border-radius: 5px !important; background-color: #04a9f4; color: #fff; min-width: 120px; margin-right: 5px; margin-top: 15px; margin-bottom: 5px;">
+=======
+          <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1" style="border-radius: 5px !important; background-color: #04a9f4; color: #fff; min-width: 120px; margin-right: 5px; margin-top: 15px; margin-bottom: 5px;">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             <?=lang("Pay")?>
           </button>
         </div>

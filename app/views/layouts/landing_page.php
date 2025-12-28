@@ -17,9 +17,13 @@
     <meta name="MobileOptimized" content="320">
 
     
+<<<<<<< HEAD
     <link rel="stylesheet" href="<?=BASE?>assets/css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/all.min.css">
     <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/v4-shims.min.css">
+=======
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
     
     <script src="<?=BASE?>assets/js/vendors/jquery-3.2.1.min.js"></script>
@@ -33,8 +37,13 @@
     <link href="<?=BASE?>assets/css/util.css" rel="stylesheet">
     <link href="<?=BASE?>assets/css/landing_page.css" rel="stylesheet">
     <link href="<?=BASE?>assets/css/footer.css" rel="stylesheet">
+<<<<<<< HEAD
     <link href="<?=BASE?>assets/css/common.css" rel="stylesheet">
     <link href="<?=BASE?>assets/css/header.css" rel="stylesheet">
+=======
+    <link href="<?php echo BASE; ?>assets/css/slide.css" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/layout.css" rel="stylesheet">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
     <script type="text/javascript">
       var token = '<?=$this->security->get_csrf_hash()?>',
@@ -53,8 +62,13 @@
           <img class="site-logo d-none" src="<?=get_option('website_logo', BASE."assets/images/logo.png")?>" alt="Webstie logo">
           <img class="site-logo-white" src="<?=get_option('website_logo_white', BASE."assets/images/logo-white.png")?>" alt="Webstie logo">
         </a>
+<<<<<<< HEAD
         <div class="d-flex order-lg-2 ms-auto">
           <ul class="navbar-nav list-inline ms-auto">
+=======
+        <div class="d-flex order-lg-2 ml-auto">
+          <ul class="navbar-nav list-inline ml-auto">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
             <li class="nav-item list-inline-item">
               <a class="nav-link js-scroll-trigger" href="#home"><?=lang("Home")?></a>
@@ -210,7 +224,11 @@
 
             <div class="modal-header">
               <h4 class="modal-title"><i class="fe fe-bell"></i> <?=lang("Notification")?></h4>
+<<<<<<< HEAD
               <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+=======
+              <button type="button" class="close" data-dismiss="modal"></button>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </div>
 
             <div class="modal-body">
@@ -218,7 +236,11 @@
             </div>
 
             <div class="modal-footer">
+<<<<<<< HEAD
               <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><?=lang("Close")?></button>
+=======
+              <button type="button" class="btn btn-danger" data-dismiss="modal"><?=lang("Close")?></button>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </div>
           </div>
         </div>
@@ -227,7 +249,10 @@
 
     <?=Modules::run("blocks/footer");?>
     <script src="<?=BASE?>assets/js/vendors/bootstrap.bundle.min.js"></script>
+<<<<<<< HEAD
     <script src="<?=BASE?>assets/js/bootstrap-toast.js"></script>
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     <script src="<?=BASE?>assets/js/vendors/jquery.sparkline.min.js"></script>
     <script src="<?=BASE?>assets/js/core.js"></script>
     <script src="<?=BASE?>assets/plugins/particles-js/particles.js"></script>
@@ -252,6 +277,7 @@
         },500);
      });
     </script>
+<<<<<<< HEAD
     
     <!-- Service Worker Registration for Offline Support -->
     <script>
@@ -267,6 +293,8 @@
         });
       }
     </script>
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
   </body>
 </html>
 

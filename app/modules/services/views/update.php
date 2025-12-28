@@ -12,8 +12,13 @@
         ?>
         <form class="form actionForm" action="<?=$url?>" method="POST">
           <div class="modal-header bg-pantone">
+<<<<<<< HEAD
             <h4 class="modal-title"><i class="fas fa-edit"></i> <?=lang("edit_service")?></h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+=======
+            <h4 class="modal-title"><i class="fa fa-edit"></i> <?=lang("edit_service")?></h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </button>
           </div>
           <div class="modal-body">
@@ -42,6 +47,7 @@
                   <div class="form-group">
                     <div class="form-label"><?php echo lang("Type"); ?></div>
                     <div class="custom-controls-stacked">
+<<<<<<< HEAD
                       <label class="form-check custom-control-inline">
                         <input type="radio" class="form-check-input" name="add_type" value="manual" <?php echo (isset($service->add_type) && $service->add_type == 'manual')? 'checked': ''?>>
                         <span class="form-check-label"><?php echo lang('Manual'); ?></span>
@@ -49,6 +55,15 @@
                       <label class="form-check custom-control-inline">
                         <input type="radio" class="form-check-input" name="add_type" value="api" <?php echo (isset($service->add_type) && $service->add_type == 'api')? 'checked': ''?>>
                         <span class="form-check-label"><?php echo lang('API'); ?></span>
+=======
+                      <label class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" name="add_type" value="manual" <?php echo (isset($service->add_type) && $service->add_type == 'manual')? 'checked': ''?>>
+                        <span class="custom-control-label"><?php echo lang('Manual'); ?></span>
+                      </label>
+                      <label class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" name="add_type" value="api" <?php echo (isset($service->add_type) && $service->add_type == 'api')? 'checked': ''?>>
+                        <span class="custom-control-label"><?php echo lang('API'); ?></span>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                       </label>
                       
                     </div>
@@ -170,9 +185,15 @@
             </div>
           </div>
           <div class="modal-footer">
+<<<<<<< HEAD
             <a href="<?=cn("api_provider/services")?>" class="btn round btn-info btn-min-width me-1 mb-1"><?=lang("add_new_service_via_api")?></a>
             <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1"><?=lang("Submit")?></button>
             <button type="button" class="btn round btn-default btn-min-width me-1 mb-1" data-bs-dismiss="modal"><?=lang("Cancel")?></button>
+=======
+            <a href="<?=cn("api_provider/services")?>" class="btn round btn-info btn-min-width mr-1 mb-1"><?=lang("add_new_service_via_api")?></a>
+            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1"><?=lang("Submit")?></button>
+            <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal"><?=lang("Cancel")?></button>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
         </form>
       </div>
@@ -281,7 +302,11 @@
     window.emojiPicker = new EmojiPicker({
       emojiable_selector: '[data-emojiable=true]',
       assetsPath: "<?=BASE?>assets/plugins/emoji-picker/lib/img/",
+<<<<<<< HEAD
       popupButtonClasses: 'far fa-face-smile'
+=======
+      popupButtonClasses: 'fa fa-smile-o'
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     });
     window.emojiPicker.discover();
   });
@@ -292,7 +317,11 @@
     window.emojiPicker = new EmojiPicker({
       emojiable_selector: '[data-emojiable=true]',
       assetsPath: "<?=BASE?>assets/plugins/emoji-picker/lib/img/",
+<<<<<<< HEAD
       popupButtonClasses: 'far fa-face-smile'
+=======
+      popupButtonClasses: 'fa fa-smile-o'
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     });
     window.emojiPicker.discover();
   });

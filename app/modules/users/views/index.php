@@ -1,7 +1,11 @@
 
 <div class="page-header">
   <h1 class="page-title">
+<<<<<<< HEAD
     <a href="<?=cn("$module/update")?>" class=""><span class="add-new" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="<?=lang("add_new")?>"><i class="fas fa-plus-square"></i></span></a>
+=======
+    <a href="<?=cn("$module/update")?>" class=""><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="<?=lang("add_new")?>"><i class="fa fa-plus-square text-primary" aria-hidden="true"></i></span></a> 
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     <?=lang("users")?>
   </h1>
 </div>
@@ -12,6 +16,7 @@
   <div class="col-md-12 col-xl-12">
     <div class="">
       <div class="card-header">
+<<<<<<< HEAD
         <h3 class="card-title" style="color: #fff !important;"><?=lang("Lists")?></h3>
         <div class="card-options">
         <div class="dropdown1" style="position: relative; display: inline-block;">
@@ -31,6 +36,21 @@
     <a class="dropdown-item1" href="<?= cn('users/export_whatsapp_numbers') ?>" style="color: #ffffff; padding: 10px 15px; font-size: 14px; display: block; transition: background-color 0.3s ease, color 0.3s ease;">
       <i class="fe fe-download"></i> Export WhatsApp Numbers
     </a>
+=======
+        <h3 class="card-title"><?=lang("Lists")?></h3>
+        <div class="card-options">
+        <div class="dropdown1" style="position: relative; display: inline-block;">
+  <button type="button" class="btn btn-outline-info dropdown-toggle" onclick="toggleDropdown()" style="color: #04a9f4; border-color: #04a9f4; background-color: transparent;">
+    <i class="fe fe-upload mr-2"></i>Export
+  </button>
+
+  <div id="customDropdown" class="dropdown-menu1" style="display: none; position: absolute; top: 100%; right: 2px; background-color: #051d2f; border: 1px solid #04a9f4; border-radius: 6px; padding: 8px 0; min-width: 150px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 1000;">
+    <a class="dropdown-item1" href="<?=cn($module.'/export/excel')?>" style="color: #ffffff; padding: 10px 15px; font-size: 14px; display: block; transition: background-color 0.3s ease, color 0.3s ease;">Excel</a>
+    
+    <a class="dropdown-item1" href="<?=cn($module.'/export/csv')?>" style="color: #ffffff; padding: 10px 15px; font-size: 14px; display: block; transition: background-color 0.3s ease, color 0.3s ease;">CSV</a>
+    
+    <a class="dropdown-item1" href="<?= cn('users/export_whatsapp_numbers') ?>" style="color: #ffffff; padding: 10px 15px; font-size: 14px; display: block; transition: background-color 0.3s ease, color 0.3s ease;">WhatsApp Numbers</a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
   </div>
 </div>
 
@@ -115,16 +135,27 @@
               <td>
     <div class="title"><h6><?php _echo($row->first_name) . " " . _echo($row->last_name); ?></h6></div>
     <div class="sub" style="margin-right: 15px; margin-bottom: 10px;">
+<<<<<<< HEAD
         <a href="<?=cn("$module/mail/".$row->ids)?>" class="ajaxModal" style="display: inline-flex; align-items: center; padding: 4px 8px; border: 1px solid #04a9f4; border-radius: 4px; color: #fdfdfdff; background-color: rgba(63, 81, 181, 0.1); text-decoration: none; transition: all 0.3s ease;">
             <i class="fas fa-envelope" style="margin-right: 6px; font-size: 14px; color: #04a9f4;"></i>
             <small style="color:#000;"><?php _echo($row->email); ?></small>
+=======
+        <a href="<?=cn("$module/mail/".$row->ids)?>" class="ajaxModal" style="display: inline-flex; align-items: center; padding: 4px 8px; border: 1px solid #04a9f4; border-radius: 4px; color: #333; font-size: 12px; text-decoration: none;">
+            <i class="fa fa-envelope" style="margin-right: 6px; font-size: 14px; color: #04a9f4;"></i>
+            <small style="color:#fff;"><?php _echo($row->email); ?></small>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </a>
     </div>
 
     <div class="sub" style="margin-bottom: 10px;">
         <small>
+<<<<<<< HEAD
             <a href="https://wa.me/<?php echo $row->whatsapp_number; ?>" target="_blank" style="display: inline-flex; align-items: center; padding: 4px 8px; border: 1px solid #04a9f4; border-radius: 4px; color: #000 !important; background-color: rgba(63, 81, 181, 0.1); text-decoration: none; transition: all 0.3s ease;">
                 <i class="fab fa-whatsapp" style="margin-right: 6px; font-size: 14px; color: #04a9f4;"></i>
+=======
+            <a href="https://wa.me/<?php echo $row->whatsapp_number; ?>" target="_blank" style="display: inline-flex; align-items: center; padding: 4px 8px; border: 1px solid #04a9f4; border-radius: 4px; color: #04a9f4; font-size: 12px; text-decoration: none;">
+                <i class="fa fa-whatsapp" style="margin-right: 6px; font-size: 14px; color: #04a9f4;"></i>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 <?php echo $row->whatsapp_number; ?>
             </a>
         </small>
@@ -159,6 +190,7 @@
                 <?=(!empty($row->balance)) ? $currency_symbol." ".currency_format($row->balance, get_option('currency_decimal', 2), $decimalpoint, $separator) : 0?>
               </td>
               <td>
+<<<<<<< HEAD
     <a href="javascript:void(0)" onclick="viewDeposit(<?= $row->id ?>)" class="btn btn-sm btn-info">
       <i class="fe fe-eye"></i> View Deposit
     </a>
@@ -178,6 +210,23 @@
         <div class="spinner-border text-primary" role="status">
           <span class="sr-only">Loading...</span>
         </div>
+=======
+    <a href="javascript:void(0)" onclick="viewDeposit(<?= $row->id ?>)">Click to view</a>
+</td>
+
+<!-- Modal to show total deposit -->
+<div id="depositModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Total Deposit</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          
+        </button>
+      </div>
+      <div class="modal-body" id="depositModalBody">
+        Loading...
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
     </div>
   </div>
@@ -192,6 +241,7 @@
       dataType: 'json',
       success: function(response) {
         if (response.status === 'success') {
+<<<<<<< HEAD
           $('#depositModalBody_' + uid).html('<h5>Total Deposit: <strong><?= $currency_symbol ?>' + response.total_deposit + '</strong></h5>');
         } else {
           $('#depositModalBody_' + uid).html('<div class="alert alert-warning">Error: ' + response.message + '</div>');
@@ -201,6 +251,17 @@
       error: function() {
         $('#depositModalBody_' + uid).html('<div class="alert alert-danger">An error occurred while fetching data.</div>');
         $('#depositModal_' + uid).modal('show');
+=======
+          $('#depositModalBody').html('Total Deposit: ' + response.total_deposit);
+        } else {
+          $('#depositModalBody').html('Error: ' + response.message);
+        }
+        $('#depositModal').modal('show');
+      },
+      error: function() {
+        $('#depositModalBody').html('An error occurred while fetching data.');
+        $('#depositModal').modal('show');
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       }
     });
   }
@@ -208,14 +269,22 @@
 
 
               <td>
+<<<<<<< HEAD
                 <button type="button" class="btn btn-square btn-outline-info btn-sm btnEditCustomRate" data-action="<?php echo  cn($module.'/ajax_modal_custom_rates/'.$row->id); ?>"><i class="fe fe-edit"></i></button>
+=======
+                <button type="button" class="btn btn-square btn-outline-info btn-sm btnEditCustomRate" data-action="<?php echo  cn($module.'/ajax_modal_custom_rates/'.$row->id); ?>"><i class="fe fe-plus mr-2"></i>Custom Rate</button>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
               </td>
               <td><?=$row->desc?></td>
               <td><?=convert_timezone($row->created, 'user')?></td>
               
               <td class="w-1">
                 <label class="custom-switch">
+<<<<<<< HEAD
                   <input type="checkbox" name="item_status" data-id="<?php echo $row->id; ?>" data-action="<?php echo cn($module.'/ajax_toggle_item_status/'); ?>" class="custom-switch-input ajaxToggleStatus" <?php echo ($row->status == 1) ? 'checked' : ''; ?>>
+=======
+                  <input type="checkbox" name="item_status" data-id="<?php echo $row->id; ?>" data-action="<?php echo cn($module.'/ajax_toggle_item_status/'); ?>" class="custom-switch-input ajaxToggleItemStatus" <?php if(!empty($row->status) && $row->status == 1) echo 'checked'; ?>>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   <span class="custom-switch-indicator"></span>
                 </label>
               </td>
@@ -225,12 +294,20 @@
               ?>
               <td>
                     <a class="ajaxModal" href="<?=cn("$module/add_funds_manual/".$row->ids)?>">
+<<<<<<< HEAD
                       <button class="btn btn-info btn-sm"><i class="fe fe-plus"></i> <?=lang("Add_Funds")?></button>
+=======
+                      <i class="btn btn-info"><?=lang("Add_Funds")?></i>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </a>
               </td>
               <td class="text-center">
                 <div class="item-action dropdown">
+<<<<<<< HEAD
                   <a href="javascript:void(0)" data-bs-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+=======
+                  <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   <div class="dropdown-menu">
                     <?php
                       if (get_role("admin")) {
@@ -261,7 +338,11 @@
     </div>
   </div>
   <div class="col-md-12">
+<<<<<<< HEAD
     <div class="float-end">
+=======
+    <div class="float-right">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       <?=$links?>
     </div>
   </div>
@@ -275,16 +356,27 @@
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
+<<<<<<< HEAD
         <h4 class="modal-title"></i> Edit custom rates</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+=======
+        <h4 class="modal-title"></i> Edit custom rates (ID: 1)</h4>
+        <button type="button" class="close" data-dismiss="modal"></button>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
       <div class="modal-body">
         <div class="row">
           <div class="col-md-12">
             <div class="form-group">
+<<<<<<< HEAD
               <label><?=lang("Select_Service")?></label>
               <select name="service-id" class="select-service-item form-control form-select">
                 <option value="">--Select Service--</option>
+=======
+              <select name="service-id" class="select-service-item" class="form-control custom-select">
+                <option value='{"service_id": "1189", "rate": "0.53", "name": "Instagram Likes [100 - 3K] [Instant] [Exclusive]"}' data-rate="1" data-data='{"rate": "0.53", "name": "Instagram Likes [100 - 3K] [Instant] [Exclusive]"}'>128 - Instagram Likes [100 - 3K] [Instant] [Exclusive] [$0.18]</option>
+                <option value='{"service_id": "123", "rate": "0.78", "name": "Instagram Likes [100 - 3K] [Instant] [Exclusive]"}' data-rate="1" data-data='{"rate": "0.53", "name": "Instagram Likes [100 - 3K] [Instant] [Exclusive]"}'>123 - Instagram Likes [100 - 3K] [Instant] [Exclusive] [$0.18]</option>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
               </select>
             </div>
           </div>
@@ -297,6 +389,7 @@
               <li class="list-separated-item s-item">
                 <div class="row align-items-center">
                   <div class="col">
+<<<<<<< HEAD
                     ID
                   </div>
                   <div class="col-md-7">
@@ -310,6 +403,22 @@
                   </div>
                   <div class="col-md-1">
                     Action
+=======
+                    111
+                  </div>
+                  <div class="col-md-7">
+                    Facebook [Real Relevant Comments - Custom Comments]
+                  </div>
+                  <div class="col-md-1">
+                    0.53
+                  </div>
+                  <div class="col-md-2">
+                    <input type="hidden" class="form-control" value="customRates[1123][price]">
+                    <input type="text" class="form-control" >
+                  </div>
+                  <div class="col-md-1">
+                    <button class="btn btn-secondary btn-remove-item" type="button"><i class="fe fe-trash-2"></i></button>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   </div>
                 </div>
               </li>
@@ -343,7 +452,11 @@
        
       </div>
       <div class="modal-footer">
+<<<<<<< HEAD
         <button type="button" class="btn btn-default" data-bs-dismiss="modal"><?=lang("Close")?></button>
+=======
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
     </div>
 

@@ -200,6 +200,7 @@ class services_model extends MY_Model {
 		return $exist_db_custom_rates;
 	}
 
+<<<<<<< HEAD
 	/**
 	 * Get paginated services with advanced filtering
 	 * 
@@ -376,4 +377,6 @@ class services_model extends MY_Model {
 		return $stats;
 	}
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 }

@@ -39,7 +39,11 @@ if (isset($_GET['uid']) && is_numeric($_GET['uid'])) {
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Total Deposit</h5>
+<<<<<<< HEAD
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+=======
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           <span aria-hidden="true">&times;</span>
         </button>
       </div>

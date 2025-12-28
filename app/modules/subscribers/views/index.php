@@ -10,6 +10,7 @@
   <?php if(!empty($users)){
   ?>
   <div class="col-md-12 col-xl-12">
+<<<<<<< HEAD
    <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><?=lang("Lists")?></h3>
@@ -17,6 +18,15 @@
           <div class="dropdown">
             <button type="button" class="btn btn-outline-info  dropdown-toggle" data-bs-toggle="dropdown">
                <i class="fe fe-upload me-2"></i>Export
+=======
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><?=lang("Lists")?></h3>
+        <div class="card-options">
+          <div class="dropdown">
+            <button type="button" class="btn btn-outline-info  dropdown-toggle" data-toggle="dropdown">
+               <i class="fe fe-upload mr-2"></i>Export
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </button>
             <div class="dropdown-menu">
               <a class="dropdown-item" href="<?=cn($module.'/export/excel')?>">Excel</a>
@@ -61,7 +71,11 @@
               ?>
               <td class="text-center w-1">
                 <div class="item-action dropdown">
+<<<<<<< HEAD
                   <a href="javascript:void(0)" data-bs-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+=======
+                  <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   <div class="dropdown-menu">
                     <?php
                       if (get_role("admin")) {
@@ -85,7 +99,11 @@
     </div>
   </div>
   <div class="col-md-12">
+<<<<<<< HEAD
     <div class="float-end">
+=======
+    <div class="float-right">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       <?=$links?>
     </div>
   </div>

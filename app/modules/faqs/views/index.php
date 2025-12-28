@@ -5,7 +5,11 @@
   ?>
   <h1 class="page-title">
     <a href="<?php echo cn("$module/update"); ?>" class="btn-add-new">
+<<<<<<< HEAD
       <span class="add-new"><i class="fas fa-plus-square text-primary" aria-hidden="true"></i></span>
+=======
+      <span class="add-new"><i class="fa fa-plus-square text-primary" aria-hidden="true"></i></span>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       <?php echo lang("FAQs"); ?>
     </a>
   </h1>
@@ -20,8 +24,13 @@
       <div class="card-header">
         <h3 class="card-title"><?php echo lang("Lists"); ?></h3>
         <div class="card-options">
+<<<<<<< HEAD
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
+=======
+          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="table-responsive">
@@ -65,15 +74,26 @@
               <td><?php echo strip_tags($row->sort); ?></td>
               <td class="w-10">
                 <?php if(!empty($row->status) && $row->status == 1){?>
+<<<<<<< HEAD
                   <span class="badge bg-info"><?php echo lang("Active"); ?></span>
                   <?php }else{?>
                   <span class="badge bg-warning text-dark"><?php echo lang("Deactive"); ?></span>
+=======
+                  <span class="badge badge-info"><?php echo lang("Active"); ?></span>
+                  <?php }else{?>
+                  <span class="badge badge-warning"><?php echo lang("Deactive"); ?></span>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 <?php }?>
               </td> 
               <td class="text-center">
                 <div class="btn-group">
+<<<<<<< HEAD
                   <a href="<?php echo cn($module."/update/".$row->ids); ?>" class="btn btn-icon btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<?php echo lang("Edit"); ?>"><i class="fe fe-edit"></i></a>
                   <a href="<?php echo cn("$module/ajax_delete_item/".$row->ids); ?>" class="btn btn-icon btn-outline-danger ajaxDeleteItem" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<?php echo lang("Delete"); ?>"><i class="fe fe-trash-2"></i></a>
+=======
+                  <a href="<?php echo cn($module."/update/".$row->ids); ?>" class="btn btn-icon btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="<?php echo lang("Edit"); ?>"><i class="fe fe-edit"></i></a>
+                  <a href="<?php echo cn("$module/ajax_delete_item/".$row->ids); ?>" class="btn btn-icon btn-outline-danger ajaxDeleteItem" data-toggle="tooltip" data-placement="bottom" title="<?php echo lang("Delete"); ?>"><i class="fe fe-trash-2"></i></a>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 </div>
               </td>
             </tr>

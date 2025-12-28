@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-dollar-sign"></i> <?=lang("Multi-Currency Management")?></h3>
+=======
+<div class="card content">
+  <div class="card-header" style="border: 0.1px solid #05d0a0; border-radius: 3.5px 3.5px 0px 0px; background: #05d0a0;">
+    <h3 class="card-title"><i class="fe fe-dollar-sign"></i> <?=lang("Multi-Currency Management")?></h3>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
   </div>
   <div class="card-body">
     <div class="row">
@@ -21,7 +27,11 @@
         <div class="alert alert-warning d-none" id="cronUrlBox">
           <strong>Cron URL:</strong><br>
           <code id="cronUrlText"></code>
+<<<<<<< HEAD
           <button type="button" class="btn btn-sm btn-primary ms-2" id="copyCronUrl">
+=======
+          <button type="button" class="btn btn-sm btn-primary ml-2" id="copyCronUrl">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             <i class="fe fe-copy"></i> Copy
           </button>
           <br><small class="text-muted mt-2 d-block">Use this URL in your cron job to automatically update exchange rates daily.</small>
@@ -65,7 +75,11 @@
                 </td>
                 <td>
                   <?php if ($currency->is_default) { ?>
+<<<<<<< HEAD
                     <span class="badge bg-success"><?=lang("Default")?></span>
+=======
+                    <span class="badge badge-success"><?=lang("Default")?></span>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   <?php } else { ?>
                     <button class="btn btn-sm btn-primary set-default" data-id="<?=$currency->id?>">
                       <?=lang("Set as Default")?>

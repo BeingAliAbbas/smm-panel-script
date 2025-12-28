@@ -320,6 +320,7 @@ class order_model extends MY_Model {
 		return $query->num_rows();
 	}
 
+<<<<<<< HEAD
 	/**
 	 * Get total provider price (formal_charge) for orders by status
 	 * @param string $status Order status to filter by
@@ -341,6 +342,8 @@ class order_model extends MY_Model {
 		return ($result && $result->total_provider_price) ? (float)$result->total_provider_price : 0;
 	}
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 	function get_orders_logs_by_search($k){
 		$k = trim(htmlspecialchars($k));
 		if (get_role("user")) {
@@ -508,6 +511,7 @@ class order_model extends MY_Model {
 		return [];
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Get full order details for bulk operations
 	 * @param string $status Order status to filter by
@@ -525,6 +529,8 @@ class order_model extends MY_Model {
 		return [];
 	}
 	
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 	function get_top_bestsellers($limit = ""){
 		if ($limit == "") {
 			$limit = 10;
@@ -555,6 +561,7 @@ class order_model extends MY_Model {
 		$config = $this->db->get("whatsapp_config")->row();
 		return ($config) ? $config : false;
 	}
+<<<<<<< HEAD
 
 	/**
 	 * Check for duplicate order (same link in active status, regardless of service)
@@ -580,4 +587,6 @@ class order_model extends MY_Model {
 		
 		return false;
 	}
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 }

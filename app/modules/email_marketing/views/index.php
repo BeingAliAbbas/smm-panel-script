@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 <!-- Include responsive CSS -->
 <link rel="stylesheet" href="<?php echo BASE; ?>assets/css/email_marketing-responsive.css">
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 <div class="row justify-content-md-center">
   <div class="col-md-12">
     <div class="page-header">
@@ -19,7 +22,11 @@
   </div>
 </div>
 
+<<<<<<< HEAD
 <div class="row email-marketing-stats">
+=======
+<div class="row">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
   <!-- Total Emails Sent -->
   <div class="col-lg-3 col-sm-6">
     <div class="card">
@@ -113,6 +120,7 @@
   </div>
 </div>
 
+<<<<<<< HEAD
 
 <!-- Quick Access Cards -->
 <div class="row mt-4">
@@ -205,6 +213,8 @@
 </div>
 
 
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 <!-- Campaign Statistics -->
 <div class="row mt-4">
   <div class="col-md-12">
@@ -214,19 +224,32 @@
 
 <div class="row">
   <div class="col-lg-8">
+<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;">Campaign Status Distribution</h3>
+=======
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Campaign Status Distribution</h3>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
       <div class="card-body">
         <div class="row">
           <div class="col-md-6">
             <div class="mb-3">
               <div class="clearfix">
+<<<<<<< HEAD
                 <div class="float-start">
                   <strong>Running Campaigns</strong>
                 </div>
                 <div class="float-end">
+=======
+                <div class="float-left">
+                  <strong>Running Campaigns</strong>
+                </div>
+                <div class="float-right">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   <small class="text-muted"><?php echo $stats->running_campaigns; ?></small>
                 </div>
               </div>
@@ -237,10 +260,17 @@
             
             <div class="mb-3">
               <div class="clearfix">
+<<<<<<< HEAD
                 <div class="float-start">
                   <strong>Completed Campaigns</strong>
                 </div>
                 <div class="float-end">
+=======
+                <div class="float-left">
+                  <strong>Completed Campaigns</strong>
+                </div>
+                <div class="float-right">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   <small class="text-muted"><?php echo $stats->completed_campaigns; ?></small>
                 </div>
               </div>
@@ -253,10 +283,17 @@
           <div class="col-md-6">
             <div class="mb-3">
               <div class="clearfix">
+<<<<<<< HEAD
                 <div class="float-start">
                   <strong>Paused Campaigns</strong>
                 </div>
                 <div class="float-end">
+=======
+                <div class="float-left">
+                  <strong>Paused Campaigns</strong>
+                </div>
+                <div class="float-right">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   <small class="text-muted"><?php echo $stats->paused_campaigns; ?></small>
                 </div>
               </div>
@@ -267,10 +304,17 @@
             
             <div class="mb-3">
               <div class="clearfix">
+<<<<<<< HEAD
                 <div class="float-start">
                   <strong>Pending Campaigns</strong>
                 </div>
                 <div class="float-end">
+=======
+                <div class="float-left">
+                  <strong>Pending Campaigns</strong>
+                </div>
+                <div class="float-right">
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   <small class="text-muted"><?php echo $stats->pending_campaigns; ?></small>
                 </div>
               </div>
@@ -292,6 +336,7 @@
   </div>
   
   <div class="col-lg-4">
+<<<<<<< HEAD
   <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;">Quick Stats</h3>
@@ -317,20 +362,57 @@
         <div class="list-group-item d-flex justify-content-between align-items-center px-0" style="background-color: transparent !important;">
           <span>Open Rate</span>
           <span class="badge bg-info badge-pill"><?php echo $stats->open_rate; ?>%</span>
+=======
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Quick Stats</h3>
+      </div>
+      <div class="card-body">
+        <div class="list-group list-group-flush">
+          <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+            <span>Total Campaigns</span>
+            <span class="badge badge-primary badge-pill"><?php echo $stats->total_campaigns; ?></span>
+          </div>
+          <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+            <span>Active Campaigns</span>
+            <span class="badge badge-success badge-pill"><?php echo $stats->running_campaigns; ?></span>
+          </div>
+          <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+            <span>Total Emails Sent</span>
+            <span class="badge badge-info badge-pill"><?php echo number_format($stats->total_sent); ?></span>
+          </div>
+          <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+            <span>Success Rate</span>
+            <span class="badge badge-success badge-pill"><?php echo $stats->total_emails > 0 ? round((($stats->total_sent - $stats->total_failed) / $stats->total_emails) * 100, 1) : 0; ?>%</span>
+          </div>
+          <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+            <span>Open Rate</span>
+            <span class="badge badge-info badge-pill"><?php echo $stats->open_rate; ?>%</span>
+          </div>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
     </div>
   </div>
 </div>
+<<<<<<< HEAD
 </div>
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
 <!-- Recent Activity -->
 <?php if(!empty($recent_logs)){ ?>
 <div class="row mt-4">
   <div class="col-md-12">
+<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-activity"></i> Recent Activity</h3>
+=======
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fe fe-activity"></i> Recent Activity</h3>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
       <div class="table-responsive">
         <table class="table table-hover table-vcenter card-table table-sm">
@@ -368,6 +450,7 @@
 </div>
 <?php } ?>
 
+<<<<<<< HEAD
 
 
 <div class="row mt-4">
@@ -375,6 +458,88 @@
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-info"></i> Getting Started</h3>
+=======
+<!-- Quick Access Cards -->
+<div class="row mt-4">
+  <div class="col-md-12">
+    <h3 class="mb-3"><i class="fe fe-grid"></i> Quick Access</h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="row row-cards">
+      
+      <!-- Campaigns Card -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="card p-3">
+          <div class="d-flex align-items-center">
+            <span class="stamp stamp-md bg-blue mr-3">
+              <i class="fe fe-mail"></i>
+            </span>
+            <div>
+              <h4 class="m-0"><a href="<?php echo cn($module . '/campaigns'); ?>" class="text-inherit">Campaigns</a></h4>
+              <small class="text-muted">Manage email campaigns</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Templates Card -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="card p-3">
+          <div class="d-flex align-items-center">
+            <span class="stamp stamp-md bg-green mr-3">
+              <i class="fe fe-file-text"></i>
+            </span>
+            <div>
+              <h4 class="m-0"><a href="<?php echo cn($module . '/templates'); ?>" class="text-inherit">Templates</a></h4>
+              <small class="text-muted">Email templates</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- SMTP Config Card -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="card p-3">
+          <div class="d-flex align-items-center">
+            <span class="stamp stamp-md bg-orange mr-3">
+              <i class="fe fe-settings"></i>
+            </span>
+            <div>
+              <h4 class="m-0"><a href="<?php echo cn($module . '/smtp'); ?>" class="text-inherit">SMTP Config</a></h4>
+              <small class="text-muted">SMTP settings</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Reports Card -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="card p-3">
+          <div class="d-flex align-items-center">
+            <span class="stamp stamp-md bg-purple mr-3">
+              <i class="fe fe-bar-chart-2"></i>
+            </span>
+            <div>
+              <h4 class="m-0"><a href="<?php echo cn($module . '/reports'); ?>" class="text-inherit">Reports</a></h4>
+              <small class="text-muted">Analytics & Reports</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fe fe-info"></i> Getting Started</h3>
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
       <div class="card-body">
         <div class="row">

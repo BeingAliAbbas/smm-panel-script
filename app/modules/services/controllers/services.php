@@ -46,6 +46,7 @@ class services extends MX_Controller {
 			redirect(cn());
 		}
 
+<<<<<<< HEAD
 		// Get filter parameters from URL
 		$filters = array(
 			'search'    => $this->input->get('search'),
@@ -78,6 +79,15 @@ class services extends MX_Controller {
 			"providers_list"  => $providers_list,
 			"stats"           => $stats,
 			"custom_rates"    => $this->model->get_custom_rates(),
+=======
+		$all_services = $this->model->get_services_list();
+		$data = array(
+			"module"       => get_class($this),
+			"columns"      => $this->columns,
+			"all_services" => $all_services,
+			"categories"   => $all_services,
+			"custom_rates" => $this->model->get_custom_rates(),
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		);
 		
 		if (!session('uid')) {
@@ -410,6 +420,7 @@ class services extends MX_Controller {
 		);
 		$this->load->view('ajax/get_services_from_api', $data);
 	}
+<<<<<<< HEAD
 
 	/**
 	 * AJAX endpoint for paginated services with filtering
@@ -821,4 +832,6 @@ class services extends MX_Controller {
 		);
 		$this->load->view('ajax/duplicates_content', $data);
 	}
+=======
+>>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 }
