@@ -852,6 +852,102 @@ class Whatsapp_marketing extends MX_Controller {
         }
     }
     
+    public function ajax_import_all_users(){
+        _is_ajax($this->module);
+        
+        // Increase PHP timeout for this operation (importing all users may take longer)
+        @set_time_limit(300);
+        @ini_set('max_execution_time', 300);
+        @ini_set('memory_limit', '256M');
+        
+        $campaign_ids = post("campaign_ids");
+        $campaign = $this->model->get_campaign($campaign_ids);
+        
+        if(!$campaign){
+            ms(array(
+                "status" => "error",
+                "message" => "Campaign not found"
+            ));
+        }
+        
+        try {
+            // Import ALL users from general_users table (no order filtering)
+            $imported = $this->model->import_all_users($campaign->id, [], 0);
+            
+            // Update campaign stats
+            $this->model->update_campaign_stats($campaign->id);
+            
+            if ($imported > 0) {
+                ms(array(
+                    "status" => "success",
+                    "message" => "Successfully imported {$imported} users from database"
+                ));
+            } else {
+                ms(array(
+                    "status" => "error",
+                    "message" => "No users found or all users already imported"
+                ));
+            }
+        } catch (Exception $e) {
+            log_message('error', 'WhatsApp Marketing Import All Users Error: ' . $e->getMessage());
+            ms(array(
+                "status" => "error",
+                "message" => "Error importing users: " . $e->getMessage()
+            ));
+        }
+    }
+    
+    public function ajax_add_manual_phone(){
+        _is_ajax($this->module);
+        
+        $campaign_ids = post("campaign_ids");
+        $phone = post("phone");
+        $name = post("name");
+        
+        $campaign = $this->model->get_campaign($campaign_ids);
+        
+        if(!$campaign){
+            ms(array(
+                "status" => "error",
+                "message" => "Campaign not found"
+            ));
+        }
+        
+        // Validate phone
+        if(empty($phone)){
+            ms(array(
+                "status" => "error",
+                "message" => "Please enter a valid phone number"
+            ));
+        }
+        
+        // Clean phone number (remove spaces and special characters except +)
+        $phone = preg_replace('/[^0-9+]/', '', $phone);
+        
+        // Add recipient with priority=1 (manual phones get highest priority)
+        $custom_data = [
+            'username' => !empty($name) ? $name : 'User',
+            'phone' => $phone,
+            'source' => 'manual'
+        ];
+        
+        // Priority 1 = highest priority (manual), 100 = default (imported)
+        if($this->model->add_recipient($campaign->id, $phone, $name, null, $custom_data, 1)){
+            // Update campaign stats
+            $this->model->update_campaign_stats($campaign->id);
+            
+            ms(array(
+                "status" => "success",
+                "message" => "Phone number added successfully (Priority: Manual/High)"
+            ));
+        } else {
+            ms(array(
+                "status" => "error",
+                "message" => "Phone number already exists in this campaign"
+            ));
+        }
+    }
+    
     // ========================================
     // TRACKING
     // ========================================

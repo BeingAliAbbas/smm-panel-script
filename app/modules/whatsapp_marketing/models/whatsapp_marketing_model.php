@@ -375,7 +375,16 @@ class Whatsapp_marketing_model extends MY_Model {
         return ($limit == -1) ? 0 : [];
     }
     
-    public function add_recipient($campaign_id, $phone_number, $name = null, $user_id = null, $custom_data = null) {
+    public function add_recipient($campaign_id, $phone_number, $name = null, $user_id = null, $custom_data = null, $priority = 100) {
+        // Check if recipient already exists
+        $this->db->where('campaign_id', $campaign_id);
+        $this->db->where('phone_number', $phone_number);
+        $exists = $this->db->count_all_results($this->tb_recipients);
+        
+        if ($exists > 0) {
+            return false; // Already exists
+        }
+        
         $data = [
             'ids' => ids(),
             'campaign_id' => $campaign_id,
@@ -383,6 +392,7 @@ class Whatsapp_marketing_model extends MY_Model {
             'name' => $name,
             'user_id' => $user_id,
             'custom_data' => $custom_data ? json_encode($custom_data) : null,
+            'priority' => $priority,
             'status' => 'pending',
             'created_at' => NOW,
             'updated_at' => NOW
@@ -455,6 +465,66 @@ class Whatsapp_marketing_model extends MY_Model {
             return $imported;
         } catch (Exception $e) {
             log_message('error', 'WhatsApp Marketing: Error in import_from_users - ' . $e->getMessage());
+            return 0;
+        }
+    }
+    
+    public function import_all_users($campaign_id, $filters = [], $limit = 0) {
+        try {
+            // Import all users from general_users table without phone number filtering
+            $this->db->select('u.id, u.email, u.first_name as name, u.balance, u.whatsapp_number');
+            $this->db->from(USERS . ' u');
+            $this->db->where('u.status', 1);
+            
+            // Apply filters if provided
+            if (!empty($filters['role'])) {
+                $this->db->where('u.role', $filters['role']);
+            }
+            
+            // Apply limit if specified (0 = no limit)
+            if ($limit > 0) {
+                $this->db->limit($limit);
+            }
+            
+            $query = $this->db->get();
+            
+            // Check for database errors
+            if (!$query) {
+                log_message('error', 'WhatsApp Marketing: Failed to query all users - ' . $this->db->error()['message']);
+                return 0;
+            }
+            
+            $users = $query->result();
+            
+            $imported = 0;
+            foreach ($users as $user) {
+                // Try to use whatsapp_number first, then phone, then skip
+                $phone = '';
+                if (!empty($user->whatsapp_number)) {
+                    $phone = preg_replace('/[^0-9+]/', '', $user->whatsapp_number);
+                }
+                
+                // Skip if no valid phone number
+                if (empty($phone) || strlen(preg_replace('/[^0-9]/', '', $phone)) < 10) {
+                    continue;
+                }
+                
+                $custom_data = [
+                    'username' => !empty($user->name) ? $user->name : 'User',
+                    'email' => !empty($user->email) ? $user->email : '',
+                    'balance' => !empty($user->balance) ? $user->balance : 0,
+                    'total_orders' => 0 // Not checking orders for this import type
+                ];
+                
+                // add_recipient now handles duplicate checking
+                if ($this->add_recipient($campaign_id, $phone, $user->name, $user->id, $custom_data)) {
+                    $imported++;
+                }
+            }
+            
+            return $imported;
+        } catch (Exception $e) {
+            log_message('error', 'WhatsApp Marketing: Error in import_all_users - ' . $e->getMessage());
             return 0;
         }
     }
