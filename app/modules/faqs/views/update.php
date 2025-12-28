@@ -13,13 +13,8 @@
       <div class="card-header">
         <h3 class="card-title"> <span><i class="fe fe-edit"></i></span> Add/Edit FAQ</h3>
         <div class="card-options">
-<<<<<<< HEAD
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
-=======
-          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-          <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="card-body">
@@ -59,11 +54,7 @@
               </div>
 
               <div class="col-md-12 col-sm-12 col-xs-12">
-<<<<<<< HEAD
                 <button type="submit" class="btn btn-primary btn-min-width me-1 mb-1"><?php echo lang('Save'); ?></button>
-=======
-                <button type="submit" class="btn btn-primary btn-min-width mr-1 mb-1"><?php echo lang('Save'); ?></button>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
               </div>
             </div>
           </div>

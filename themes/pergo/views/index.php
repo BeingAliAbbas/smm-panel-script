@@ -163,19 +163,11 @@
                   <?=lang('client_one_comment')?>
                 </p>
                 <div class="star-icon">
-<<<<<<< HEAD
                   <span><i class="fas fa-star"></i></span>
                   <span><i class="fas fa-star"></i></span>
                   <span><i class="fas fa-star"></i></span>
                   <span><i class="fas fa-star"></i></span>
                   <span><i class="fas fa-star"></i></span>
-=======
-                  <span><i class="fa fa-star"></i></span>
-                  <span><i class="fa fa-star"></i></span>
-                  <span><i class="fa fa-star"></i></span>
-                  <span><i class="fa fa-star"></i></span>
-                  <span><i class="fa fa-star"></i></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 </div>
               </div>
             </div>
@@ -192,19 +184,11 @@
                   <?=lang('client_two_comment')?>
                 </p>
                 <div class="star-icon">
-<<<<<<< HEAD
                   <span><i class="fas fa-star"></i></span>
                   <span><i class="fas fa-star"></i></span>
                   <span><i class="fas fa-star"></i></span>
                   <span><i class="fas fa-star"></i></span>
                   <span><i class="fas fa-star"></i></span>
-=======
-                  <span><i class="fa fa-star"></i></span>
-                  <span><i class="fa fa-star"></i></span>
-                  <span><i class="fa fa-star"></i></span>
-                  <span><i class="fa fa-star"></i></span>
-                  <span><i class="fa fa-star"></i></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 </div>
               </div>
             </div>
@@ -221,19 +205,11 @@
                   
                 </p>
                 <div class="star-icon">
-<<<<<<< HEAD
                   <span><i class="fas fa-star"></i></span>
                   <span><i class="fas fa-star"></i></span>
                   <span><i class="fas fa-star"></i></span>
                   <span><i class="fas fa-star"></i></span>
                   <span><i class="fas fa-star"></i></span>
-=======
-                  <span><i class="fa fa-star"></i></span>
-                  <span><i class="fa fa-star"></i></span>
-                  <span><i class="fa fa-star"></i></span>
-                  <span><i class="fa fa-star"></i></span>
-                  <span><i class="fa fa-star"></i></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 </div>
               </div>
             </div>
@@ -254,11 +230,7 @@
               </div>
               <div class="input-group">
                 <input type="email" name="email" class="form-control email" placeholder="Enter Your email" required>
-<<<<<<< HEAD
                 <button class="btn btn-pill btn-gradient btn-signin btn-submit" type="submit">
-=======
-                <button class="input-group-append btn btn-pill btn-gradient btn-signin btn-submit" type="submit">
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   <?php echo lang("subscribe_now"); ?>
                 </button>
               </div>
@@ -278,11 +250,7 @@
 
             <div class="modal-header">
               <h4 class="modal-title"><i class="fe fe-bell"></i> <?=lang("Notification")?></h4>
-<<<<<<< HEAD
               <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-=======
-              <button type="button" class="close" data-dismiss="modal"></button>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </div>
 
             <div class="modal-body">
@@ -290,11 +258,7 @@
             </div>
 
             <div class="modal-footer">
-<<<<<<< HEAD
               <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><?=lang("Close")?></button>
-=======
-              <button type="button" class="btn btn-danger" data-dismiss="modal"><?=lang("Close")?></button>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </div>
           </div>
         </div>

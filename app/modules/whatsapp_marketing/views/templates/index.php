@@ -2,15 +2,9 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header">
-<<<<<<< HEAD
             <h3><i class="fas fa-file-text"></i> WhatsApp Message Templates</h3>
             <a href="<?php echo cn($module . '/template_create'); ?>" class="btn btn-primary float-end ajaxModal">
                 <i class="fas fa-plus"></i> Create Template
-=======
-            <h3><i class="fa fa-file-text"></i> WhatsApp Message Templates</h3>
-            <a href="<?php echo cn($module . '/template_create'); ?>" class="btn btn-primary float-right ajaxModal">
-                <i class="fa fa-plus"></i> Create Template
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </a>
         </div>
         <div class="card-body">

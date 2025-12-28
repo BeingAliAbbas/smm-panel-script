@@ -33,10 +33,7 @@ class api_provider extends MX_Controller {
 		parent::__construct();
 		$this->load->model(get_class($this).'_model', 'model');
 		$this->model->get_class();
-<<<<<<< HEAD
 		$this->load->library('cron_logger');
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
 		$this->tb_users         = USERS;
 		$this->tb_categories    = CATEGORIES;
@@ -729,11 +726,7 @@ class api_provider extends MX_Controller {
 
 	private function error_alert(){
 		return '<div class="alert alert-icon alert-danger" role="alert">
-<<<<<<< HEAD
 		          <i class="fe fe-alert-triangle me-2"></i> '.lang("there_seems_to_be_an_issue_connecting_to_api_provider_please_check_api_key_and_token_again").'
-=======
-		          <i class="fe fe-alert-triangle mr-2"></i> '.lang("there_seems_to_be_an_issue_connecting_to_api_provider_please_check_api_key_and_token_again").'
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		        </div>';
 	}
 
@@ -812,7 +805,6 @@ class api_provider extends MX_Controller {
 	| NOTE: sync_services here now maps is_enable_sync_price => enable_sync_options
 	--------------------------------------------------------------*/
 	public function cron($type = ""){
-<<<<<<< HEAD
 		// Start logging
 		$log_id = $this->cron_logger->start('cron/' . $type);
 		
@@ -832,29 +824,10 @@ class api_provider extends MX_Controller {
 
 			case 'sync_services':
 				$this->cron_sync_services($log_id);
-=======
-		switch ($type) {
-
-			case 'order':
-				$this->cron_place_orders();
-				break;
-
-			case 'status_subscriptions':
-				$this->cron_status_subscriptions();
-				break;
-
-			case 'status':
-				$this->cron_status_orders();
-				break;
-
-			case 'sync_services':
-				$this->cron_sync_services();
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 				break;
 		}
 	}
 
-<<<<<<< HEAD
 	private function cron_place_orders($log_id = null){
 		$orders = $this->model->get_all_orders();
 		if (empty($orders)) {
@@ -872,27 +845,15 @@ class api_provider extends MX_Controller {
 		// Load WhatsApp notification library for error notifications
 		$this->load->library('whatsapp_notification');
 
-=======
-	private function cron_place_orders(){
-		$orders = $this->model->get_all_orders();
-		if (empty($orders)) {
-			echo "There is no order at the present.<br>Successfully";
-			return;
-		}
-
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		foreach ($orders as $row) {
 			$api = $this->model->get("url, key", $this->tb_api_providers, ["id" => $row->api_provider_id]);
 			if (empty($api)) {
 				echo "API Provider does not exists.<br>";
-<<<<<<< HEAD
 				// Queue error notification to admin
 				if ($this->whatsapp_notification->queue_order_error_notification($row, 'API Provider does not exist')) {
 					$error_notifications_queued++;
 				}
 				$errors++;
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 				continue;
 			}
 			$data_post = [
@@ -966,7 +927,6 @@ class api_provider extends MX_Controller {
 			$response = json_decode($this->connect_api($api->url, $data_post));
 			if (!$response) {
 				echo "OrderID - ". $row->id."<br>";
-<<<<<<< HEAD
 				$error_message = 'Troubleshooting API requests';
 				$this->db->update($this->tb_orders, [
 					"status"  => 'error',
@@ -978,13 +938,6 @@ class api_provider extends MX_Controller {
 					$error_notifications_queued++;
 				}
 				$errors++;
-=======
-				$this->db->update($this->tb_orders, [
-					"status"  => 'error',
-					"note"    => 'Troubleshooting API requests',
-					"changed" => NOW,
-				], ["id" => $row->id]);
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 				continue;
 			}
 
@@ -995,20 +948,16 @@ class api_provider extends MX_Controller {
 					"note"    => $response->error,
 					"changed" => NOW,
 				], ["id" => $row->id]);
-<<<<<<< HEAD
 				// Queue error notification to admin
 				if ($this->whatsapp_notification->queue_order_error_notification($row, $response->error)) {
 					$error_notifications_queued++;
 				}
 				$errors++;
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 				continue;
 			}
 
 			if (!empty($response->order)) {
 				$this->db->update($this->tb_orders, ["api_order_id" => $response->order, "changed" => NOW], ["id" => $row->id]);
-<<<<<<< HEAD
 				$processed++;
 			}
 		}
@@ -1023,21 +972,12 @@ class api_provider extends MX_Controller {
 	}
 
 	private function cron_status_subscriptions($log_id = null){
-=======
-			}
-		}
-		echo "Successfully";
-	}
-
-	private function cron_status_subscriptions(){
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		$orders = $this->model->get_all_subscriptions_status();
 		$new_currency_rate = get_option('new_currecry_rate', 1);
 		if ($new_currency_rate == 0) $new_currency_rate = 1;
 
 		if (empty($orders)) {
 			echo "There is no order at the present.<br>Successfully";
-<<<<<<< HEAD
 			if ($log_id) {
 				$this->cron_logger->end($log_id, 'Success', 200, 'No subscriptions to check');
 			}
@@ -1050,11 +990,6 @@ class api_provider extends MX_Controller {
 		// Load WhatsApp notification library for status change notifications
 		$this->load->library('whatsapp_notification');
 
-=======
-			return;
-		}
-
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		foreach ($orders as $row) {
 			$api = $this->model->get("id, url, key", $this->tb_api_providers, ["id" => $row->api_provider_id] );
 			if (empty($api)) {
@@ -1074,10 +1009,7 @@ class api_provider extends MX_Controller {
 
 			if (!empty($response->status)) {
 				$rand_time = get_random_time();
-<<<<<<< HEAD
 				$old_status = $row->status; // Store old status for notification
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 				$data = [
 					"sub_status"         => $response->status,
 					"sub_response_orders"=> json_encode($response->orders),
@@ -1087,7 +1019,6 @@ class api_provider extends MX_Controller {
 				];
 
 				if (in_array($response->status, ["Completed","Canceled"])) {
-<<<<<<< HEAD
 					$new_status = ($response->status == "Completed") ? "completed" : "canceled";
 					$data["status"] = $new_status;
 					
@@ -1095,9 +1026,6 @@ class api_provider extends MX_Controller {
 					if ($new_status == 'completed' && $row->status != 'completed') {
 						$data['completed_at'] = NOW;
 					}
-=======
-					$data["status"] = ($response->status == "Completed") ? "completed" : "canceled";
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 				}
 
 				// New subscription child orders
@@ -1113,7 +1041,6 @@ class api_provider extends MX_Controller {
 					}
 				}
 				$this->db->update($this->tb_orders, $data, ["id" => $row->id]);
-<<<<<<< HEAD
 				$processed++;
 
 				// Send WhatsApp notification if status changed to a notifiable status
@@ -1145,40 +1072,25 @@ class api_provider extends MX_Controller {
 
 	private function cron_status_orders($log_id = null){
     $limit = 100;
-=======
-			}
-		}
-		echo "Successfully";
-	}
-
-	private function cron_status_orders(){
-    $limit = 50;
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     $orders = $this->model->get_all_orders_status($limit, 0);
 
     if (empty($orders)) {
         echo "There is no order at the present.<br>Successfully";
-<<<<<<< HEAD
         if ($log_id) {
             $this->cron_logger->end($log_id, 'Success', 200, 'No orders to check');
         }
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         return;
     }
 
     $new_currency_rate = get_option('new_currecry_rate', 1);
     if ($new_currency_rate == 0) $new_currency_rate = 1;
 
-<<<<<<< HEAD
     $processed = 0;
     $notifications_sent = 0;
 
     // Load WhatsApp notification library for status change notifications
     $this->load->library('whatsapp_notification');
 
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     foreach ($orders as $row) {
         echo "Checking Order ID: {$row->id}<br>"; // ✅ log every checked order
 
@@ -1208,10 +1120,7 @@ class api_provider extends MX_Controller {
 
             $data = [];
             $rand_time = get_random_time();
-<<<<<<< HEAD
             $old_status = $row->status; // Store old status for notification
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
             if ($row->is_drip_feed) {
                 $status_dripfeed = (strrpos($response->status, 'progress') || strrpos(strtolower($response->status), 'active')) ? 'inprogress'
@@ -1223,14 +1132,11 @@ class api_provider extends MX_Controller {
                     "changed" => date('Y-m-d H:i:s', strtotime(NOW) + $rand_time),
                     "status"  => $status_dripfeed,
                 ];
-<<<<<<< HEAD
                 
                 // Set completed_at timestamp when status changes to completed
                 if ($status_dripfeed == 'completed' && $row->status != 'completed') {
                     $data['completed_at'] = NOW;
                 }
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
                 if (isset($response->runs)) {
                     $data['sub_response_orders'] = json_encode($response);
@@ -1264,16 +1170,12 @@ class api_provider extends MX_Controller {
                 if ($remains < 0) {
                     $remains = "+".abs($remains);
                 }
-<<<<<<< HEAD
                 $new_status = ($response->status == "In progress") ? "inprogress" : strtolower($response->status);
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 $data = [
                     "start_counter" => $response->start_count,
                     "remains"       => $remains,
                     "note"          => "",
                     "changed"       => date('Y-m-d H:i:s', strtotime(NOW) + $rand_time),
-<<<<<<< HEAD
                     "status"        => $new_status,
                 ];
                 
@@ -1287,13 +1189,6 @@ class api_provider extends MX_Controller {
                 $return_funds = 0;
                 $new_balance = 0;
                 
-=======
-                    "status"        => ($response->status == "In progress") ? "inprogress" : strtolower($response->status),
-                ];
-            }
-
-            if (!empty($data)) {
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 // Refund / Partial / Canceled compensation
                 if ($row->sub_response_posts != 1 && in_array($response->status, ["Refunded","Canceled","Partial"])) {
                     $data['charge'] = 0;
@@ -1320,15 +1215,11 @@ class api_provider extends MX_Controller {
                     $user = $this->model->get("id, balance", $this->tb_users, ["id"=> $row->uid]);
                     if (!empty($user)) {
                         $balance = $user->balance + $return_funds;
-<<<<<<< HEAD
                         $new_balance = $balance;
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                         $this->db->update($this->tb_users, ["balance" => $balance], ["id"=> $row->uid]);
                     }
                 }
                 $this->db->update($this->tb_orders, $data, ["id" => $row->id]);
-<<<<<<< HEAD
                 $processed++;
 
                 // Send WhatsApp notification if status changed to a notifiable status
@@ -1354,14 +1245,11 @@ class api_provider extends MX_Controller {
                         echo $row->id." → WhatsApp notification disabled for status: ".$final_new_status."<br>";
                     }
                 }
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             }
         }
     }
 
     echo "Successfully";
-<<<<<<< HEAD
     
     // Log the result
     if ($log_id) {
@@ -1372,12 +1260,6 @@ class api_provider extends MX_Controller {
 
 
 	private function cron_sync_services($log_id = null){
-=======
-}
-
-
-	private function cron_sync_services(){
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		ini_set('max_execution_time', 300000);
 
 		$defaut_auto_sync = get_option("defaut_auto_sync_service_setting", '{"price_percentage_increase":50,"sync_request":0,"new_currency_rate":"1","is_enable_sync_price":0,"is_convert_to_new_currency":0}');
@@ -1406,11 +1288,8 @@ class api_provider extends MX_Controller {
     2
 );
 
-<<<<<<< HEAD
 		$synced_apis = 0;
 
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
 		foreach ($apis as $api) {
 			$data_post = ['key'=>$api->key,'action'=>'services'];
@@ -1441,7 +1320,6 @@ class api_provider extends MX_Controller {
 			];
 
 			$this->sync_services_by_api($data_item);
-<<<<<<< HEAD
 			$synced_apis++;
 		}
 		echo "Successfully";
@@ -1450,10 +1328,6 @@ class api_provider extends MX_Controller {
 		if ($log_id) {
 			$this->cron_logger->end($log_id, 'Success', 200, "Synced {$synced_apis} API providers");
 		}
-=======
-		}
-		echo "Successfully";
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 	}
 
 	/*--------------------------------------------------------------
@@ -1697,14 +1571,11 @@ public function update_order_status($order_id = ""){
                 "changed" => NOW,
                 "status" => $status_dripfeed,
             ];
-<<<<<<< HEAD
             
             // Set completed_at timestamp when status changes to completed
             if ($status_dripfeed == 'completed' && $old_status != 'completed') {
                 $data['completed_at'] = NOW;
             }
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
             if (isset($response->runs)) {
                 $data['sub_response_orders'] = json_encode($response);
@@ -1738,16 +1609,12 @@ public function update_order_status($order_id = ""){
                 $remains = "+" . abs($remains);
             }
 
-<<<<<<< HEAD
             $new_status = ($response->status == "In progress") ? "inprogress" : strtolower($response->status);
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             $data = [
                 "start_counter" => isset($response->start_count) ? $response->start_count : null,
                 "remains" => $remains,
                 "note" => "",
                 "changed" => NOW,
-<<<<<<< HEAD
                 "status" => $new_status,
             ];
             
@@ -1755,10 +1622,6 @@ public function update_order_status($order_id = ""){
             if ($new_status == 'completed' && $old_status != 'completed') {
                 $data['completed_at'] = NOW;
             }
-=======
-                "status" => ($response->status == "In progress") ? "inprogress" : strtolower($response->status),
-            ];
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         }
 
         if (!empty($data)) {
@@ -1929,14 +1792,11 @@ public function update_latest_orders($limit = 200){
                     "changed" => NOW,
                     "status" => $status_dripfeed,
                 ];
-<<<<<<< HEAD
                 
                 // Set completed_at timestamp when status changes to completed
                 if ($status_dripfeed == 'completed' && $old_status != 'completed') {
                     $data['completed_at'] = NOW;
                 }
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
                 if (isset($response->runs)) {
                     $data['sub_response_orders'] = json_encode($response);
@@ -1970,16 +1830,12 @@ public function update_latest_orders($limit = 200){
                     $remains = "+" . abs($remains);
                 }
 
-<<<<<<< HEAD
                 $new_status = ($response->status == "In progress") ? "inprogress" : strtolower($response->status);
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 $data = [
                     "start_counter" => isset($response->start_count) ? $response->start_count : null,
                     "remains" => $remains,
                     "note" => "",
                     "changed" => NOW,
-<<<<<<< HEAD
                     "status" => $new_status,
                 ];
                 
@@ -1987,10 +1843,6 @@ public function update_latest_orders($limit = 200){
                 if ($new_status == 'completed' && $old_status != 'completed') {
                     $data['completed_at'] = NOW;
                 }
-=======
-                    "status" => ($response->status == "In progress") ? "inprogress" : strtolower($response->status),
-                ];
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             }
 
             if (!empty($data)) {
@@ -2052,8 +1904,4 @@ public function update_latest_orders($limit = 200){
         "results" => $results
     ]);
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 }

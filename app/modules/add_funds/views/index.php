@@ -176,7 +176,6 @@
     </div></div>
   <?php endif; ?>
 
-<<<<<<< HEAD
   <?php if (get_code_part_by_position('add_funds', 'top', '') != ''): ?>
     <div class="row"><div class="col-sm-12">
       <?= get_code_part_by_position('add_funds', 'top', '') ?>
@@ -185,24 +184,16 @@
 
 <!-- Red rounded YouTube button instead of accordion -->
 <br>
-=======
-<!-- Red rounded YouTube button instead of accordion -->
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
   <div class="row mb-3">
     <div class="col-sm-12 text-center">
       <a href="https://www.youtube.com/embed/wnCQolxg7OY?si=IHJBmRhhcZPAlbHr"
          target="_blank"
          class="youtube-btn">
-<<<<<<< HEAD
         <i class="fab fa-youtube-play me-2"></i> Watch Tutorial on YouTube
-=======
-        <i class="fa fa-youtube-play mr-2"></i> Watch Tutorial on YouTube
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </a>
     </div>
   </div>
 
-<<<<<<< HEAD
  <?php if (!empty($payments)): ?>
 <section class="add-funds m-t-30">
   <div class="row justify-content-md-center" id="result_ajaxSearch">
@@ -231,28 +222,6 @@
         </div>
 
      
-=======
-  <?php if (!empty($payments)): ?>
-    <section class="add-funds m-t-30">
-      <div class="row justify-content-md-center" id="result_ajaxSearch">
-        <div class="col-md-8">
-          <div class="card">
-            <div class="d-flex align-items-center justify-content-center">
-              <div class="tabs-list w-100 p-3">
-                <div class="form-group mb-0 w-100">
-                  <label for="paymentTypeDropdown" class="mb-2"><b>Please select a payment Method</b></label>
-                  <select id="paymentTypeDropdown" class="form-control">
-                    <option value="">Select Payment Type</option>
-                    <?php foreach ($payments as $row): ?>
-                      <option value="<?php echo htmlspecialchars($row->type); ?>">
-                        <?php echo htmlspecialchars($row->name); ?>
-                      </option>
-                    <?php endforeach; ?>
-                  </select>
-                </div>
-              </div>
-            </div>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
             <div class="card-body">
               <div class="tab-content">
@@ -274,11 +243,7 @@
     <div class="row justify-content-md-center">
       <div class="col-md-8 p-0">
         <div class="transaction-card">
-<<<<<<< HEAD
           <div class="transaction-card-header1 p-3" style="background: #003a75; border-radius: 8px 8px 0 0;">
-=======
-          <div class="transaction-card-header">
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             <h5 class="transaction-card-title text-white">Last 5 Transactions</h5>
           </div>
           <div class="transaction-card-body p-0">
@@ -326,25 +291,18 @@
     </div>
   </section>
 
-<<<<<<< HEAD
   <?php if (get_code_part_by_position('add_funds', 'bottom', '') != ''): ?>
     <div class="row"><div class="col-sm-12">
       <?= get_code_part_by_position('add_funds', 'bottom', '') ?>
     </div></div>
   <?php endif; ?>
 
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 </div><!-- /container-fluid -->
 
 <!-- jQuery (must be before Select2 and Bootstrap JS) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Bootstrap JS (for collapse/accordion) -->
-<<<<<<< HEAD
 <script src="<?php echo BASE; ?>assets/js/vendors/bootstrap.bundle.min.js"></script>
-=======
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 <!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 

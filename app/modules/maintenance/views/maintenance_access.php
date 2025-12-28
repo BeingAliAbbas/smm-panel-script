@@ -22,11 +22,7 @@
                 
           <div class="input-icon mb-5">
             <span class="input-icon-addon">
-<<<<<<< HEAD
               <i class="fas fa-key"></i>
-=======
-              <i class="fa fa-key"></i>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </span>
             <input type="password" class="form-control" name="password" placeholder="<?=lang("Password")?>"required>
           </div>  

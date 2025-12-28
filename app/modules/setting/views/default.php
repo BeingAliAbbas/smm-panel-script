@@ -1,12 +1,6 @@
-<<<<<<< HEAD
    <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-settings"></i> <?=lang("default_setting")?></h3>
-=======
-    <div class="card content">
-      <div class="card-header" style="border: 0.1px solid #05d0a0; border-radius: 3.5px 3.5px 0px 0px; background: #05d0a0 !important;">
-        <h3 class="card-title"><i class="fe fe-settings"></i> <?=lang("default_setting")?></h3>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
       <div class="card-body">
         <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
@@ -85,17 +79,10 @@
                 <div class="col-md-6">
                   <div class="custom-controls-stacked">
                     <label><?=lang("auto_clear_ticket_lists")?></label>
-<<<<<<< HEAD
                     <label class="form-check">
                       <input type="hidden" name="is_clear_ticket" value="0">
                       <input type="checkbox" class="form-check-input" name="is_clear_ticket" value="1" <?=(get_option('is_clear_ticket',"") == 1)? "checked" : ''?>>
                       <span class="form-check-label"><?=lang("Active")?></span>
-=======
-                    <label class="custom-control custom-checkbox">
-                      <input type="hidden" name="is_clear_ticket" value="0">
-                      <input type="checkbox" class="custom-control-input" name="is_clear_ticket" value="1" <?=(get_option('is_clear_ticket',"") == 1)? "checked" : ''?>>
-                      <span class="custom-control-label"><?=lang("Active")?></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                 </div>
@@ -142,17 +129,10 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="custom-controls-stacked">
-<<<<<<< HEAD
                     <label class="form-check">
                       <input type="hidden" name="enable_drip_feed" value="0">
                       <input type="checkbox" class="form-check-input" name="enable_drip_feed" value="1" <?=(get_option('enable_drip_feed',"") == 1)? "checked" : ''?>>
                       <span class="form-check-label"><?=lang("Active")?></span>
-=======
-                    <label class="custom-control custom-checkbox">
-                      <input type="hidden" name="enable_drip_feed" value="0">
-                      <input type="checkbox" class="custom-control-input" name="enable_drip_feed" value="1" <?=(get_option('enable_drip_feed',"") == 1)? "checked" : ''?>>
-                      <span class="custom-control-label"><?=lang("Active")?></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                   <small class="text-danger"><?=lang("note_please_make_sure_the_dripfeed_feature_has_the_active_status_in_api_provider_before_you_activate")?></small>
@@ -184,17 +164,10 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="custom-controls-stacked">
-<<<<<<< HEAD
                     <label class="form-check">
                       <input type="hidden" name="enable_notification_popup" value="0">
                       <input type="checkbox" class="form-check-input" name="enable_notification_popup" value="1" <?=(get_option('enable_notification_popup', 0) == 1)? "checked" : ''?>>
                       <span class="form-check-label"><?=lang("Active")?></span>
-=======
-                    <label class="custom-control custom-checkbox">
-                      <input type="hidden" name="enable_notification_popup" value="0">
-                      <input type="checkbox" class="custom-control-input" name="enable_notification_popup" value="1" <?=(get_option('enable_notification_popup', 0) == 1)? "checked" : ''?>>
-                      <span class="custom-control-label"><?=lang("Active")?></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                 </div>
@@ -211,17 +184,10 @@
                 <div class="col-md-6">
                   <h5 class="m-t-10"><i class="fe fe-link"></i> <?=lang("disable_home_page_langding_page")?></h5>
                   <div class="custom-controls-stacked">
-<<<<<<< HEAD
                     <label class="form-check">
                       <input type="hidden" name="enable_disable_homepage" value="0">
                       <input type="checkbox" class="form-check-input" name="enable_disable_homepage" value="1" <?=(get_option('enable_disable_homepage',"") == 1)? "checked" : ''?>>
                       <span class="form-check-label"><?=lang("Active")?></span>
-=======
-                    <label class="custom-control custom-checkbox">
-                      <input type="hidden" name="enable_disable_homepage" value="0">
-                      <input type="checkbox" class="custom-control-input" name="enable_disable_homepage" value="1" <?=(get_option('enable_disable_homepage',"") == 1)? "checked" : ''?>>
-                      <span class="custom-control-label"><?=lang("Active")?></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                 </div>
@@ -229,17 +195,10 @@
                 <div class="col-md-6">
                   <h5 class="m-t-10"><i class="fe fe-link"></i> <?php echo lang("disable_signup_page"); ?></h5>
                   <div class="custom-controls-stacked">
-<<<<<<< HEAD
                     <label class="form-check">
                       <input type="hidden" name="disable_signup_page" value="0">
                       <input type="checkbox" class="form-check-input" name="disable_signup_page" value="1" <?=(get_option('disable_signup_page',"") == 1)? "checked" : ''?>>
                       <span class="form-check-label"><?=lang("Active")?></span>
-=======
-                    <label class="custom-control custom-checkbox">
-                      <input type="hidden" name="disable_signup_page" value="0">
-                      <input type="checkbox" class="custom-control-input" name="disable_signup_page" value="1" <?=(get_option('disable_signup_page',"") == 1)? "checked" : ''?>>
-                      <span class="custom-control-label"><?=lang("Active")?></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                 </div>
@@ -247,17 +206,10 @@
                 <div class="col-md-6">
                   <h5 class="m-t-10"><i class="fe fe-link"></i> <?=lang("explication_of_the_service_symbol")?></h5>
                   <div class="custom-controls-stacked">
-<<<<<<< HEAD
                     <label class="form-check">
                       <input type="hidden" name="enable_explication_service_symbol" value="0">
                       <input type="checkbox" class="form-check-input" name="enable_explication_service_symbol" value="1" <?=(get_option('enable_explication_service_symbol',"") == 1)? "checked" : ''?>>
                       <span class="form-check-label"><?=lang("Active")?></span>
-=======
-                    <label class="custom-control custom-checkbox">
-                      <input type="hidden" name="enable_explication_service_symbol" value="0">
-                      <input type="checkbox" class="custom-control-input" name="enable_explication_service_symbol" value="1" <?=(get_option('enable_explication_service_symbol',"") == 1)? "checked" : ''?>>
-                      <span class="custom-control-label"><?=lang("Active")?></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                 </div>
@@ -265,17 +217,10 @@
                 <div class="col-md-6">
                   <h5 class="m-t-10"><i class="fe fe-link"></i> <?=lang("displays_the_service_lists_without_login_or_register")?></h5>
                   <div class="custom-controls-stacked">
-<<<<<<< HEAD
                     <label class="form-check">
                       <input type="hidden" name="enable_service_list_no_login" value="0">
                       <input type="checkbox" class="form-check-input" name="enable_service_list_no_login" value="1" <?=(get_option('enable_service_list_no_login',"") == 1)? "checked" : ''?>>
                       <span class="form-check-label"><?=lang("Active")?></span>
-=======
-                    <label class="custom-control custom-checkbox">
-                      <input type="hidden" name="enable_service_list_no_login" value="0">
-                      <input type="checkbox" class="custom-control-input" name="enable_service_list_no_login" value="1" <?=(get_option('enable_service_list_no_login',"") == 1)? "checked" : ''?>>
-                      <span class="custom-control-label"><?=lang("Active")?></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                 </div>
@@ -283,17 +228,10 @@
                 <div class="col-md-6">
                   <h5 class="m-t-10"><i class="fe fe-link"></i> <?=lang("displays_news__announcement_feature")?></h5>
                   <div class="custom-controls-stacked">
-<<<<<<< HEAD
                     <label class="form-check">
                       <input type="hidden" name="enable_news_announcement" value="0">
                       <input type="checkbox" class="form-check-input" name="enable_news_announcement" value="1" <?=(get_option('enable_news_announcement',"") == 1)? "checked" : ''?>>
                       <span class="form-check-label"><?=lang("Active")?></span>
-=======
-                    <label class="custom-control custom-checkbox">
-                      <input type="hidden" name="enable_news_announcement" value="0">
-                      <input type="checkbox" class="custom-control-input" name="enable_news_announcement" value="1" <?=(get_option('enable_news_announcement',"") == 1)? "checked" : ''?>>
-                      <span class="custom-control-label"><?=lang("Active")?></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                 </div>
@@ -301,17 +239,10 @@
                 <div class="col-md-6">
                   <h5 class="m-t-10"><i class="fe fe-link"></i> <?=lang("displays_api_tab_in_header")?></h5>
                   <div class="custom-controls-stacked">
-<<<<<<< HEAD
                     <label class="form-check">
                       <input type="hidden" name="enable_api_tab" value="0">
                       <input type="checkbox" class="form-check-input" name="enable_api_tab" value="1" <?=(get_option('enable_api_tab',"") == 1)? "checked" : ''?>>
                       <span class="form-check-label"><?=lang("Active")?></span>
-=======
-                    <label class="custom-control custom-checkbox">
-                      <input type="hidden" name="enable_api_tab" value="0">
-                      <input type="checkbox" class="custom-control-input" name="enable_api_tab" value="1" <?=(get_option('enable_api_tab',"") == 1)? "checked" : ''?>>
-                      <span class="custom-control-label"><?=lang("Active")?></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                 </div>
@@ -319,17 +250,10 @@
                 <div class="col-md-6">
                   <h5 class="m-t-10"><i class="fe fe-link"></i> <?=lang("displays_required_skypeid_field_in_signup_page")?></h5>
                   <div class="custom-controls-stacked">
-<<<<<<< HEAD
                     <label class="form-check">
                       <input type="hidden" name="enable_signup_skype_field" value="0">
                       <input type="checkbox" class="form-check-input" name="enable_signup_skype_field" value="1" <?=(get_option('enable_signup_skype_field',"") == 1)? "checked" : ''?>>
                       <span class="form-check-label"><?=lang("Active")?></span>
-=======
-                    <label class="custom-control custom-checkbox">
-                      <input type="hidden" name="enable_signup_skype_field" value="0">
-                      <input type="checkbox" class="custom-control-input" name="enable_signup_skype_field" value="1" <?=(get_option('enable_signup_skype_field',"") == 1)? "checked" : ''?>>
-                      <span class="custom-control-label"><?=lang("Active")?></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                 </div>
@@ -340,17 +264,10 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="custom-controls-stacked">
-<<<<<<< HEAD
                     <label class="form-check">
                       <input type="hidden" name="enable_goolge_recapcha" value="0">
                       <input type="checkbox" class="form-check-input" name="enable_goolge_recapcha" value="1" <?=(get_option('enable_goolge_recapcha',"") == 1)? "checked" : ''?>>
                       <span class="form-check-label"><?=lang("Active")?></span>
-=======
-                    <label class="custom-control custom-checkbox">
-                      <input type="hidden" name="enable_goolge_recapcha" value="0">
-                      <input type="checkbox" class="custom-control-input" name="enable_goolge_recapcha" value="1" <?=(get_option('enable_goolge_recapcha',"") == 1)? "checked" : ''?>>
-                      <span class="custom-control-label"><?=lang("Active")?></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                 </div>
@@ -375,17 +292,10 @@
             <div class="col-md-6">
     <h5 class="m-t-10"><i class="fe fe-image"></i> Vertical Image Modal</h5>
     <div class="custom-controls-stacked mb-2">
-<<<<<<< HEAD
         <label class="form-check">
             <input type="hidden" name="show_vertical_image_modal" value="0">
             <input type="checkbox" class="form-check-input" name="show_vertical_image_modal" value="1" <?= (get_option('show_vertical_image_modal', 0) == 1) ? "checked" : "" ?>>
             <span class="form-check-label">Enable Modal</span>
-=======
-        <label class="custom-control custom-checkbox">
-            <input type="hidden" name="show_vertical_image_modal" value="0">
-            <input type="checkbox" class="custom-control-input" name="show_vertical_image_modal" value="1" <?= (get_option('show_vertical_image_modal', 0) == 1) ? "checked" : "" ?>>
-            <span class="custom-control-label">Enable Modal</span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </label>
     </div>
     <div class="form-group">

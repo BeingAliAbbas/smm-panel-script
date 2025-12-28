@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 <!-- Include responsive CSS -->
 <link rel="stylesheet" href="<?php echo BASE; ?>assets/css/email_marketing-responsive.css">
 
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 <div class="row justify-content-md-center">
   <div class="col-md-12">
     <div class="page-header">
@@ -19,21 +16,12 @@
   </div>
 </div>
 
-<<<<<<< HEAD
 <!-- Import Options Row 1: Database Imports -->
 <div class="row">
   <div class="col-md-6">
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-database"></i> Import Active Users (With Orders)</h3>
-=======
-<!-- Import Options -->
-<div class="row">
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title"><i class="fe fe-database"></i> Import from User Database</h3>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
       <div class="card-body">
         <p>Import active users who have placed at least 1 order</p>
@@ -43,11 +31,7 @@
         <form id="importUsersForm" action="<?php echo cn($module . '/ajax_import_from_users'); ?>" method="POST">
           <input type="hidden" name="campaign_ids" value="<?php echo $campaign->ids; ?>">
           <button type="submit" class="btn btn-primary">
-<<<<<<< HEAD
             <i class="fe fe-download"></i> Import Active Users
-=======
-            <i class="fe fe-download"></i> Import Users
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </button>
         </form>
       </div>
@@ -55,7 +39,6 @@
   </div>
   
   <div class="col-md-6">
-<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-users"></i> Import All Users (From Database)</h3>
@@ -82,11 +65,6 @@
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-upload"></i> Import from CSV/TXT File</h3>
-=======
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title"><i class="fe fe-upload"></i> Import from CSV/TXT File</h3>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
       <div class="card-body">
         <p>Upload a CSV file with email addresses (format: email,name)</p>
@@ -102,7 +80,6 @@
       </div>
     </div>
   </div>
-<<<<<<< HEAD
   
   <div class="col-md-6">
     <div class="card p-0 content">
@@ -128,36 +105,23 @@
       </div>
     </div>
   </div>
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 </div>
 
 <!-- Recipients List -->
 <div class="row mt-3">
   <div class="col-md-12">
-<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;">Recipients List (Showing last 100)</h3>
         <div class="card-options">
           <span class="badge bg-primary">Total: <?php echo number_format($campaign->total_emails); ?></span>
-=======
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Recipients List (Showing last 100)</h3>
-        <div class="card-options">
-          <span class="badge badge-primary">Total: <?php echo number_format($campaign->total_emails); ?></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="table-responsive">
         <table class="table table-hover table-vcenter card-table table-sm">
           <thead>
             <tr>
-<<<<<<< HEAD
               <th>Priority</th>
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
               <th>Email</th>
               <th>Name</th>
               <th>Status</th>
@@ -175,7 +139,6 @@
                   case 'failed': $status_badge = 'danger'; break;
                   case 'bounced': $status_badge = 'warning'; break;
                 }
-<<<<<<< HEAD
                 // Determine priority label
                 $priority_label = 'Imported';
                 $priority_badge = 'secondary';
@@ -186,10 +149,6 @@
             ?>
             <tr>
               <td><span class="badge badge-<?php echo $priority_badge; ?>"><?php echo $priority_label; ?></span></td>
-=======
-            ?>
-            <tr>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
               <td><?php echo htmlspecialchars($recipient->email); ?></td>
               <td><?php echo htmlspecialchars($recipient->name ?: '-'); ?></td>
               <td><span class="badge badge-<?php echo $status_badge; ?>"><?php echo ucfirst($recipient->status); ?></span></td>
@@ -198,11 +157,7 @@
             </tr>
             <?php }} else { ?>
             <tr>
-<<<<<<< HEAD
               <td colspan="6" class="text-center">
-=======
-              <td colspan="5" class="text-center">
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 <p class="text-muted">No recipients added yet. Import users or upload a CSV file above.</p>
               </td>
             </tr>
@@ -216,11 +171,7 @@
 
 <script>
 $(document).ready(function(){
-<<<<<<< HEAD
   // Handle import from users (active users with orders)
-=======
-  // Handle import from users
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
   $('#importUsersForm').on('submit', function(e){
     e.preventDefault();
     var $form = $(this);
@@ -239,11 +190,7 @@ $(document).ready(function(){
       data: $.param(formData),
       timeout: 60000, // 60 seconds timeout
       beforeSend: function(){
-<<<<<<< HEAD
         $form.find('button').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Importing...');
-=======
-        $form.find('button').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Importing...');
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       },
       success: function(response){
         if(response.status == 'success'){
@@ -253,11 +200,7 @@ $(document).ready(function(){
           }, 500);
         } else {
           show_message(response.message, 'error');
-<<<<<<< HEAD
           $form.find('button').prop('disabled', false).html('<i class="fe fe-download"></i> Import Active Users');
-=======
-          $form.find('button').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         }
       },
       error: function(xhr, status, error){
@@ -279,7 +222,6 @@ $(document).ready(function(){
         }
         
         show_message(errorMsg, 'error');
-<<<<<<< HEAD
         $form.find('button').prop('disabled', false).html('<i class="fe fe-download"></i> Import Active Users');
       }
     });
@@ -328,9 +270,6 @@ $(document).ready(function(){
         
         show_message(errorMsg, 'error');
         $form.find('button').prop('disabled', false).html('<i class="fe fe-download"></i> Import All Users');
-=======
-        $form.find('button').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       }
     });
   });
@@ -356,11 +295,7 @@ $(document).ready(function(){
       contentType: false,
       timeout: 60000, // 60 seconds timeout
       beforeSend: function(){
-<<<<<<< HEAD
         $form.find('button').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Uploading...');
-=======
-        $form.find('button').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Uploading...');
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       },
       success: function(response){
         if(response.status == 'success'){
@@ -387,7 +322,6 @@ $(document).ready(function(){
       }
     });
   });
-<<<<<<< HEAD
   
   // Handle manual email addition
   $('#addManualEmailForm').on('submit', function(e){
@@ -436,7 +370,5 @@ $(document).ready(function(){
       }
     });
   });
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 });
 </script>

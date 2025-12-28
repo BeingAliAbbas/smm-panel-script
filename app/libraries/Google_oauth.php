@@ -8,16 +8,12 @@ class google_oauth{
     private $redirect_url;
     private $access_token;
 
-<<<<<<< HEAD
     public function __construct($params = array()){
         // Extract parameters from the array (CodeIgniter passes params as an array)
         $client_id = isset($params['client_id']) ? $params['client_id'] : null;
         $client_secret = isset($params['client_secret']) ? $params['client_secret'] : null;
         $redirect_url = isset($params['redirect_url']) ? $params['redirect_url'] : "auth/google";
         
-=======
-    public function __construct($client_id = null, $client_secret = null, $redirect_url = "auth/google"){
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         $this->client = new Google_Client();
         $this->client->setAccessType("offline");
         $this->client->setApprovalPrompt("force");
@@ -35,7 +31,6 @@ class google_oauth{
     function get_access_token(){
         try {
             if(get("code")){
-<<<<<<< HEAD
                 // Authenticate with the authorization code
                 $result = $this->client->authenticate(get("code"));
                 
@@ -61,25 +56,11 @@ class google_oauth{
             // error_log('Google OAuth Error: ' . $e->getMessage());
             redirect(cn('auth/login'));
             return false;
-=======
-                $this->client->authenticate(get("code"));
-                $oauth2 = new Google_Service_Oauth2($this->client);
-                $token = $this->client->getAccessToken();
-                $this->access_token = $token;
-                return $token;
-            }else{
-                redirect(cn($this->redirect_url));
-            }
-            
-        } catch (Exception $e) {
-            redirect(cn($this->redirect_url));
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         }
     }
 
     function get_user_info(){
         try {
-<<<<<<< HEAD
             if (!$this->access_token) {
                 // No access token available
                 return false;
@@ -96,13 +77,6 @@ class google_oauth{
         } catch (Exception $e) {
             // Log error for debugging (optional)
             // error_log('Google User Info Error: ' . $e->getMessage());
-=======
-            $oauth2 = new Google_Service_Oauth2($this->client);
-            $this->client->setAccessToken($this->access_token);
-            $userinfo = $oauth2->userinfo->get();
-            return $userinfo;
-        } catch (Exception $e) {
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             return false;
         }
     }

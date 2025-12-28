@@ -84,7 +84,6 @@ class Email_marketing_model extends MY_Model {
         return $this->db->update($this->tb_campaigns, $data);
     }
     
-<<<<<<< HEAD
     /**
      * Update campaign SMTP rotation index by campaign ID (not ids)
      * @param int $campaign_id Campaign primary key ID
@@ -109,8 +108,6 @@ class Email_marketing_model extends MY_Model {
         return $result;
     }
     
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     public function delete_campaign($ids) {
         // Get campaign to delete related data
         $campaign = $this->get_campaign($ids);
@@ -136,14 +133,10 @@ class Email_marketing_model extends MY_Model {
             SUM(CASE WHEN status = 'sent' THEN 1 ELSE 0 END) as sent,
             SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) as failed,
             SUM(CASE WHEN status = 'opened' THEN 1 ELSE 0 END) as opened,
-<<<<<<< HEAD
             SUM(CASE WHEN status = 'bounced' THEN 1 ELSE 0 END) as bounced,
             SUM(CASE WHEN validation_status = 'valid' THEN 1 ELSE 0 END) as validated,
             SUM(CASE WHEN validation_status = 'invalid' THEN 1 ELSE 0 END) as invalid,
             SUM(CASE WHEN validation_status = 'skipped' THEN 1 ELSE 0 END) as validation_skipped
-=======
-            SUM(CASE WHEN status = 'bounced' THEN 1 ELSE 0 END) as bounced
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         ");
         $this->db->from($this->tb_recipients);
         $this->db->where('campaign_id', $campaign_id);
@@ -158,12 +151,9 @@ class Email_marketing_model extends MY_Model {
                 'failed_emails' => $stats->failed,
                 'opened_emails' => $stats->opened,
                 'bounced_emails' => $stats->bounced,
-<<<<<<< HEAD
                 'validated_emails' => $stats->validated ?? 0,
                 'invalid_emails' => $stats->invalid ?? 0,
                 'validation_skipped' => $stats->validation_skipped ?? 0,
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 'updated_at' => NOW
             ]);
             return true;
@@ -430,12 +420,9 @@ class Email_marketing_model extends MY_Model {
             $this->db->limit($limit, $page);
         }
         
-<<<<<<< HEAD
         // Order by priority first (lower = higher priority), then by created_at
         // Manual emails have priority=1, imported have priority=100
         $this->db->order_by('priority', 'ASC');
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         $this->db->order_by('created_at', 'ASC');
         $query = $this->db->get();
         
@@ -450,7 +437,6 @@ class Email_marketing_model extends MY_Model {
         return ($limit == -1) ? 0 : [];
     }
     
-<<<<<<< HEAD
     public function add_recipient($campaign_id, $email, $name = null, $user_id = null, $custom_data = null, $priority = 100) {
         // Check if recipient already exists to prevent duplicates
         $this->db->where('campaign_id', $campaign_id);
@@ -462,9 +448,6 @@ class Email_marketing_model extends MY_Model {
             return false;
         }
         
-=======
-    public function add_recipient($campaign_id, $email, $name = null, $user_id = null, $custom_data = null) {
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         $data = [
             'ids' => ids(),
             'campaign_id' => $campaign_id,
@@ -472,10 +455,7 @@ class Email_marketing_model extends MY_Model {
             'name' => $name,
             'user_id' => $user_id,
             'custom_data' => $custom_data ? json_encode($custom_data) : null,
-<<<<<<< HEAD
             'priority' => $priority,
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             'tracking_token' => md5($campaign_id . $email . time() . rand(1000, 9999)),
             'status' => 'pending',
             'created_at' => NOW,
@@ -528,7 +508,6 @@ class Email_marketing_model extends MY_Model {
                     continue;
                 }
                 
-<<<<<<< HEAD
                 // Get order count for this user (with limit to prevent slow queries)
                 $this->db->where('uid', $user->id);
                 $order_count = $this->db->count_all_results(ORDER);
@@ -543,28 +522,6 @@ class Email_marketing_model extends MY_Model {
                 // add_recipient now handles duplicate checking
                 if ($this->add_recipient($campaign_id, $user->email, $user->name, $user->id, $custom_data)) {
                     $imported++;
-=======
-                // Check if already exists
-                $this->db->where('campaign_id', $campaign_id);
-                $this->db->where('email', $user->email);
-                $exists = $this->db->count_all_results($this->tb_recipients);
-                
-                if ($exists == 0) {
-                    // Get order count for this user (with limit to prevent slow queries)
-                    $this->db->where('uid', $user->id);
-                    $order_count = $this->db->count_all_results(ORDER);
-                    
-                    $custom_data = [
-                        'username' => $user->name ? $user->name : 'User',
-                        'email' => $user->email,
-                        'balance' => $user->balance ? $user->balance : 0,
-                        'total_orders' => $order_count
-                    ];
-                    
-                    if ($this->add_recipient($campaign_id, $user->email, $user->name, $user->id, $custom_data)) {
-                        $imported++;
-                    }
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 }
             }
             
@@ -575,7 +532,6 @@ class Email_marketing_model extends MY_Model {
         }
     }
     
-<<<<<<< HEAD
     /**
      * Import ALL users from general_users table (no order filtering)
      * @param int $campaign_id Campaign ID
@@ -639,8 +595,6 @@ class Email_marketing_model extends MY_Model {
         }
     }
     
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     public function import_from_csv($campaign_id, $file_path) {
         if (!file_exists($file_path)) {
             return 0;
@@ -655,21 +609,9 @@ class Email_marketing_model extends MY_Model {
                     $email = trim($data[0]);
                     $name = isset($data[1]) ? trim($data[1]) : null;
                     
-<<<<<<< HEAD
                     // add_recipient now handles duplicate checking
                     if ($this->add_recipient($campaign_id, $email, $name)) {
                         $imported++;
-=======
-                    // Check if already exists
-                    $this->db->where('campaign_id', $campaign_id);
-                    $this->db->where('email', $email);
-                    $exists = $this->db->count_all_results($this->tb_recipients);
-                    
-                    if ($exists == 0) {
-                        if ($this->add_recipient($campaign_id, $email, $name)) {
-                            $imported++;
-                        }
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     }
                 }
             }
@@ -682,12 +624,9 @@ class Email_marketing_model extends MY_Model {
     public function get_next_pending_recipient($campaign_id) {
         $this->db->where('campaign_id', $campaign_id);
         $this->db->where('status', 'pending');
-<<<<<<< HEAD
         // Order by priority first (lower = higher priority), then by id
         // Manual emails have priority=1, imported have priority=100
         $this->db->order_by('priority', 'ASC');
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         $this->db->order_by('id', 'ASC');
         $this->db->limit(1);
         $query = $this->db->get($this->tb_recipients);
@@ -719,7 +658,6 @@ class Email_marketing_model extends MY_Model {
     // LOG METHODS
     // ========================================
     
-<<<<<<< HEAD
     /**
      * Add log entry (basic version for backward compatibility)
      */
@@ -745,28 +683,17 @@ class Email_marketing_model extends MY_Model {
             'campaign_id' => (int)$campaign_id,
             'recipient_id' => (int)$recipient_id,
             'smtp_config_id' => ($smtp_config_id !== null) ? (int)$smtp_config_id : null,
-=======
-    public function add_log($campaign_id, $recipient_id, $email, $subject, $status, $error_message = null) {
-        $data = [
-            'ids' => ids(),
-            'campaign_id' => $campaign_id,
-            'recipient_id' => $recipient_id,
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             'email' => $email,
             'subject' => $subject,
             'status' => $status,
             'error_message' => $error_message,
-<<<<<<< HEAD
             'time_taken_ms' => (float)$time_taken_ms,
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             'sent_at' => ($status == 'sent') ? NOW : null,
             'ip_address' => $this->input->ip_address(),
             'user_agent' => $this->input->user_agent(),
             'created_at' => NOW
         ];
         
-<<<<<<< HEAD
         // Log the insert for debugging
         log_message('debug', sprintf(
             'Email Log Insert: smtp_config_id=%s, campaign_id=%d, email=%s, status=%s, time=%0.2fms',
@@ -777,15 +704,12 @@ class Email_marketing_model extends MY_Model {
             $time_taken_ms
         ));
         
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         return $this->db->insert($this->tb_logs, $data);
     }
     
     public function get_logs($campaign_id, $limit = -1, $page = -1) {
         if ($limit == -1) {
             $this->db->select('count(*) as sum');
-<<<<<<< HEAD
             $this->db->from($this->tb_logs);
             $this->db->where('campaign_id', $campaign_id);
             $this->db->order_by('created_at', 'DESC');
@@ -799,20 +723,6 @@ class Email_marketing_model extends MY_Model {
             $this->db->order_by('l.created_at', 'DESC');
         }
         
-=======
-        } else {
-            $this->db->select('*');
-        }
-        
-        $this->db->from($this->tb_logs);
-        $this->db->where('campaign_id', $campaign_id);
-        
-        if ($limit != -1) {
-            $this->db->limit($limit, $page);
-        }
-        
-        $this->db->order_by('created_at', 'DESC');
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         $query = $this->db->get();
         
         if ($query->num_rows() > 0) {
@@ -826,7 +736,6 @@ class Email_marketing_model extends MY_Model {
         return ($limit == -1) ? 0 : [];
     }
     
-<<<<<<< HEAD
     /**
      * Get queue metrics for observability dashboard
      * @return object Queue metrics
@@ -869,8 +778,6 @@ class Email_marketing_model extends MY_Model {
         ];
     }
     
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     // ========================================
     // SETTINGS METHODS
     // ========================================
@@ -929,7 +836,6 @@ class Email_marketing_model extends MY_Model {
         
         return $body;
     }
-<<<<<<< HEAD
     
     /**
      * Calculate spam risk score for email content
@@ -1050,6 +956,3 @@ class Email_marketing_model extends MY_Model {
         return null;
     }
 }
-=======
-}
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98

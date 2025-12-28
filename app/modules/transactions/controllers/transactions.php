@@ -16,11 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  *  - Make sure ms() helper (JSON response) and ids(), NOW constants exist (already in your codebase).
  *  - Ensure you add a trigger button in the transactions index view to open the add_funds_manual modal:
  *      <a href="<?=cn($module.'/add_funds_manual')?>" class="btn btn-outline-info btn-sm ajaxModal">
-<<<<<<< HEAD
  *          <i class="fe fe-dollar-sign me-1"></i><?=lang('Add_Funds')?>
-=======
- *          <i class="fe fe-dollar-sign mr-1"></i><?=lang('Add_Funds')?>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
  *      </a>
  */
 class transactions extends MX_Controller {
@@ -76,7 +72,6 @@ class transactions extends MX_Controller {
 		$page            = ($page > 0) ? ($page - 1) : 0;
 		$limit_per_page  = get_option("default_limit_per_page", 10);
 
-<<<<<<< HEAD
 		// Advanced filters for admin
 		$filters = [];
 		if (get_role('admin')) {
@@ -92,18 +87,11 @@ class transactions extends MX_Controller {
 		}
 
 		$query           = array_filter($filters); // Remove empty values
-=======
-		$query           = array(); // Extend with filters if needed
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		$query_string    = (!empty($query)) ? "?".http_build_query($query) : "";
 
 		$config = array(
 			'base_url'         => cn(get_class($this).$query_string),
-<<<<<<< HEAD
 			'total_rows'       => $this->model->get_transaction_list(true, "all", "", "", $filters),
-=======
-			'total_rows'       => $this->model->get_transaction_list(true),
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 			'per_page'         => $limit_per_page,
 			'use_page_numbers' => true,
 			'prev_link'        => '<i class="fe fe-chevron-left"></i>',
@@ -113,7 +101,6 @@ class transactions extends MX_Controller {
 		);
 		$this->pagination->initialize($config);
 		$links        = $this->pagination->create_links();
-<<<<<<< HEAD
 		$transactions = $this->model->get_transaction_list(false, "all", $limit_per_page, $page * $limit_per_page, $filters);
 
 		// Get statistics for admin dashboard
@@ -121,20 +108,14 @@ class transactions extends MX_Controller {
 		if (get_role('admin')) {
 			$stats = $this->model->get_transaction_stats($filters);
 		}
-=======
-		$transactions = $this->model->get_transaction_list(false, "all", $limit_per_page, $page * $limit_per_page);
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
 		$data = array(
 			"module"       => $this->module,
 			"columns"      => $this->columns,
 			"transactions" => $transactions,
 			"links"        => $links,
-<<<<<<< HEAD
 			"stats"        => $stats,
 			"filters"      => $filters,
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		);
 
 		$this->template->build('index', $data);
@@ -208,7 +189,6 @@ class transactions extends MX_Controller {
 				$user_balance_obj = $this->model->get("balance", $this->tb_users, ['id' => $check_item->uid]);
 				$current_balance  = $user_balance_obj ? $user_balance_obj->balance : 0;
 				$new_balance      = $current_balance + ($check_item->amount - $check_item->txn_fee);
-<<<<<<< HEAD
 				$balance_update_result = $this->db->update($this->tb_users, ["balance" => $new_balance], ["id" => $check_item->uid]);
 
 				// Only proceed with logging and notifications if balance update succeeded
@@ -228,15 +208,6 @@ class transactions extends MX_Controller {
 					$this->load->library('Transactional_email');
 					$this->transactional_email->send_payment_approved_email($check_item->uid, $transaction_id, ($check_item->amount - $check_item->txn_fee), $payment_method);
 				}
-=======
-				$this->db->update($this->tb_users, ["balance" => $new_balance], ["id" => $check_item->uid]);
-
-				// Log balance change
-				$this->load->helper('balance_logs');
-				log_payment_addition($check_item->uid, $transaction_id, ($check_item->amount - $check_item->txn_fee), $current_balance, $new_balance, $payment_method);
-
-				$this->send_transaction_success_whatsapp($check_item->uid, $transaction_id, $check_item->amount);
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 			}
 
 			ms(array("status" => "success", "message" => lang("Updated successfully")));
@@ -308,7 +279,6 @@ class transactions extends MX_Controller {
 		// Update user balance
 		$old_balance = $user->balance;
 		$new_balance = $user->balance + $funds;
-<<<<<<< HEAD
 		$balance_update_result = $this->db->update($this->tb_users, ['balance' => $new_balance], ['id' => $user->id]);
 
 		// Only proceed with logging and notifications if balance update succeeded
@@ -348,32 +318,6 @@ class transactions extends MX_Controller {
 				'message' => 'Failed to update user balance. Please try again or contact support if the issue persists.',
 			]);
 		}
-=======
-		$this->db->update($this->tb_users, ['balance' => $new_balance], ['id' => $user->id]);
-
-		// Log transaction
-		$data_log = [
-			'ids'            => ids(),
-			'uid'            => $user->id,
-			'type'           => $payment_method,
-			'transaction_id' => $transaction_id,
-			'amount'         => round($funds, 4),
-			'txn_fee'        => round($fee, 4),
-			'note'           => ($note != '') ? $note : $funds,
-			'status'         => 1, // immediate credit
-			'created'        => NOW,
-		];
-		$this->db->insert($this->tb_transaction_logs, $data_log);
-
-		// Log balance change
-		$this->load->helper('balance_logs');
-		log_manual_funds($user->id, $funds, $old_balance, $new_balance, $note, $transaction_id);
-
-		ms([
-			'status'  => 'success',
-			'message' => 'Funds added successfully',
-		]);
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 	}
 
 	/**
@@ -388,7 +332,6 @@ class transactions extends MX_Controller {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Export transactions to CSV
 	 */
 	public function export_csv(){
@@ -485,8 +428,6 @@ class transactions extends MX_Controller {
 	}
 
 	/**
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 	 * Search page
 	 */
 	public function search(){
@@ -539,7 +480,6 @@ class transactions extends MX_Controller {
 	 * @param mixed  $amount
 	 */
 	private function send_transaction_success_whatsapp($user_id, $transaction_id, $amount) {
-<<<<<<< HEAD
 		// Check if WhatsApp module is loaded and messaging is enabled
 		$this->load->model('whatsapp/whatsapp_model', 'whatsapp_model');
 		
@@ -548,8 +488,6 @@ class transactions extends MX_Controller {
 			return;
 		}
 
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		$user_info    = $this->model->get("*", $this->tb_users, ['id' => $user_id]);
 		if (!$user_info) return;
 
@@ -583,7 +521,6 @@ class transactions extends MX_Controller {
 		$phoneNumber = preg_replace('/\D/', '', $phoneNumber);
 		if ($phoneNumber == '') return;
 
-<<<<<<< HEAD
 		// Check if WhatsApp module is loaded, if not load it
 		if (!isset($this->whatsapp_model)) {
 			$this->load->model('whatsapp/whatsapp_model', 'whatsapp_model');
@@ -797,43 +734,6 @@ class transactions extends MX_Controller {
 		} else {
 			// Fallback to logging if table doesn't exist
 			log_message('info', 'Pay URL access: ' . json_encode($log_data));
-=======
-		$whatsapp_config = $this->model->get("url, api_key", "whatsapp_config", []);
-		if (empty($whatsapp_config) || empty($whatsapp_config->url) || empty($whatsapp_config->api_key)) {
-			log_message('error', 'WhatsApp config missing');
-			return;
-		}
-
-		$apiUrl = $whatsapp_config->url;
-		$apiKey = $whatsapp_config->api_key;
-
-		$data = [
-			'phoneNumber' => $phoneNumber,
-			'message'     => $message,
-			'apiKey'      => $apiKey,
-		];
-
-		$ch = curl_init($apiUrl);
-		curl_setopt_array($ch, [
-			CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
-			CURLOPT_POST           => true,
-			CURLOPT_POSTFIELDS     => json_encode($data),
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_TIMEOUT        => 30,
-		]);
-
-		$response = curl_exec($ch);
-		if (curl_errno($ch)) {
-			log_message('error', 'WhatsApp cURL Error: '.curl_error($ch));
-			curl_close($ch);
-			return;
-		}
-		curl_close($ch);
-
-		$respArr = json_decode($response, true);
-		if (empty($respArr['success'])) {
-			log_message('error', 'WhatsApp API error: '.$response);
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		}
 	}
 

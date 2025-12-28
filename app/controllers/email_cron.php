@@ -9,7 +9,13 @@ class Email_cron extends CI_Controller {
     public function __construct(){
         parent::__construct();
         $this->load->model('email_marketing/email_marketing_model', 'email_model');
-        $this->load->library('email');
+        $this->load->library('cron_logger');
+        $this->load->library('EmailListChecker');
+        
+        // Load PHPMailer for better deliverability
+        require_once APPPATH . 'libraries/PHPMailer/src/PHPMailer.php';
+        require_once APPPATH . 'libraries/PHPMailer/src/SMTP.php';
+        require_once APPPATH . 'libraries/PHPMailer/src/Exception.php';
         
         // Security token for cron access
         $this->requiredToken = get_option('email_cron_token', md5('email_marketing_cron_' . ENCRYPTION_KEY));
@@ -21,9 +27,11 @@ class Email_cron extends CI_Controller {
      * URL: /cron/email_marketing?token=YOUR_TOKEN&campaign_id=CAMPAIGN_ID (optional)
      */
     public function run(){
+        $log_id = $this->cron_logger->start('cron/email_marketing');
         // Verify token
         $token = $this->input->get('token', true);
         if(!$token || !hash_equals($this->requiredToken, $token)){
+            $this->cron_logger->end($log_id, 'Failed', 403, 'Invalid or missing token');
             show_404();
             return;
         }
@@ -56,6 +64,11 @@ class Email_cron extends CI_Controller {
         
         // Process emails
         $result = $this->process_emails($campaign_id);
+        // Log the result
+        $status = ($result['status'] == 'success' || $result['status'] == 'info') ? 'Success' : 'Failed';
+        $response_code = ($status == 'Success') ? 200 : 500;
+        $message = $result['message'] . ' (Sent: ' . $result['emails_sent'] . ')';
+        $this->cron_logger->end($log_id, $status, $response_code, $message);
         
         $this->respond($result);
     }
@@ -172,25 +185,89 @@ class Email_cron extends CI_Controller {
     }
     
     /**
-     * Send individual email
+     * Send individual email using PHPMailer for better deliverability
      */
     private function send_email($campaign, $recipient){
+        $smtp_config_id = null; // Initialize to track which SMTP is being used
+        $validation_start_time = microtime(true);
+        
         try {
+            // ========================================
+            // STEP 1: EMAIL VALIDATION
+            // ========================================
+            
+            if($this->emaillistchecker->is_enabled()){
+                if($recipient->validation_status == 'pending' || empty($recipient->validation_status)){
+                    // Validate email
+                    $validation_result = $this->emaillistchecker->validate_single_email($recipient->email);
+
+                    // Update recipient with validation result
+                    $this->email_model->db->where('id', $recipient->id);
+                    $this->email_model->db->update('email_recipients', [
+                        'validation_status' => $validation_result['valid'] ? 'valid' : 'invalid',
+                        'validation_result' => $validation_result['result'],
+                        'validation_reason' => $validation_result['reason'],
+                        'validation_score' => $validation_result['score'],
+                        'validation_checked_at' => NOW,
+                        'validation_error' => $validation_result['error'],
+                        'updated_at' => NOW
+                    ]);
+
+                    // Use the fresh validation result instead of old $recipient object
+                    if(!$validation_result['valid']){
+                        $error_msg = 'Email validation failed: ' . ($validation_result['reason'] ?? 'Invalid email');
+                        $this->log_failed(
+                            $campaign, 
+                            $recipient, 
+                            $error_msg, 
+                            null, 
+                            'invalid', 
+                            $validation_result['result'], 
+                            $validation_result['reason']
+                        );
+                        return false;
+                    }
+                    
+                    // Refresh recipient object
+                    $this->email_model->db->where('id', $recipient->id);
+                    $recipient = $this->email_model->db->get('email_recipients')->row();
+                }
+                
+                // Skip if email is invalid
+                if($recipient->validation_status == 'invalid'){
+                    $error_msg = 'Email validation failed: ' . ($recipient->validation_reason ?: 'Invalid email');
+                    $this->log_failed($campaign, $recipient, $error_msg, null, 'invalid', $recipient->validation_result, $recipient->validation_reason);
+                    return false;
+                }
+            }
+            
+            // ========================================
+            // STEP 2: PREPARE EMAIL
+            // ========================================
+            
             // Get template
             $this->email_model->db->where('id', $campaign->template_id);
             $template = $this->email_model->db->get('email_templates')->row();
             
             if(!$template){
-                $this->log_failed($campaign, $recipient, 'Template not found');
+                $this->log_failed($campaign, $recipient, 'Template not found', null);
+                return false;
+            }
+            
+            // Get SMTP config with rotation support
+            $smtp_config_id = $this->get_next_smtp_config($campaign);
+            
+            if(!$smtp_config_id){
+                $this->log_failed($campaign, $recipient, 'No SMTP configuration available', null);
                 return false;
             }
             
             // Get SMTP config
-            $this->email_model->db->where('id', $campaign->smtp_config_id);
+            $this->email_model->db->where('id', $smtp_config_id);
             $smtp = $this->email_model->db->get('email_smtp_configs')->row();
             
             if(!$smtp || $smtp->status != 1){
-                $this->log_failed($campaign, $recipient, 'SMTP configuration not found or disabled');
+                $this->log_failed($campaign, $recipient, 'SMTP configuration not found or disabled', $smtp_config_id);
                 return false;
             }
             
@@ -218,60 +295,126 @@ class Email_cron extends CI_Controller {
             $subject = $this->email_model->process_template_variables($template->subject, $variables);
             $body = $this->email_model->process_template_variables($template->body, $variables);
             
+            // Calculate spam risk score
+            $spam_risk_score = $this->email_model->calculate_spam_risk_score($subject, $body);
+            
             // Add tracking pixel to body if enabled
             if($this->email_model->get_setting('enable_open_tracking', 1) == 1){
                 $body .= $variables['tracking_pixel'];
             }
             
-            // Configure email
-            $config = [
-                'protocol' => 'smtp',
-                'smtp_host' => $smtp->host,
-                'smtp_port' => $smtp->port,
-                'smtp_user' => $smtp->username,
-                'smtp_pass' => $smtp->password,
-                'smtp_crypto' => $smtp->encryption,
-                'mailtype' => 'html',
-                'charset' => 'utf-8',
-                'newline' => "\r\n",
-                'wordwrap' => TRUE
-            ];
+            // Create plain text version (strip HTML tags)
+            $altBody = strip_tags($body);
+            $altBody = html_entity_decode($altBody, ENT_QUOTES, 'UTF-8');
+            $altBody = preg_replace('/\s+/', ' ', $altBody); // Clean up whitespace
+            $altBody = trim($altBody);
             
-            $this->email->initialize($config);
-            $this->email->from($smtp->from_email, $smtp->from_name);
-            $this->email->to($recipient->email);
+            // ========================================
+            // STEP 3: SEND EMAIL WITH PHPMAILER
+            // ========================================
             
-            if($smtp->reply_to){
-                $this->email->reply_to($smtp->reply_to);
+            $send_start_time = microtime(true);
+            
+            // Use PHPMailer for better deliverability
+            $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+            
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host = $smtp->host;
+            $mail->SMTPAuth = true;
+            $mail->Username = $smtp->username;
+            $mail->Password = $smtp->password;
+            
+            // Set encryption
+            if($smtp->encryption == 'ssl'){
+                $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+                $mail->Port = $smtp->port ?: 465;
+            } elseif($smtp->encryption == 'tls'){
+                $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port = $smtp->port ?: 587;
+            } else {
+                $mail->SMTPSecure = '';
+                $mail->Port = $smtp->port ?: 25;
             }
             
-            $this->email->subject($subject);
-            $this->email->message($body);
+            // Recipients
+            $mail->setFrom($smtp->from_email, $smtp->from_name);
+            $mail->addAddress($recipient->email, $recipient->name ?: '');
+            
+            // Reply-To
+            if($smtp->reply_to){
+                $mail->addReplyTo($smtp->reply_to, $smtp->from_name);
+            }
+            
+            // Return-Path (important for deliverability)
+            $mail->Sender = $smtp->from_email;
+            
+            // Custom headers for better deliverability
+            $mail->addCustomHeader('X-Mailer', $smtp->from_name . ' Mailer');
+            $mail->addCustomHeader('X-Priority', '3'); // Normal priority
+            $mail->addCustomHeader('X-MSMail-Priority', 'Normal');
+            $mail->addCustomHeader('Importance', 'Normal');
+            
+            // List-Unsubscribe header (important for bulk email)
+            $unsubscribe_url = base_url('email_marketing/unsubscribe/' . $recipient->tracking_token);
+            $mail->addCustomHeader('List-Unsubscribe', '<' . $unsubscribe_url . '>');
+            $mail->addCustomHeader('List-Unsubscribe-Post', 'List-Unsubscribe=One-Click');
+            
+            // Precedence header for bulk emails
+            $mail->addCustomHeader('Precedence', 'bulk');
+            
+            // Content
+            $mail->isHTML(true);
+            $mail->CharSet = 'UTF-8';
+            $mail->Encoding = 'base64';
+            $mail->Subject = $subject;
+            $mail->Body = $body;
+            $mail->AltBody = $altBody; // Plain text alternative
             
             // Send email
-            if($this->email->send()){
+            if($mail->send()){
+                $send_time_ms = (microtime(true) - $send_start_time) * 1000;
+                
                 // Update recipient status
                 $this->email_model->update_recipient_status($recipient->id, 'sent');
                 
-                // Add log
-                $this->email_model->add_log(
-                    $campaign->id,
-                    $recipient->id,
-                    $recipient->email,
-                    $subject,
-                    'sent'
-                );
+                // Add log with SMTP config ID, validation info, and deliverability tracking
+                $this->email_model->db->insert('email_logs', [
+                    'ids' => ids(),
+                    'campaign_id' => (int)$campaign->id,
+                    'recipient_id' => (int)$recipient->id,
+                    'smtp_config_id' => ($smtp_config_id !== null) ? (int)$smtp_config_id : null,
+                    'email' => $recipient->email,
+                    'subject' => $subject,
+                    'status' => 'sent',
+                    'error_message' => null,
+                    'validation_status' => $recipient->validation_status ?? null,
+                    'validation_result' => $recipient->validation_result ?? null,
+                    'validation_reason' => $recipient->validation_reason ?? null,
+                    'spam_risk_score' => round($spam_risk_score, 2), // Add spam risk score
+                    'has_plain_text' => 1, // We now always add plain text alternative
+                    'has_unsubscribe' => 1, // We now always add List-Unsubscribe header
+                    'deliverability_status' => 'inbox', // Assume inbox delivery by default
+                    'time_taken_ms' => (float)$send_time_ms,
+                    'sent_at' => NOW,
+                    'ip_address' => $this->input->ip_address(),
+                    'user_agent' => $this->input->user_agent(),
+                    'created_at' => NOW
+                ]);
                 
                 return true;
             } else {
                 // Get error
-                $error = $this->email->print_debugger();
-                $this->log_failed($campaign, $recipient, $error);
+                $error = $mail->ErrorInfo;
+                $this->log_failed($campaign, $recipient, $error, $smtp_config_id);
                 return false;
             }
             
+        } catch(\PHPMailer\PHPMailer\Exception $e){
+            $this->log_failed($campaign, $recipient, 'PHPMailer Error: ' . $e->getMessage(), $smtp_config_id);
+            return false;
         } catch(Exception $e){
-            $this->log_failed($campaign, $recipient, $e->getMessage());
+            $this->log_failed($campaign, $recipient, $e->getMessage(), $smtp_config_id);
             return false;
         }
     }
@@ -279,19 +422,79 @@ class Email_cron extends CI_Controller {
     /**
      * Log failed email
      */
-    private function log_failed($campaign, $recipient, $error){
+    private function log_failed($campaign, $recipient, $error, $smtp_config_id = null, $validation_status = null, $validation_result = null, $validation_reason = null){
         // Update recipient status
         $this->email_model->update_recipient_status($recipient->id, 'failed', $error);
         
-        // Add log
-        $this->email_model->add_log(
-            $campaign->id,
-            $recipient->id,
-            $recipient->email,
-            'Failed',
-            'failed',
-            $error
-        );
+        // Add log with SMTP config ID and validation info
+        $this->email_model->db->insert('email_logs', [
+            'ids' => ids(),
+            'campaign_id' => (int)$campaign->id,
+            'recipient_id' => (int)$recipient->id,
+            'smtp_config_id' => ($smtp_config_id !== null) ? (int)$smtp_config_id : null,
+            'email' => $recipient->email,
+            'subject' => 'Failed',
+            'status' => 'failed',
+            'error_message' => $error,
+            'validation_status' => $validation_status ?? ($recipient->validation_status ?? null),
+            'validation_result' => $validation_result ?? ($recipient->validation_result ?? null),
+            'validation_reason' => $validation_reason ?? ($recipient->validation_reason ?? null),
+            'sent_at' => null,
+            'ip_address' => $this->input->ip_address(),
+            'user_agent' => $this->input->user_agent(),
+            'created_at' => NOW
+        ]);
+    }
+    
+    /**
+     * Get next SMTP config ID using rotation
+     * Implements round-robin rotation for multi-SMTP campaigns
+     * Falls back to single smtp_config_id for backward compatibility
+     * 
+     * @param object $campaign Campaign object
+     * @return int|null SMTP config ID or null if none available
+     */
+    private function get_next_smtp_config($campaign){
+        // Check if campaign has multiple SMTPs configured (rotation mode)
+        if(!empty($campaign->smtp_config_ids)){
+            $smtp_ids = json_decode($campaign->smtp_config_ids, true);
+            
+            // Handle JSON decode errors
+            if(json_last_error() !== JSON_ERROR_NONE){
+                log_message('error', sprintf(
+                    'Email Marketing: Failed to decode smtp_config_ids for campaign %d: %s',
+                    $campaign->id,
+                    json_last_error_msg()
+                ));
+                // Fall through to single SMTP fallback
+            } elseif(is_array($smtp_ids) && count($smtp_ids) > 0){
+                // Get current rotation index
+                $current_index = (int)$campaign->smtp_rotation_index;
+                
+                // Ensure index is within bounds
+                if($current_index < 0 || $current_index >= count($smtp_ids)){
+                    $current_index = 0;
+                }
+                
+                // Get SMTP ID at current index
+                $smtp_id = (int)$smtp_ids[$current_index];
+                
+                // Calculate next index (round-robin)
+                $next_index = ($current_index + 1) % count($smtp_ids);
+                
+                // Update rotation index in database for next email
+                // Note: In high-concurrency scenarios, multiple cron instances may read 
+                // the same index. This is acceptable as it only affects SMTP distribution
+                // and doesn't cause functional errors. For strict rotation, consider
+                // implementing a locking mechanism or atomic increment.
+                $this->email_model->update_campaign_rotation_index($campaign->id, $next_index);
+                
+                return $smtp_id;
+            }
+        }
+        
+        // Fallback to single SMTP config (backward compatibility)
+        return !empty($campaign->smtp_config_id) ? (int)$campaign->smtp_config_id : null;
     }
     
     /**

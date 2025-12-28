@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 <!-- Include responsive CSS -->
 <link rel="stylesheet" href="<?php echo BASE; ?>assets/css/email_marketing-responsive.css">
 
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 <div class="row justify-content-md-center">
   <div class="col-md-12">
     <div class="page-header">
@@ -20,11 +17,7 @@
 </div>
 
 <!-- Overall Statistics -->
-<<<<<<< HEAD
 <div class="row email-marketing-stats">
-=======
-<div class="row">
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
   <div class="col-lg-3 col-sm-6">
     <div class="card">
       <div class="card-body">
@@ -93,19 +86,11 @@
 <!-- Campaign Performance Table -->
 <div class="row mt-4">
   <div class="col-md-12">
-<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;">Campaign Performance Summary</h3>
         <div class="card-options">
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-=======
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Campaign Performance Summary</h3>
-        <div class="card-options">
-          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="table-responsive">
@@ -156,11 +141,7 @@
               <td><span class="text-danger"><?php echo number_format($campaign->failed_emails); ?></span></td>
               <td>
                 <div class="clearfix">
-<<<<<<< HEAD
                   <div class="float-start"><strong><?php echo $success_rate; ?>%</strong></div>
-=======
-                  <div class="float-left"><strong><?php echo $success_rate; ?>%</strong></div>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 </div>
                 <div class="progress progress-sm">
                   <div class="progress-bar bg-success" style="width: <?php echo $success_rate; ?>%"></div>
@@ -168,11 +149,7 @@
               </td>
               <td>
                 <div class="clearfix">
-<<<<<<< HEAD
                   <div class="float-start"><strong><?php echo $open_rate; ?>%</strong></div>
-=======
-                  <div class="float-left"><strong><?php echo $open_rate; ?>%</strong></div>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 </div>
                 <div class="progress progress-sm">
                   <div class="progress-bar bg-info" style="width: <?php echo $open_rate; ?>%"></div>
@@ -202,15 +179,9 @@
 <!-- Email Statistics Breakdown -->
 <div class="row mt-4">
   <div class="col-md-6">
-<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;">Email Delivery Statistics</h3>
-=======
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Email Delivery Statistics</h3>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
       <div class="card-body">
         <div class="row mb-3">
@@ -226,13 +197,8 @@
         
         <div class="mb-3">
           <div class="clearfix">
-<<<<<<< HEAD
             <div class="float-start"><strong>Sent Emails</strong></div>
             <div class="float-end"><small class="text-muted"><?php echo number_format($stats->total_sent); ?></small></div>
-=======
-            <div class="float-left"><strong>Sent Emails</strong></div>
-            <div class="float-right"><small class="text-muted"><?php echo number_format($stats->total_sent); ?></small></div>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
           <div class="progress progress-sm">
             <div class="progress-bar bg-success" style="width: <?php echo $stats->total_emails > 0 ? round(($stats->total_sent / $stats->total_emails) * 100) : 0; ?>%"></div>
@@ -241,13 +207,8 @@
         
         <div class="mb-3">
           <div class="clearfix">
-<<<<<<< HEAD
             <div class="float-start"><strong>Pending Emails</strong></div>
             <div class="float-end"><small class="text-muted"><?php echo number_format($stats->total_remaining); ?></small></div>
-=======
-            <div class="float-left"><strong>Pending Emails</strong></div>
-            <div class="float-right"><small class="text-muted"><?php echo number_format($stats->total_remaining); ?></small></div>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
           <div class="progress progress-sm">
             <div class="progress-bar bg-primary" style="width: <?php echo $stats->total_emails > 0 ? round(($stats->total_remaining / $stats->total_emails) * 100) : 0; ?>%"></div>
@@ -256,13 +217,8 @@
         
         <div class="mb-3">
           <div class="clearfix">
-<<<<<<< HEAD
             <div class="float-start"><strong>Failed Emails</strong></div>
             <div class="float-end"><small class="text-muted"><?php echo number_format($stats->total_failed); ?></small></div>
-=======
-            <div class="float-left"><strong>Failed Emails</strong></div>
-            <div class="float-right"><small class="text-muted"><?php echo number_format($stats->total_failed); ?></small></div>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
           <div class="progress progress-sm">
             <div class="progress-bar bg-danger" style="width: <?php echo $stats->total_emails > 0 ? round(($stats->total_failed / $stats->total_emails) * 100) : 0; ?>%"></div>
@@ -271,13 +227,8 @@
         
         <div class="mb-0">
           <div class="clearfix">
-<<<<<<< HEAD
             <div class="float-start"><strong>Opened Emails</strong></div>
             <div class="float-end"><small class="text-muted"><?php echo number_format($stats->total_opened); ?></small></div>
-=======
-            <div class="float-left"><strong>Opened Emails</strong></div>
-            <div class="float-right"><small class="text-muted"><?php echo number_format($stats->total_opened); ?></small></div>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
           <div class="progress progress-sm">
             <div class="progress-bar bg-info" style="width: <?php echo $stats->total_sent > 0 ? round(($stats->total_opened / $stats->total_sent) * 100) : 0; ?>%"></div>
@@ -288,26 +239,15 @@
   </div>
   
   <div class="col-md-6">
-<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;">Campaign Status Distribution</h3>
-=======
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Campaign Status Distribution</h3>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
       <div class="card-body">
         <div class="mb-3">
           <div class="clearfix">
-<<<<<<< HEAD
             <div class="float-start"><strong>Running</strong></div>
             <div class="float-end"><small class="text-muted"><?php echo $stats->running_campaigns; ?></small></div>
-=======
-            <div class="float-left"><strong>Running</strong></div>
-            <div class="float-right"><small class="text-muted"><?php echo $stats->running_campaigns; ?></small></div>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
           <div class="progress progress-sm">
             <div class="progress-bar bg-success" style="width: <?php echo $stats->total_campaigns > 0 ? round(($stats->running_campaigns / $stats->total_campaigns) * 100) : 0; ?>%"></div>
@@ -316,13 +256,8 @@
         
         <div class="mb-3">
           <div class="clearfix">
-<<<<<<< HEAD
             <div class="float-start"><strong>Completed</strong></div>
             <div class="float-end"><small class="text-muted"><?php echo $stats->completed_campaigns; ?></small></div>
-=======
-            <div class="float-left"><strong>Completed</strong></div>
-            <div class="float-right"><small class="text-muted"><?php echo $stats->completed_campaigns; ?></small></div>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
           <div class="progress progress-sm">
             <div class="progress-bar bg-info" style="width: <?php echo $stats->total_campaigns > 0 ? round(($stats->completed_campaigns / $stats->total_campaigns) * 100) : 0; ?>%"></div>
@@ -331,13 +266,8 @@
         
         <div class="mb-3">
           <div class="clearfix">
-<<<<<<< HEAD
             <div class="float-start"><strong>Paused</strong></div>
             <div class="float-end"><small class="text-muted"><?php echo $stats->paused_campaigns; ?></small></div>
-=======
-            <div class="float-left"><strong>Paused</strong></div>
-            <div class="float-right"><small class="text-muted"><?php echo $stats->paused_campaigns; ?></small></div>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
           <div class="progress progress-sm">
             <div class="progress-bar bg-warning" style="width: <?php echo $stats->total_campaigns > 0 ? round(($stats->paused_campaigns / $stats->total_campaigns) * 100) : 0; ?>%"></div>
@@ -346,13 +276,8 @@
         
         <div class="mb-0">
           <div class="clearfix">
-<<<<<<< HEAD
             <div class="float-start"><strong>Pending</strong></div>
             <div class="float-end"><small class="text-muted"><?php echo $stats->pending_campaigns; ?></small></div>
-=======
-            <div class="float-left"><strong>Pending</strong></div>
-            <div class="float-right"><small class="text-muted"><?php echo $stats->pending_campaigns; ?></small></div>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
           <div class="progress progress-sm">
             <div class="progress-bar bg-secondary" style="width: <?php echo $stats->total_campaigns > 0 ? round(($stats->pending_campaigns / $stats->total_campaigns) * 100) : 0; ?>%"></div>
@@ -366,15 +291,9 @@
 <!-- Export Options -->
 <div class="row mt-4">
   <div class="col-md-12">
-<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;">Export Options</h3>
-=======
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Export Options</h3>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
       <div class="card-body">
         <h4>Individual Campaign Reports</h4>

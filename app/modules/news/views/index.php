@@ -4,11 +4,7 @@
     <?php 
       if(get_role("admin") || get_role('supporter')) {
     ?>
-<<<<<<< HEAD
     <a href="<?=cn("$module/update")?>" class="ajaxModal"><span class="add-new" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<?=lang("add_new")?>"><i class="fe fe-plus-square text-primary" aria-hidden="true"></i></span></a> 
-=======
-    <a href="<?=cn("$module/update")?>" class="ajaxModal"><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="<?=lang("add_new")?>"><i class="fe fe-plus-square text-primary" aria-hidden="true"></i></span></a> 
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     <?php }else{?>
     <span><i class="fe fe-help-circle" aria-hidden="true"></i></span>
     <?php }?>
@@ -18,21 +14,12 @@
 
 <div class="row news-annoucement" id="result_ajaxSearch">
   <div class="col-md-12 col-xl-12">
-<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><?=lang("Lists")?></h3>
         <div class="card-options">
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
-=======
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title"><?=lang("Lists")?></h3>
-        <div class="card-options">
-          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-          <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="table-responsive">
@@ -90,11 +77,7 @@
               </td>
               <td class="text-center">
                 <div class="item-action dropdown">
-<<<<<<< HEAD
                   <a href="javascript:void(0)" data-bs-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
-=======
-                  <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   <div class="dropdown-menu">
                     <a href="<?=cn("$module/ajax_notification/")?>" class="dropdown-item ajaxModal"><i class="dropdown-icon fe fe-eye"></i> <?=lang("View")?> </a>
 

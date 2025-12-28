@@ -4,13 +4,8 @@
       <div class="modal-content">
         <form class="form actionForm" action="<?php echo cn($module . '/ajax_campaign_create'); ?>" data-redirect="<?php echo cn($module . '/campaigns'); ?>" method="POST">
           <div class="modal-header bg-pantone">
-<<<<<<< HEAD
             <h4 class="modal-title"><i class="fas fa-envelope"></i> Create New Campaign</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-=======
-            <h4 class="modal-title"><i class="fa fa-envelope"></i> Create New Campaign</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </button>
           </div>
           <div class="modal-body">
@@ -37,19 +32,12 @@
                   </div>
                   
                   <div class="form-group">
-<<<<<<< HEAD
                     <label>SMTP Configurations <span class="text-danger">*</span></label>
                     <div class="smtp-checkboxes" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
-=======
-                    <label>SMTP Configuration <span class="text-danger">*</span></label>
-                    <select class="form-control square" name="smtp_config_id" required>
-                      <option value="">Select SMTP</option>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                       <?php if(!empty($smtp_configs)){ 
                         foreach($smtp_configs as $smtp){
                           if($smtp->status == 1){
                       ?>
-<<<<<<< HEAD
                       <div class="form-check mb-2">
                         <input type="checkbox" class="form-check-input" name="smtp_config_ids[]" value="<?php echo $smtp->id; ?>" id="smtp_<?php echo $smtp->id; ?>" <?php echo $smtp->is_default ? 'checked' : ''; ?>>
                         <label class="form-check-label" for="smtp_<?php echo $smtp->id; ?>">
@@ -60,15 +48,6 @@
                       <?php }}} ?>
                     </div>
                     <small class="text-muted">Select one or more SMTP servers. Multiple SMTPs will be rotated round-robin during sending.</small>
-=======
-                      <option value="<?php echo $smtp->id; ?>" <?php echo $smtp->is_default ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($smtp->name); ?>
-                        <?php echo $smtp->is_default ? ' (Default)' : ''; ?>
-                      </option>
-                      <?php }}} ?>
-                    </select>
-                    <small class="text-muted">Select SMTP server to send emails</small>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   </div>
                   
                   <div class="row">
@@ -89,11 +68,7 @@
                   </div>
                   
                   <div class="alert alert-info">
-<<<<<<< HEAD
                     <i class="fas fa-info-circle"></i> After creating the campaign, you'll be able to add recipients and start sending.
-=======
-                    <i class="fa fa-info-circle"></i> After creating the campaign, you'll be able to add recipients and start sending.
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   </div>
                   
                 </div>
@@ -101,13 +76,8 @@
             </div>
           </div>
           <div class="modal-footer">
-<<<<<<< HEAD
             <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1">Submit</button>
             <button type="button" class="btn round btn-default btn-min-width me-1 mb-1" data-bs-dismiss="modal">Cancel</button>
-=======
-            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1">Submit</button>
-            <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal">Cancel</button>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
         </form>
       </div>

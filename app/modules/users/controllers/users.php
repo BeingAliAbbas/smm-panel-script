@@ -17,10 +17,7 @@ class users extends MX_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->load->model(get_class($this).'_model', 'model');
-<<<<<<< HEAD
 		$this->load->model('Transaction_model');
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		//Config Module
 		$this->tb_users                 = USERS;
 		$this->tb_users_price           = USERS_PRICE;
@@ -53,20 +50,12 @@ class users extends MX_Controller {
 			$query_string = "?" . http_build_query($query);
 		}
 	
-<<<<<<< HEAD
 		// Fetch users with total orders and total deposits
 		$users = $this->model->get_users_list(false, "all", $limit_per_page, $page * $limit_per_page);
 		
 		foreach ($users as &$user) {
 			$user->total_orders = $this->model->get_total_orders_by_user_id($user->id);
 			$user->total_deposit = $this->Transaction_model->get_total_deposit($user->id);
-=======
-		// Fetch users with total orders
-		$users = $this->model->get_users_list(false, "all", $limit_per_page, $page * $limit_per_page);
-		
-		foreach ($users as &$user) {
-			$user->total_orders = $this->model->get_total_orders_by_user_id($user->id); // Get total orders for each user
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		}
 	
 		$config = array(
@@ -92,18 +81,14 @@ class users extends MX_Controller {
 		$this->template->build('index', $data);
 	}
 	
-<<<<<<< HEAD
 	/**
 	 * Get total deposit for a user via AJAX
 	 * @param int $uid User ID
 	 */
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 	public function deposit_viewer() {
 		try {
 			if (isset($_GET['uid']) && is_numeric($_GET['uid'])) {
 				$uid = intval($_GET['uid']);
-<<<<<<< HEAD
 				$total_deposit = $this->Transaction_model->get_total_deposit($uid);
 	
 				if ($total_deposit !== false && $total_deposit > 0) {
@@ -169,24 +154,6 @@ class users extends MX_Controller {
 			echo '<p>'.lang("No_transactions_found").'</p>';
 		}
 	}
-=======
-				$this->load->model('Transaction_model'); // Make sure the model is loaded here
-				$total_deposit = $this->Transaction_model->get_total_deposit($uid); // Call model method
-	
-				if ($total_deposit !== false) {
-					echo json_encode(["status" => "success", "total_deposit" => number_format($total_deposit, 2)]);
-				} else {
-					echo json_encode(["status" => "error", "message" => "No deposits found."]);
-				}
-			} else {
-				echo json_encode(["status" => "error", "message" => "Invalid user ID."]);
-			}
-		} catch (Exception $e) {
-			echo json_encode(["status" => "error", "message" => $e->getMessage()]);
-		}
-	}
-	
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
 	public function update($ids = ""){
 		// Fetch the user data based on the unique ID (ids)
@@ -216,22 +183,13 @@ class users extends MX_Controller {
 		// Prepare data to pass to the view
 		$data = array(
 			"module"          => get_class($this),
-<<<<<<< HEAD
 			"user"            => $user,
 			"whatsapp_number" => $whatsapp_number,
-=======
-			"user"            => $user,  // User data including WhatsApp number
-			"whatsapp_number" => $whatsapp_number,  // WhatsApp number specifically
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 			"payments_defaut" => $payments_defaut,
 			"limit_payments"  => $limit_payments,
 		);
 	
-<<<<<<< HEAD
 		// Load the 'update' view with the user data
-=======
-		// Load the 'update' view with the user data, including the WhatsApp number
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		$this->template->build('update', $data);
 	}
 	
@@ -246,11 +204,6 @@ class users extends MX_Controller {
 		$this->load->view('mail_to_user', $data);
 	}
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 	public function add_funds_manual($ids = ""){
 		$user    = $this->model->get("ids, id, first_name, last_name, email", $this->tb_users, "ids = '{$ids}' ");
 		$payments_defaut = $this->model->fetch('type, name', $this->tb_payments, ['status' => 1]);
@@ -261,13 +214,8 @@ class users extends MX_Controller {
 		);
 		$this->load->view('add_funds_manual', $data);
 	}
-<<<<<<< HEAD
 
 	public function ajax_add_funds_manualy($ids = ""){
-=======
-	public function ajax_add_funds_manualy($ids = ""){
-		// _is_ajax($this->module);
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		$funds     			= (double)post('funds');
 		$payment_method     = post('payment_method');
 		$transaction_id     = post('transaction_id');
@@ -334,22 +282,12 @@ class users extends MX_Controller {
 		
 		// Update user data
 		if ($this->db->update($this->tb_users, $data, ['ids' => $ids])) {
-<<<<<<< HEAD
-=======
-			// Email sending removed as requested: no email will be sent when funds are added manually.
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 			ms(array(
 				'status'  => 'success',
 				'message' => lang("Update_successfully"),
 			));
 		}
 	}
-<<<<<<< HEAD
-=======
-	
-	
-	
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
 	public function ajax_update($ids = ""){
 		$first_name         = post('first_name');
@@ -362,12 +300,8 @@ class users extends MX_Controller {
 		$timezone           = post('timezone');
 		$desc               = post('desc');
 		$settings           = post('settings');
-<<<<<<< HEAD
 		$whatsapp_number    = post('whatsapp_number');
 		
-=======
-		$whatsapp_number           = post('whatsapp_number');
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		if($first_name == '' || $last_name == ''){
 			ms(array(
 				'status'  => 'error',
@@ -378,11 +312,7 @@ class users extends MX_Controller {
 		$data = array(
 			"first_name"              => $first_name,
 			"last_name"               => $last_name,
-<<<<<<< HEAD
 			"whatsapp_number"         => $whatsapp_number,
-=======
-			"whatsapp_number"               => $whatsapp_number,
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 			"role"                    => $role,
 			"status"                  => $status,
 			"timezone"                => $timezone,
@@ -477,48 +407,7 @@ class users extends MX_Controller {
 			}
 		}
 	}
-<<<<<<< HEAD
 
-=======
-	public function get_user_transactions() {
-		$user_id = $this->input->post('user_id');
-		
-		// Log the user ID to ensure it's being received
-		log_message('debug', 'Received user ID: ' . $user_id);
-	
-		// Query the transactions for the user
-		$this->db->where('uid', $user_id);
-		$query = $this->db->get('general_transaction_logs');
-		
-		// Log the number of rows returned
-		log_message('debug', 'Transactions found: ' . $query->num_rows());
-	
-		// Check if transactions are found
-		if ($query->num_rows() > 0) {
-			$transactions = $query->result();
-			
-			// Prepare the HTML to display the transactions
-			$html = '<table class="table table-striped">';
-			$html .= '<thead><tr><th>Transaction ID</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead><tbody>';
-			
-			foreach ($transactions as $transaction) {
-				$html .= '<tr>';
-				$html .= '<td>'.$transaction->transaction_id.'</td>';
-				$html .= '<td>'.$transaction->amount.'</td>';
-				$html .= '<td>'.$transaction->created.'</td>';
-				$html .= '<td>'.($transaction->status == 1 ? 'Completed' : 'Pending').'</td>';
-				$html .= '</tr>';
-			}
-			
-			$html .= '</tbody></table>';
-			
-			echo $html;
-		} else {
-			echo '<p>No transactions found.</p>';
-		}
-	}
-	
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 	public function ajax_send_email(){
 		_is_ajax(get_class($this));
 		$user_email       = post("email_to");
@@ -762,7 +651,6 @@ class users extends MX_Controller {
 	}
 
 	public function export_whatsapp_numbers() {
-<<<<<<< HEAD
 		$this->load->helper('file');
 		$this->load->helper('download');
 	
@@ -777,35 +665,10 @@ class users extends MX_Controller {
 		fputcsv($output, $header);
 	
 		foreach ($users as $user) {
-=======
-		// Load the helper for file and download operations
-		$this->load->helper('file');
-		$this->load->helper('download');
-	
-		// Define the CSV file header
-		$header = array("User ID", "First Name", "Last Name", "WhatsApp Number", "Email");
-	
-		// Fetch users from the database who have WhatsApp numbers
-		$users = $this->model->fetch('*', $this->tb_users, "whatsapp_number IS NOT NULL AND whatsapp_number != ''");
-	
-		// Open output in memory to write the CSV
-		$output = fopen('php://output', 'w');
-	
-		// Start the buffer so the headers are included in the CSV
-		ob_start();
-	
-		// Add the header to the CSV
-		fputcsv($output, $header);
-	
-		// Loop through the users and add their data to the CSV
-		foreach ($users as $user) {
-			// Replace `whatsapp_number` with the correct column from your table
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 			$row = array(
 				$user->id,
 				$user->first_name,
 				$user->last_name,
-<<<<<<< HEAD
 				$user->whatsapp_number,
 				$user->email
 			);
@@ -822,30 +685,6 @@ class users extends MX_Controller {
 		force_download($filename, $csv_data);
 	}
 	
-=======
-				$user->whatsapp_number, // Replace with actual column name
-				$user->email
-			);
-	
-			// Write the row data into CSV
-			fputcsv($output, $row);
-		}
-	
-		// Get the content of the output
-		$csv_data = ob_get_clean();
-	
-		// Close output
-		fclose($output);
-	
-		// Set filename for download
-		$filename = 'whatsapp_numbers_' . date('Y-m-d_H-i-s') . '.csv';
-	
-		// Force the CSV file to be downloaded
-		force_download($filename, $csv_data);
-	}
-	
-	// ajax_modal_custom_rates
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 	public function ajax_modal_custom_rates($uid = ""){
 		_is_ajax($this->module);
 		$uid = (int)$uid;
@@ -864,21 +703,13 @@ class users extends MX_Controller {
 			echo 	'<div class="modal-dialog">
 					    <div class="modal-content">
 						    <div class="alert  alert-dismissible">
-<<<<<<< HEAD
 							  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-=======
-							  <button type="button" class="close" data-dismiss="modal"></button>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 							  <h4>Warning!</h4>
 							  <p>
 							   User is inactive mode, please active this user before adding custom rate!
 							  </p>
 							  <div class="btn-list">
-<<<<<<< HEAD
 							    <button class="btn btn-warning btn-sm" type="button" data-bs-dismiss="modal">Okay</button>
-=======
-							    <button class="btn btn-warning btn-sm" type="button" data-dismiss="modal">Okay</button>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 							  </div>
 							</div>
 					    </div>

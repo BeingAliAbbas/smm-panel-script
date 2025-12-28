@@ -23,11 +23,7 @@
                 <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-<<<<<<< HEAD
                       <h5 class="text-info"><i class="fas fa-life-ring"></i> <?=lang("Updates")?></h5>
-=======
-                      <h5 class="text-info"><i class="fa fa-life-ring"></i> <?=lang("Updates")?></h5>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
@@ -73,11 +69,7 @@
                 <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-<<<<<<< HEAD
                       <h5 class="text-info"><i class="fas fa-info-circle"></i> <?=lang("Rules")?></h5>
-=======
-                      <h5 class="text-info"><i class="fa fa-info-circle"></i> <?=lang("Rules")?></h5>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">

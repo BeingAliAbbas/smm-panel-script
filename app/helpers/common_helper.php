@@ -24,7 +24,6 @@ if(!function_exists('get')){
 
 
 if(!function_exists('post')){
-<<<<<<< HEAD
 	function post($name = "", $xss_clean = true){
 		$CI = &get_instance();
 		if($name != ""){
@@ -36,15 +35,6 @@ if(!function_exists('post')){
 				if($xss_clean){
 					$result = strip_tags($result);
 				}
-=======
-	function post($name = ""){
-		$CI = &get_instance();
-		if($name != ""){
-			$post = $CI->input->post(trim($name));
-			if(is_string($post)){
-				$result =  addslashes($CI->input->post(trim($name)));
-				$result =  strip_tags($result);
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 			}else{
 				$result = $post;
 			}
@@ -1302,7 +1292,6 @@ if(!function_exists("update_option")){
 	}
 }
 
-<<<<<<< HEAD
 /**
  * Get code part content from the code_parts table
  * @param string $page_key The unique page identifier
@@ -1747,8 +1736,6 @@ if(!function_exists("get_code_part_settings")){
 	}
 }
 
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 if(!function_exists("get_upload_folder")){
 	function get_upload_folder(){
 		$path = APPPATH."../assets/uploads/user" . sha1(session("uid"))."/";
@@ -2140,7 +2127,6 @@ if (!function_exists('_is_ajax')) {
 			return true;
 		}
 	}
-<<<<<<< HEAD
 }
 
 /**
@@ -2294,6 +2280,4 @@ if (!function_exists('is_mobile_device')) {
 		
 		return false;
 	}
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 }

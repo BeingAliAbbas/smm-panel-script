@@ -9,7 +9,6 @@
   </div>
 </div>
 <?php }?>
-<<<<<<< HEAD
 
 <?php if (get_code_part_by_position('orders', 'top', '') != '') { ?>
 <div class="col-sm-12">
@@ -25,12 +24,6 @@
   <div class="search-box m-r-30 d-none d-lg-block">
       <?php
       if ( allowed_search_bar(segment(1)) || allowed_search_bar(segment(1)) ) {
-=======
-<div class="container-fluid">
-  <div class="search-box m-r-30 d-none d-lg-block">
-      <?php
-      if ( allowed_search_bar(segment(1)) || allowed_search_bar(segment(2)) ) {
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         echo Modules::run("blocks/search_box");
       }
       ?>
@@ -54,11 +47,7 @@
                   <?=order_status_title($row_status)?>
                   <?php
                       if (in_array($row_status, ['error']) && isset($number_error_orders)) {
-<<<<<<< HEAD
                           echo '<span class="badge bg-danger badge-error-orders">'.$number_error_orders.'</span>';
-=======
-                          echo '<span class="badge badge-danger badge-error-orders">'.$number_error_orders.'</span>';
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                       }
                   ?>
               </a>
@@ -70,36 +59,23 @@
 <?php if ($order_status == 'all' && get_role("admin")): ?>
   <!-- Total Profit Card -->
   <div id="total-profit-card" class="card summary-card">
-<<<<<<< HEAD
     <h4><?=lang("Total Profit")?> <small style="font-size:1rem; color: #000000ff;">(100 orders)</small></h4>
-=======
-    <h4><?=lang("Total Profit")?> <small style="font-size:1rem; color:#bfc9d1;">(100 orders)</small></h4>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     <p id="total-profit-value" class="summary-value" style="color: #27ae60; font-size:2rem; font-weight:bold; margin:0;"></p>
   </div>
 
   <!-- Total Sell Card -->
   <div id="total-sell-card" class="card summary-card">
-<<<<<<< HEAD
     <h4><?=lang("Total Sell")?> <small style="font-size:1rem; color: #000;">(100 orders)</small></h4>
-=======
-    <h4><?=lang("Total Sell")?> <small style="font-size:1rem; color:#bfc9d1;">(100 orders)</small></h4>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     <p id="total-sell-value" class="summary-value" style="color: #f39c12; font-size:2rem; font-weight:bold; margin:0;"></p>
   </div>
 
   <!-- Profit Today Card -->
   <div id="profit-today-card" class="card summary-card">
-<<<<<<< HEAD
     <h4><?=lang("Profit Today")?> <small style="font-size:1rem; color:#000;">(100 orders)</small></h4>
-=======
-    <h4><?=lang("Profit Today")?> <small style="font-size:1rem; color:#bfc9d1;">(100 orders)</small></h4>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     <p id="profit-today-value" class="summary-value" style="color: #2980b9; font-size:2rem; font-weight:bold; margin:0;"></p>
   </div>
 <?php endif; ?>
 
-<<<<<<< HEAD
 <?php if ($order_status == 'error' && get_role("admin") && isset($total_provider_price)): ?>
   <!-- Total Provider Price Card for Error Orders -->
   <div id="total-provider-price-card" class="card summary-card">
@@ -121,12 +97,6 @@ if (get_role("admin")) {
   <?php if ($order_status == 'error') { ?>
     <div class="dropdown d-inline-block">
       <button class="btn btn-secondary dropdown-toggle" type="button" id="bulkActionDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-=======
-  <br><br>
-  <?php if ($order_status == 'error') { ?>
-    <div class="dropdown d-inline-block">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="bulkActionDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         Bulk Actions
       </button>
       <div class="dropdown-menu" aria-labelledby="bulkActionDropdown">
@@ -140,7 +110,6 @@ if (get_role("admin")) {
     <?php if(!empty($order_logs)){ ?>
       <div class="col-md-12">
         <div>
-<<<<<<< HEAD
           <div class="card-header" style="border: 0.1px solid #003a75; border-radius: 3.5px 3.5px 0px 0px; background: #003a75 !important;">
               <h3 class="card-title" style="color: #ffffffff !important;"><?=lang("Your Orders")?></h3>
               <div class="card-options">
@@ -152,30 +121,13 @@ if (get_role("admin")) {
                       <div class="dropdown-menu" style="background-color: #051d2f!important; border: 1px solid #04a9f4;">
                           <a class="dropdown-item" href="#" onclick="copyAllApiOrderIds()" style="background-color: #051d2f!important; color: #fff !important;">
                               <i class="fas fa-copy me-2"></i> Copy All API Order IDs
-=======
-          <div class="card-header bg-gradient text-white">
-              <h3 class="card-title"><?=lang("Your Orders")?></h3>
-              <div class="card-options">
-                  <?php if (get_role("admin")) { ?>
-                  <div class="dropdown">
-                      <button type="button" class="btn btn-outline-info dropdown-toggle" data-toggle="dropdown" style="background-color: #06324e; color: #fff; border: none;">
-                          <i class="fa fa-clone mr-2"></i> Copy Options
-                      </button>
-                      <div class="dropdown-menu" style="background-color: #051d2f!important; border: 1px solid #04a9f4;">
-                          <a class="dropdown-item" href="#" onclick="copyAllApiOrderIds()" style="background-color: #051d2f!important; color: #fff !important;">
-                              <i class="fa fa-copy mr-2"></i> Copy All API Order IDs
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                           </a>
                       </div>
                   </div>
                   <?php } ?>
               </div>
           </div>
-<<<<<<< HEAD
           <div class="table-responsive" style="border-radius: 0px;">
-=======
-          <div class="table-responsive">
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             <table class="table table-hover table-bordered table-vcenter card-table">
               <thead style="color: #fff;">
                 <tr>
@@ -222,11 +174,7 @@ if (get_role("admin")) {
                   <td style="color: #fff;">
                     <span id="orderId_<?=$row->id?>"><?=$row->id?></span>
                     <button onclick="copyToClipboard('orderId_<?=$row->id?>')" style="background:none; border:none; cursor:pointer;">
-<<<<<<< HEAD
                       <i class="fas fa-copy" style="color: #2ecc71; margin-left: 8px;"></i>
-=======
-                      <i class="fa fa-copy" style="color: #2ecc71; margin-left: 8px;"></i>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </button>
                   </td>
                   <?php if (get_role("admin") || get_role("supporter")) { ?>
@@ -236,11 +184,7 @@ if (get_role("admin")) {
                     </span>
                     <?php if ($row->api_order_id != 0 && $row->api_order_id != -1): ?>
                       <button onclick="copyToClipboard('apiOrderId_<?=$row->id?>')" style="background:none; border:none; cursor:pointer;">
-<<<<<<< HEAD
                         <i class="fas fa-copy" style="color: #2ecc71; margin-left: 8px;"></i>
-=======
-                        <i class="fa fa-copy" style="color: #2ecc71; margin-left: 8px;"></i>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                       </button>
                     <?php endif; ?>
                   </td>
@@ -308,11 +252,7 @@ if (get_role("admin")) {
                   <td><?= $currency_symbol . currency_format(convert_currency($profit), $decimal_places, $decimalpoint, $separator); ?></td>
                   <?php endif; ?>
                   <td style="color: #fff;"><?=convert_timezone($row->created, "user")?></td>
-<<<<<<< HEAD
                   <td class="order-status-cell">
-=======
-                  <td>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     <?php
                     $order_status = $row->status;
                     if (!get_role('admin') && in_array($order_status, ['fail', 'error'])) {
@@ -343,7 +283,6 @@ if (get_role("admin")) {
                         <?php endif; ?>
                       <?php endif; ?>
                     <?php endif; ?>
-<<<<<<< HEAD
                     
                     <?php
                     // Show cancel button for non-admin users in the status column
@@ -389,8 +328,6 @@ if (get_role("admin")) {
                       }
                     }
                     ?>
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   </td>
                   <?php if (get_role("admin") || get_role("supporter")) { ?>
                   <td class="text-red"><?=!empty($row->note)? $row->note : ""?></td>
@@ -408,7 +345,6 @@ if (get_role("admin")) {
                       </a>
                       <br><br>
                     <?php } ?>
-<<<<<<< HEAD
                     
                     <?php
                     // Show cancel button for cancellable orders (pending, processing, inprogress)
@@ -449,8 +385,6 @@ if (get_role("admin")) {
                       }
                     } 
                     ?>
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   </td>
                   <?php } ?>
                 </tr>
@@ -461,11 +395,7 @@ if (get_role("admin")) {
         </div>
       </div>
       <div class="col-md-12">
-<<<<<<< HEAD
         <div class="float-end">
-=======
-        <div class="float-right">
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           <?=$links?>
         </div>
       </div>
@@ -475,7 +405,6 @@ if (get_role("admin")) {
   </div>
 </div>
 
-<<<<<<< HEAD
 <?php if (get_code_part_by_position('orders', 'bottom', '') != '') { ?>
 <div class="col-sm-12">
   <div class="row">
@@ -486,8 +415,6 @@ if (get_role("admin")) {
 </div>
 <?php }?>
 
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 <!-- Scripts -->
 <script>
 $(document).ready(function() {
@@ -505,7 +432,6 @@ $(document).ready(function() {
   $('#profit-today-value').text(profitToday + ' PKR');
 
   // No JS required for single order resend (uses anchor)
-<<<<<<< HEAD
 
   // Handle cancel order button click
   $('.cancel-order-btn').click(function() {
@@ -570,8 +496,6 @@ $(document).ready(function() {
       }
     });
   });
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 });
 
 // Copy single order id to clipboard
@@ -625,7 +549,6 @@ function copyTextToClipboard(text) {
   font-size: 18px;
   font-weight: bold;
 }
-<<<<<<< HEAD
 li {
   color: #000 !important; /* black text */
 }
@@ -646,6 +569,4 @@ li {
   opacity: 0.7;
 }
 
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 </style>

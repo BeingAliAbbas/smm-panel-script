@@ -1,5 +1,4 @@
 
-<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-globe"></i> <?=lang("website_setting")?> - Advanced SEO</h3>
@@ -12,15 +11,6 @@
             <div class="col-md-12">
               <h4 class="border-bottom pb-2 mb-3"><i class="fe fe-settings"></i> Basic Settings</h4>
             </div>
-=======
-    <div class="card content">
-      <div class="card-header" style="border: 0.1px solid #05d0a0; border-radius: 3.5px 3.5px 0px 0px; background: #05d0a0;">
-        <h3 class="card-title"><i class="fe fe-globe"></i> <?=lang("website_setting")?></h3>
-      </div>
-      <div class="card-body">
-        <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?=cn($module)?>">
-          <div class="row">
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             <div class="col-md-12 col-lg-12">
               <div class="form-group">
                 <div class="form-label"><?=lang("Maintenance_mode")?></div>
@@ -55,7 +45,6 @@
                 <input class="form-control" name="website_title" value="<?=get_option('website_title', "SmartPanel - SMM Panel Reseller Tool")?>">
               </div>
             </div>
-<<<<<<< HEAD
           </div>
 
           <!-- Advanced Meta Tags Section -->
@@ -318,18 +307,10 @@
             <div class="">
               <button class="btn btn-primary btn-min-width btn-lg text-uppercase"><?=lang("Save")?></button>
             </div>
-=======
-            <div class="col-md-12">
-              <div class="">
-                <button class="btn btn-primary btn-min-width btn-lg text-uppercase"><?=lang("Save")?></button>
-              </div>
-            </div>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
         </form>
       </div>
     </div>
-<<<<<<< HEAD
 
     <script>
     // Live SEO preview updates
@@ -349,5 +330,3 @@
       });
     });
     </script>
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98

@@ -68,7 +68,6 @@
     <input class="form-control223344 square" type="text" name="service_price" value="<?=(!empty($service->price))?currency_format(convert_currency($service->price), get_option("currency_decimal")) :''?>" readonly>
   </div>
 </div>
-<<<<<<< HEAD
 
 <?php if (!empty($service->avg_completion_time) && $service->avg_completion_time > 0): ?>
 <div class="col-md-12 col-sm-12 col-xs-12">
@@ -100,5 +99,3 @@
   </div>
 </div>
 <?php endif; ?>
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98

@@ -1,13 +1,7 @@
 
-<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-mail"></i> <?=lang("email_setting")?></h3>
-=======
-    <div class="card content">
-      <div class="card-header" style="border: 0.1px solid #1B78FC; border-radius: 3.5px 3.5px 0px 0px; background: #1B78FC;">
-        <h3 class="card-title"><i class="fe fe-mail"></i> <?=lang("email_setting")?></h3>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
       <div class="card-body">
         <form class="actionForm" action="<?=cn("$module/ajax_general_settings/")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
@@ -18,97 +12,54 @@
                 <div class="form-label"><?=lang("email_notifications")?></div>
 
                 <div class="custom-controls-stacked">
-<<<<<<< HEAD
                   <label class="form-check">
                     <input type="hidden" name="is_verification_new_account" value="0">
                     <input type="checkbox" class="form-check-input" name="is_verification_new_account" value="1" <?=(get_option('is_verification_new_account', 0) == 1)? "checked" : ''?>>
                     <span class="form-check-label"> <?=lang("email_verification_for_new_customer_accounts_preventing_spam_account")?></span>
-=======
-                  <label class="custom-control custom-checkbox">
-                    <input type="hidden" name="is_verification_new_account" value="0">
-                    <input type="checkbox" class="custom-control-input" name="is_verification_new_account" value="1" <?=(get_option('is_verification_new_account', 0) == 1)? "checked" : ''?>>
-                    <span class="custom-control-label"> <?=lang("email_verification_for_new_customer_accounts_preventing_spam_account")?></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   </label>
                 </div>   
 
                 <div class="custom-controls-stacked">
-<<<<<<< HEAD
                   <label class="form-check">
                     <input type="hidden" name="is_welcome_email" value="0">
                     <input type="checkbox" class="form-check-input" name="is_welcome_email" value="1" <?=(get_option('is_welcome_email',"") == 1)? "checked" : ''?>>
                     <span class="form-check-label"><?=lang("new_user_welcome_email")?></span>
-=======
-                  <label class="custom-control custom-checkbox">
-                    <input type="hidden" name="is_welcome_email" value="0">
-                    <input type="checkbox" class="custom-control-input" name="is_welcome_email" value="1" <?=(get_option('is_welcome_email',"") == 1)? "checked" : ''?>>
-                    <span class="custom-control-label"><?=lang("new_user_welcome_email")?></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   </label>
                 </div>     
 
                 <div class="custom-controls-stacked">
-<<<<<<< HEAD
                   <label class="form-check">
                     <input type="hidden" name="is_new_user_email" value="0">
                     <input type="checkbox" class="form-check-input" name="is_new_user_email" value="1" <?=(get_option('is_new_user_email',"") == 1)? "checked" : ''?>>
                     <span class="form-check-label"><?=lang("new_user_notification_email")?> <small><?=lang("receive_notification_when_a_new_user_registers_to_the_site")?></small></span>
-=======
-                  <label class="custom-control custom-checkbox">
-                    <input type="hidden" name="is_new_user_email" value="0">
-                    <input type="checkbox" class="custom-control-input" name="is_new_user_email" value="1" <?=(get_option('is_new_user_email',"") == 1)? "checked" : ''?>>
-                    <span class="custom-control-label"><?=lang("new_user_notification_email")?> <small><?=lang("receive_notification_when_a_new_user_registers_to_the_site")?></small></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   </label>
                 </div>
 
                 <div class="custom-controls-stacked">
-<<<<<<< HEAD
                   <label class="form-check">
                     <input type="hidden" name="is_payment_notice_email" value="0">
                     <input type="checkbox" class="form-check-input" name="is_payment_notice_email" value="1" <?=(get_option('is_payment_notice_email',"") == 1)? "checked" : ''?>>
                     <span class="form-check-label"><?=lang("payment_notification_email")?> <small><?=lang("send_notification_when_a_new_user_add_funds_successfully_to_user_balance")?></small></span>
-=======
-                  <label class="custom-control custom-checkbox">
-                    <input type="hidden" name="is_payment_notice_email" value="0">
-                    <input type="checkbox" class="custom-control-input" name="is_payment_notice_email" value="1" <?=(get_option('is_payment_notice_email',"") == 1)? "checked" : ''?>>
-                    <span class="custom-control-label"><?=lang("payment_notification_email")?> <small><?=lang("send_notification_when_a_new_user_add_funds_successfully_to_user_balance")?></small></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   </label>
                 </div>
 
                 <div class="custom-controls-stacked">
-<<<<<<< HEAD
                   <label class="form-check">
                     <input type="hidden" name="is_ticket_notice_email" value="0">
                     <input type="checkbox" class="form-check-input" name="is_ticket_notice_email" value="1" <?=(get_option('is_ticket_notice_email',"") == 1)? "checked" : ''?>>
                     <span class="form-check-label"><?=lang("ticket_notification_email")?> <small><?=lang("send_notification_to_user_when_admin_reply_to_a_ticket")?></small></span>
-=======
-                  <label class="custom-control custom-checkbox">
-                    <input type="hidden" name="is_ticket_notice_email" value="0">
-                    <input type="checkbox" class="custom-control-input" name="is_ticket_notice_email" value="1" <?=(get_option('is_ticket_notice_email',"") == 1)? "checked" : ''?>>
-                    <span class="custom-control-label"><?=lang("ticket_notification_email")?> <small><?=lang("send_notification_to_user_when_admin_reply_to_a_ticket")?></small></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   </label>
                 </div>
 
                 <div class="custom-controls-stacked">
-<<<<<<< HEAD
                   <label class="form-check">
                     <input type="hidden" name="is_ticket_notice_email_admin" value="0">
                     <input type="checkbox" class="form-check-input" name="is_ticket_notice_email_admin" value="1" <?=(get_option('is_ticket_notice_email_admin', "") == 1)? "checked" : ''?>>
                     <span class="form-check-label"><?=lang("ticket_notification_email")?> <small><?php echo lang("send_notification_to_admin_when_user_open_a_ticket"); ?></small></span>
-=======
-                  <label class="custom-control custom-checkbox">
-                    <input type="hidden" name="is_ticket_notice_email_admin" value="0">
-                    <input type="checkbox" class="custom-control-input" name="is_ticket_notice_email_admin" value="1" <?=(get_option('is_ticket_notice_email_admin', "") == 1)? "checked" : ''?>>
-                    <span class="custom-control-label"><?=lang("ticket_notification_email")?> <small><?php echo lang("send_notification_to_admin_when_user_open_a_ticket"); ?></small></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   </label>
                 </div>
 
                 <div class="custom-controls-stacked">
-<<<<<<< HEAD
                   <label class="form-check">
                     <input type="hidden" name="is_order_notice_email" value="0">
                     <input type="checkbox" class="form-check-input" name="is_order_notice_email" value="1" <?=(get_option('is_order_notice_email',"") == 1)? "checked" : ''?>>
@@ -169,15 +120,6 @@
                 <label class="form-label"><?=lang("Provider_Balance_Threshold")?></label>
                 <input type="number" class="form-control" name="provider_balance_threshold" value="<?=get_option('provider_balance_threshold', '100')?>" step="0.01" min="0">
                 <small class="form-text text-muted"><?=lang("Alert_will_be_sent_when_provider_balance_falls_below_this_value_Maximum_one_email_per_provider_per_24_hours")?></small>
-=======
-                  <label class="custom-control custom-checkbox">
-                    <input type="hidden" name="is_order_notice_email" value="0">
-                    <input type="checkbox" class="custom-control-input" name="is_order_notice_email" value="1" <?=(get_option('is_order_notice_email',"") == 1)? "checked" : ''?>>
-                    <span class="custom-control-label"><?=lang("order_notification_email")?> <small><?=lang("receive_notification_when_a_user_place_order_successfully")?></small></span>
-                  </label>
-                </div>
-
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
               </div>
 
               <div class="form-group">

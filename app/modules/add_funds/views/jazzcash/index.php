@@ -1,16 +1,4 @@
-<<<<<<< HEAD
 
-=======
-<style>
-    .ff {
-        background: #164964;
-        border: 1px solid #00ffff;
-        padding: 0.5rem;
-        border-radius: 3px;
-        margin-bottom: 1rem;
-    }
-</style>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
 <?php
   $option               = get_value($payment_params, 'option');
@@ -45,7 +33,6 @@
           </p>
         </div>
 
-<<<<<<< HEAD
 
   
   <div class="jc-account-body">
@@ -245,26 +232,6 @@ function copyJazzCash(elementId) {
   });
 }
 </script>
-=======
-        <!-- Account Info -->
-        <fieldset class="ff mt-1">
-          <center>
-            <div class="for-group text-center text-uppercase">
-              <strong>JAZZCASH ACCOUNT TITLE:</strong>
-              <h2>
-                <span id="holderName"><?= $title; ?></span>
-              </h2>
-            </div>
-
-            <div class="for-group text-center">
-              <strong>JAZZCASH ACCOUNT NUMBER:</strong>
-              <h2>
-                <span id="accountNumber"><?= $number; ?></span>
-              </h2>
-            </div>
-          </center>
-        </fieldset>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
         <!-- Amount -->
         <div class="form-group">

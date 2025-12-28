@@ -234,7 +234,6 @@ class tickets extends MX_Controller {
 						'message'  => $send_message,
 					));
 				}
-<<<<<<< HEAD
 
 				// Send WhatsApp notification to admin for new support ticket
 				$this->load->library('whatsapp_notification');
@@ -247,8 +246,6 @@ class tickets extends MX_Controller {
 					);
 					$this->whatsapp_notification->send('support_ticket', $variables);
 				}
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 			}
 
 			ms(array(

@@ -10,7 +10,6 @@
 </div>
 <?php }?>
 
-<<<<<<< HEAD
 <?php if (get_code_part_by_position('transactions', 'top', '') != '') { ?>
 <div class="col-sm-12">
   <div class="row">
@@ -193,17 +192,11 @@
 </div>
 <?php } ?>
 
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 <style>
 /* ---------- Custom Styling Add Funds Button + Card Header (matches dark theme) ---------- */
 .transaction-card {
   background: #06141b;
-<<<<<<< HEAD
   border: 1px solid #003a75;
-=======
-  border: 1px solid #0d3242;
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
   border-radius: 14px;
   box-shadow: 0 8px 18px -8px rgba(0,0,0,.6), 0 2px 6px -2px rgba(0,0,0,.5);
   overflow: hidden;
@@ -213,13 +206,8 @@
   justify-content:space-between;
   align-items:center;
   padding:18px 22px 14px;
-<<<<<<< HEAD
   background: #003a75 !important;
   border-bottom:1px solid #003a75;
-=======
-  background:linear-gradient(135deg,#042636,#052d40 55%,#041d28);
-  border-bottom:1px solid #0e3b4e;
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 }
 .transaction-card-title{
   margin:0;
@@ -298,7 +286,6 @@
     <div class="transaction-card-header">
       <h3 class="transaction-card-title"><?= lang('Lists') ?></h3>
 
-<<<<<<< HEAD
       <div class="d-flex gap-2">
         <?php if (get_role('admin')): ?>
           <?php
@@ -319,14 +306,6 @@
           </a>
         <?php endif; ?>
       </div>
-=======
-      <?php if (get_role('admin') || get_role('supporter')): ?>
-        <a href="<?=cn($module.'/add_funds_manual')?>" class="ajaxModal btn-add-funds">
-          <i class="fe fe-plus"></i>
-          <span><?=lang('Add_Funds')?></span>
-        </a>
-      <?php endif; ?>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     </div>
 
     <div class="table-responsive">
@@ -347,7 +326,6 @@
           <?php
             if (!empty($transactions)) {
               $i = 0;
-<<<<<<< HEAD
               // Multi-currency support setup
               $current_currency = get_current_currency();
               $currency_symbol = $current_currency ? $current_currency->symbol : get_option("currency_symbol", "$");
@@ -355,10 +333,6 @@
               $decimalpoint = get_option('currency_decimal_separator', 'dot') == 'comma' ? ',' : '.';
               $separator = get_option('currency_thousand_separator', 'space') == 'space' ? ' ' : (get_option('currency_thousand_separator', 'comma') == 'comma' ? ',' : '.');
               
-=======
-              $current_currency = get_current_currency();
-              $currency_symbol = $current_currency ? $current_currency->symbol : get_option("currency_symbol", '$');
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
               foreach ($transactions as $key => $row) {
                 $i++;
           ?>
@@ -395,13 +369,8 @@
                 <img class="payment" src="<?=BASE?>/assets/images/payments/<?=strtolower($row->type); ?>.png" alt="<?=$row->type?> icon">
               <?php } ?>
             </td>
-<<<<<<< HEAD
             <td><?= $currency_symbol . currency_format(convert_currency($row->amount), $decimal_places, $decimalpoint, $separator) ?></td>
             <td><?= $currency_symbol . currency_format(convert_currency($row->txn_fee), $decimal_places, $decimalpoint, $separator) ?></td>
-=======
-            <td><?=$currency_symbol . currency_format(convert_currency($row->amount), get_option('currency_decimal', 2))?></td>
-            <td><?=$row->txn_fee?></td>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             <?php if (get_role("admin")) { ?>
               <td><?=$row->note;?></td>
             <?php } ?>
@@ -413,24 +382,16 @@
                     echo '<span class="badge badge-default">'.lang('Paid').'</span>';
                     break;
                   case 0:
-<<<<<<< HEAD
                     echo '<span class="badge bg-warning text-dark">'.lang("waiting_for_buyer_funds").'</span>';
                     break;
                   case -1:
                     echo '<span class="badge bg-danger">'.lang('cancelled_timed_out').'</span>';
-=======
-                    echo '<span class="badge badge-warning">'.lang("waiting_for_buyer_funds").'</span>';
-                    break;
-                  case -1:
-                    echo '<span class="badge badge-danger">'.lang('cancelled_timed_out').'</span>';
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     break;
                 }
               ?>
             </td>
             <?php if (get_role("admin")) { ?>
             <td class="text-center">
-<<<<<<< HEAD
               <a href="<?=cn("$module/update/".$row->ids)?>" class="btn btn-sm btn-primary ajaxModal me-1" title="<?=lang('Edit')?>">
                 <i class="fe fe-edit"></i>
               </a>
@@ -444,11 +405,6 @@
                 <i class="fe fe-check-circle"></i>
               </a>
               <?php } ?>
-=======
-              <a href="<?=cn("$module/update/".$row->ids)?>" class="ajaxModal">
-                <i class="btn btn-info fe fe-edit"> <?=lang('Edit')?></i>
-              </a>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </td>
             <?php } ?>
           </tr>
@@ -460,11 +416,7 @@
 </div>
 
 <div class="col-md-12">
-<<<<<<< HEAD
   <div class="float-end">
-=======
-  <div class="float-right">
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     <?=$links?>
   </div>
 </div>
@@ -472,7 +424,6 @@
 <?php } else {
   echo Modules::run("blocks/empty_data");
 } ?>
-<<<<<<< HEAD
 
 <?php if (get_code_part_by_position('transactions', 'bottom', '') != '') { ?>
 <div class="col-sm-12">
@@ -550,6 +501,3 @@ function confirmQuickPay(event, element) {
   font-size: 14px;
 }
 </style>
-=======
-</div>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98

@@ -9,7 +9,6 @@ class currencies extends MX_Controller {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Currency Manager Index Page
 	 * Standalone module for managing currencies
 	 */
@@ -56,8 +55,6 @@ class currencies extends MX_Controller {
 	}
 
 	/**
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 	 * Set user's selected currency
 	 */
 	public function set_currency(){
@@ -503,7 +500,6 @@ class currencies extends MX_Controller {
 			'message' => 'Currency updated successfully'
 		]);
 	}
-<<<<<<< HEAD
 
 	/**
 	 * Delete a currency
@@ -609,6 +605,4 @@ class currencies extends MX_Controller {
 			'message' => "Successfully processed {$updated} currencies"
 		]);
 	}
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 }

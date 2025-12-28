@@ -13,7 +13,6 @@
             <div class="tabs-list">
               <ul class="nav nav-tabs">
                 <li class="mmm">
-<<<<<<< HEAD
                   <a class="active show" data-bs-toggle="tab" href="#dashboard"><i class="fas fa-book"></i> Dashboard Page Text</a>
                 </li>
                 <li class="mmm">
@@ -39,33 +38,6 @@
                 </li>
                 <li class="mmm">
                   <a data-bs-toggle="tab" href="#transactions"><i class="fas fa-book"></i> Transactions Page Text</a>
-=======
-                  <a class="active show" data-toggle="tab" href="#dashboard"><i class="fa fa-book"></i> Dashboard Page Text</a>
-                </li>
-                <li class="mmm">
-                  <a data-toggle="tab" href="#new_order"><i class="fa fa-book"></i> New Order Page Text</a>
-                </li>
-                <li class="mmm">
-                  <a data-toggle="tab" href="#orders"><i class="fa fa-book"></i> Order Logs Page Text</a>
-                </li>
-                <li class="mmm">
-                  <a data-toggle="tab" href="#services"><i class="fa fa-book"></i> Services Page Text</a>
-                </li>
-                <li class="mmm">
-                  <a data-toggle="tab" href="#add_funds"><i class="fa fa-book"></i> Add Funds Page Text</a>
-                </li>
-                <li class="mmm">
-                  <a data-toggle="tab" href="#api"><i class="fa fa-book"></i> API Page Text</a>
-                </li>
-                <li class="mmm">
-                  <a data-toggle="tab" href="#tickets"><i class="fa fa-book"></i> Tickets Page Text</a>
-                </li>
-                <li class="mmm">
-                  <a data-toggle="tab" href="#child_panel"><i class="fa fa-book"></i> Child Panel Page Text</a>
-                </li>
-                <li class="mmm">
-                  <a data-toggle="tab" href="#transactions"><i class="fa fa-book"></i> Transactions Page Text</a>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 </li>
               </ul>
             </div>
@@ -123,11 +95,7 @@
                 <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-<<<<<<< HEAD
                       <h5 class="text-info"><i class="fas fa-shopping-cart"></i> <?=lang("Orders")?></h5>
-=======
-                      <h5 class="text-info"><i class="fa fa-shopping-cart"></i> <?=lang("Orders")?></h5>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                         <div class="row">
                           <div class="col-md-12">
                             <div class="form-group">
@@ -173,11 +141,7 @@
                 <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-<<<<<<< HEAD
                       <h5 class="text-info"><i class="fas fa-money-bill"></i> <?=lang("Add_Funds")?></h5>
-=======
-                      <h5 class="text-info"><i class="fa fa-money"></i> <?=lang("Add_Funds")?></h5>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                         <div class="row">
                           <div class="col-md-12">
                             <div class="form-group">
@@ -223,11 +187,7 @@
                 <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-<<<<<<< HEAD
                       <h5 class="text-info"><i class="far fa-comments"></i> <?=lang("Tickets")?></h5>
-=======
-                      <h5 class="text-info"><i class="fa fa-comments-o"></i> <?=lang("Tickets")?></h5>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                         <div class="row">
                           <div class="col-md-12">
                             <div class="form-group">
@@ -250,11 +210,7 @@
                 <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-<<<<<<< HEAD
                       <h5 class="text-info"><i class="fas fa-child"></i> <?=lang("Child_Panel")?></h5>
-=======
-                      <h5 class="text-info"><i class="fa fa-child"></i> <?=lang("Child_Panel")?></h5>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                         <div class="row">
                           <div class="col-md-12">
                             <div class="form-group">

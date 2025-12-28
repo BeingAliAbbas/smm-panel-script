@@ -11,11 +11,7 @@
     <?php 
       if(get_role("admin")  || get_role("supporter")) {
     ?>
-<<<<<<< HEAD
     <a href="<?=cn("$module/update")?>" class="ajaxModal"><span class="add-new" data-bs-toggle="tooltip"><i class="btn btn-info fas fa-plus"> <?=lang("add_new")?></i></span></a> 
-=======
-    <a href="<?=cn("$module/update")?>" class="ajaxModal"><span class="add-new" data-toggle="tooltip"><i class="btn btn-info fa fa-plus"> <?=lang("add_new")?></i></span></a> 
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     <?php }?>
   </h1>
   <div class="page-options d-flex">
@@ -24,7 +20,6 @@
     ?>
     <div class="form-group d-flex">
       <div class="item-action dropdown action-options">
-<<<<<<< HEAD
         <button type="button" class="btn btn-pill btn-outline-info dropdown-toggle" data-bs-toggle="dropdown">
            <i class="fe fe-menu me-2"></i> <?=lang("Action")?>
         </button>
@@ -33,16 +28,6 @@
           <a class="dropdown-item ajaxActionOptions" href="<?=cn($module.'/ajax_actions_option')?>" data-type="all_deactive"><i class="fe fe-trash-2 text-danger me-2"></i> <?=lang("all_deactivated_categories")?></a>
           <a class="dropdown-item ajaxActionOptions" href="<?=cn($module.'/ajax_actions_option')?>" data-type="deactive"><i class="fe fe-x-square text-danger me-2"></i> <?=lang('Deactive')?></a>   
           <a class="dropdown-item ajaxActionOptions" href="<?=cn($module.'/ajax_actions_option')?>" data-type="active"><i class="fe fe-check-square text-success me-2"></i> <?=lang('Active')?></a>
-=======
-        <button type="button" class="btn btn-pill btn-outline-info dropdown-toggle" data-toggle="dropdown">
-           <i class="fe fe-menu mr-2"></i> <?=lang("Action")?>
-        </button>
-        <div class="dropdown-menu dropdown-menu-right">
-          <a class="dropdown-item ajaxActionOptions" href="<?=cn($module.'/ajax_actions_option')?>" data-type="delete"><i class="fe fe-trash-2 text-danger mr-2"></i> <?=lang("Delete")?></a>
-          <a class="dropdown-item ajaxActionOptions" href="<?=cn($module.'/ajax_actions_option')?>" data-type="all_deactive"><i class="fe fe-trash-2 text-danger mr-2"></i> <?=lang("all_deactivated_categories")?></a>
-          <a class="dropdown-item ajaxActionOptions" href="<?=cn($module.'/ajax_actions_option')?>" data-type="deactive"><i class="fe fe-x-square text-danger mr-2"></i> <?=lang('Deactive')?></a>   
-          <a class="dropdown-item ajaxActionOptions" href="<?=cn($module.'/ajax_actions_option')?>" data-type="active"><i class="fe fe-check-square text-success mr-2"></i> <?=lang('Active')?></a>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
     </div>
@@ -54,19 +39,11 @@
   <?php if(!empty($categories)){
   ?>
   <div class="col-md-12 col-xl-12">
-<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><?=lang("Lists")?></h3>
         <div class="card-options">
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-=======
-    <div class="card">
-      <div class="card-header" style="border: 0.1px solid #05d0a0; border-radius: 3.5px 3.5px 0px 0px; background: #05d0a0;">
-        <h3 class="card-title"><?=lang("Lists")?></h3>
-        <div class="card-options">
-          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="table-responsive">
@@ -78,15 +55,9 @@
               ?>
               <th class="text-center w-1">
                 <div class="custom-controls-stacked">
-<<<<<<< HEAD
                   <label class="form-check">
                     <input type="checkbox" class="form-check-input check-all" data-name="chk_1">
                     <span class="form-check-label"></span>
-=======
-                  <label class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input check-all" data-name="chk_1">
-                    <span class="custom-control-label"></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   </label>
                 </div>
               </th>
@@ -117,15 +88,9 @@
               ?>
               <th class="text-center w-1">
                 <div class="custom-controls-stacked">
-<<<<<<< HEAD
                   <label class="form-check">
                     <input type="checkbox" class="form-check-input chk_1"  name="ids[]" value="<?=$row->ids?>">
                     <span class="form-check-label"></span>
-=======
-                  <label class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input chk_1"  name="ids[]" value="<?=$row->ids?>">
-                    <span class="custom-control-label"></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   </label>
                 </div>
               </th>
@@ -138,15 +103,9 @@
               <td><?=$row->sort?></td>
               <td>
                 <?php if(!empty($row->status) && $row->status == 1){?>
-<<<<<<< HEAD
                   <span class="badge bg-info"><?=lang("Active")?></span>
                   <?php }else{?>
                   <span class="badge bg-warning text-dark"><?=lang("Deactive")?></span>
-=======
-                  <span class="badge badge-info"><?=lang("Active")?></span>
-                  <?php }else{?>
-                  <span class="badge badge-warning"><?=lang("Deactive")?></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 <?php }?>
               </td>
 
@@ -155,11 +114,7 @@
               ?>
               <td class="text-center">
                 <div class="item-action dropdown">
-<<<<<<< HEAD
                   <a href="javascript:void(0)" data-bs-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
-=======
-                  <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   <div class="dropdown-menu">
                     
                     <a href="<?=cn("$module/update/".$row->ids)?>" class="dropdown-item ajaxModal"><i class="dropdown-icon fe fe-edit"></i> <?=lang('Edit')?> </a>
@@ -181,11 +136,7 @@
     </div>
   </div>
   <div class="col-md-12">
-<<<<<<< HEAD
     <div class="float-end">
-=======
-    <div class="float-right">
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       <?=$links?>
     </div>
   </div>

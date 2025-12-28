@@ -61,7 +61,6 @@ class balance_logs extends MX_Controller {
 		$page            = ($page > 0) ? ($page - 1) : 0;
 		$limit_per_page  = get_option("default_limit_per_page", 10);
 
-<<<<<<< HEAD
 		// Advanced filters for admin
 		$filters = [];
 		if (get_role('admin') || get_role('supporter')) {
@@ -77,18 +76,11 @@ class balance_logs extends MX_Controller {
 		}
 
 		$query           = array_filter($filters); // Remove empty values
-=======
-		$query           = array();
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		$query_string    = (!empty($query)) ? "?".http_build_query($query) : "";
 
 		$config = array(
 			'base_url'         => cn(get_class($this).$query_string),
-<<<<<<< HEAD
 			'total_rows'       => $this->model->get_balance_logs_list(true, "all", "", "", $filters),
-=======
-			'total_rows'       => $this->model->get_balance_logs_list(true),
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 			'per_page'         => $limit_per_page,
 			'use_page_numbers' => true,
 			'prev_link'        => '<i class="fe fe-chevron-left"></i>',
@@ -98,7 +90,6 @@ class balance_logs extends MX_Controller {
 		);
 		$this->pagination->initialize($config);
 		$links       = $this->pagination->create_links();
-<<<<<<< HEAD
 		$balance_logs = $this->model->get_balance_logs_list(false, "all", $limit_per_page, $page * $limit_per_page, $filters);
 
 		// Get statistics for admin dashboard
@@ -106,20 +97,14 @@ class balance_logs extends MX_Controller {
 		if (get_role('admin') || get_role('supporter')) {
 			$stats = $this->model->get_balance_stats($filters);
 		}
-=======
-		$balance_logs = $this->model->get_balance_logs_list(false, "all", $limit_per_page, $page * $limit_per_page);
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
 		$data = array(
 			"module"       => $this->module,
 			"columns"      => $this->columns,
 			"balance_logs" => $balance_logs,
 			"links"        => $links,
-<<<<<<< HEAD
 			"stats"        => $stats,
 			"filters"      => $filters,
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 		);
 
 		$this->template->build('index', $data);
@@ -248,7 +233,6 @@ class balance_logs extends MX_Controller {
 				break;
 		}
 	}
-<<<<<<< HEAD
 	
 	/**
 	 * View Execution Logs - Display cron list with last run times
@@ -363,6 +347,3 @@ class balance_logs extends MX_Controller {
 		$this->load->view('view_details', $data);
 	}
 }
-=======
-}
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98

@@ -64,11 +64,7 @@
       <div class="card-header">
         <h3 class="card-title">Recipients List (Showing last 100)</h3>
         <div class="card-options">
-<<<<<<< HEAD
           <span class="badge bg-primary">Total: <?php echo number_format($campaign->total_messages); ?></span>
-=======
-          <span class="badge badge-primary">Total: <?php echo number_format($campaign->total_messages); ?></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="table-responsive">
@@ -144,11 +140,7 @@ $(document).ready(function(){
       data: formData,
       timeout: 60000,
       beforeSend: function(){
-<<<<<<< HEAD
         $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Importing...');
-=======
-        $button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Importing...');
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       },
       success: function(response){
         if(response.status == 'success'){
@@ -201,11 +193,7 @@ $(document).ready(function(){
       contentType: false,
       timeout: 60000,
       beforeSend: function(){
-<<<<<<< HEAD
         $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Uploading...');
-=======
-        $button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Uploading...');
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       },
       success: function(response){
         if(response.status == 'success'){

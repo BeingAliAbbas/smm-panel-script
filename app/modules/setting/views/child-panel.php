@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-archive"></i> <?= lang("childpanel_setting") ?></h3>
-=======
-<div class="card content">
-      <div class="card-header" style="border: 0.1px solid #1B78FC; border-radius: 3.5px 3.5px 0px 0px; background: #1B78FC;">
-        <h3 class="card-title"><i class="fe fe-archive"></i> <?= lang("childpanel_setting") ?></h3>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     </div>
          <div class="card-body">
         <form class="actionForm" action="<?= cn("$module/ajax_general_settings") ?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
@@ -25,11 +19,7 @@
                         <label class="form-label"><?= lang("childpanel_price") ?>
                         </label>
                         <div class="input-group">
-<<<<<<< HEAD
                             <span class="">
-=======
-                            <span class="input-group-prepend">
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                                 <span class="input-group-text"><?= get_option('currency_symbol') ?></span>
                             </span>
                             <input type="number" class="form-control" name="childpanel_price" value="<?= get_option('childpanel_price') ?>">
@@ -103,11 +93,7 @@
 
           <div class="form-group">
             <div class="input-group">
-<<<<<<< HEAD
               <span class="">
-=======
-              <span class="input-group-prepend">
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 <span class="input-group-text"><?=get_option('currency_symbol',"$")?></span>
               </span>
               <input class="form-control" name="affiliate_bonus" value="<?= get_option('affiliate_bonus', "10") ?>">

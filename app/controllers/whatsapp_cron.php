@@ -9,10 +9,7 @@ class Whatsapp_cron extends CI_Controller {
     public function __construct(){
         parent::__construct();
         $this->load->model('whatsapp_marketing/whatsapp_marketing_model', 'whatsapp_model');
-<<<<<<< HEAD
         $this->load->library('cron_logger');
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         
         // Security token for cron access
         $this->requiredToken = get_option('whatsapp_cron_token', md5('whatsapp_marketing_cron_' . ENCRYPTION_KEY));
@@ -24,7 +21,6 @@ class Whatsapp_cron extends CI_Controller {
      * URL: /whatsapp_cron/run?token=YOUR_TOKEN&campaign_id=CAMPAIGN_ID (optional)
      */
     public function run(){
-<<<<<<< HEAD
         // Start logging
         $log_id = $this->cron_logger->start('whatsapp_cron/run');
         
@@ -32,11 +28,6 @@ class Whatsapp_cron extends CI_Controller {
         $token = $this->input->get('token', true);
         if(!$token || !hash_equals($this->requiredToken, $token)){
             $this->cron_logger->end($log_id, 'Failed', 403, 'Invalid or missing token');
-=======
-        // Verify token
-        $token = $this->input->get('token', true);
-        if(!$token || !hash_equals($this->requiredToken, $token)){
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             show_404();
             return;
         }
@@ -48,11 +39,7 @@ class Whatsapp_cron extends CI_Controller {
         $lockFileKey = $campaign_id ? 'campaign_' . $campaign_id : 'all';
         $lockFile = APPPATH.'cache/whatsapp_cron_' . $lockFileKey . '.lock';
         
-<<<<<<< HEAD
         $minInterval = 108;
-=======
-        $minInterval = 60;
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         if(file_exists($lockFile)){
             $lastRun = (int)@file_get_contents($lockFile);
             $now = time();
@@ -72,15 +59,12 @@ class Whatsapp_cron extends CI_Controller {
         
         $result = $this->process_messages($campaign_id);
         
-<<<<<<< HEAD
         // Log the result
         $status = ($result['status'] == 'success' || $result['status'] == 'info') ? 'Success' : 'Failed';
         $response_code = ($status == 'Success') ? 200 : 500;
         $message = $result['message'] . ' (Sent: ' . $result['messages_sent'] . ')';
         $this->cron_logger->end($log_id, $status, $response_code, $message);
         
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         $this->respond($result);
     }
     

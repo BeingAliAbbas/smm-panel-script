@@ -4,13 +4,8 @@
       <div class="modal-content">
         <form class="form actionForm" action="<?php echo cn($module . '/ajax_smtp_create'); ?>" data-redirect="<?php echo cn($module . '/smtp'); ?>" method="POST">
           <div class="modal-header bg-pantone">
-<<<<<<< HEAD
             <h4 class="modal-title"><i class="fas fa-cog"></i> Add SMTP Configuration</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-=======
-            <h4 class="modal-title"><i class="fa fa-cog"></i> Add SMTP Configuration</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </button>
           </div>
           <div class="modal-body">
@@ -73,28 +68,16 @@
                   </div>
                   
                   <div class="form-group">
-<<<<<<< HEAD
                     <label class="form-check">
                       <input type="checkbox" class="form-check-input" name="is_default" value="1">
                       <span class="form-check-label">Set as default SMTP</span>
-=======
-                    <label class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" name="is_default" value="1">
-                      <span class="custom-control-label">Set as default SMTP</span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                   
                   <div class="form-group">
-<<<<<<< HEAD
                     <label class="form-check">
                       <input type="checkbox" class="form-check-input" name="status" value="1" checked>
                       <span class="form-check-label">Active</span>
-=======
-                    <label class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" name="status" value="1" checked>
-                      <span class="custom-control-label">Active</span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </label>
                   </div>
                   
@@ -103,13 +86,8 @@
             </div>
           </div>
           <div class="modal-footer">
-<<<<<<< HEAD
             <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1">Submit</button>
             <button type="button" class="btn round btn-default btn-min-width me-1 mb-1" data-bs-dismiss="modal">Cancel</button>
-=======
-            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1">Submit</button>
-            <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal">Cancel</button>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
         </form>
       </div>

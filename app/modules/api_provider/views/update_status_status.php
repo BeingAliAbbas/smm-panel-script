@@ -3,19 +3,11 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">
-<<<<<<< HEAD
                     <i class="fas fa-arrows-rotate"></i> Bulk Status Update Results
                 </h3>
                 <div class="card-options">
                     <a href="<?=cn('api_provider/update_order_status')?>" class="btn btn-default btn-sm">
                         <i class="fas fa-arrow-left"></i> Back to Form
-=======
-                    <i class="fa fa-refresh"></i> Bulk Status Update Results
-                </h3>
-                <div class="card-options">
-                    <a href="<?=cn('api_provider/update_order_status')?>" class="btn btn-default btn-sm">
-                        <i class="fa fa-arrow-left"></i> Back to Form
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </a>
                 </div>
             </div>
@@ -45,15 +37,9 @@
                                 <td><?=$update['new_status']?></td>
                                 <td>
                                     <?php if($update['success']): ?>
-<<<<<<< HEAD
                                         <span class="badge bg-success">Success</span>
                                     <?php else: ?>
                                         <span class="badge bg-danger">Failed</span>
-=======
-                                        <span class="badge badge-success">Success</span>
-                                    <?php else: ?>
-                                        <span class="badge badge-danger">Failed</span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                                     <?php endif; ?>
                                     <div class="small text-muted"><?=$update['message']?></div>
                                 </td>
@@ -65,17 +51,10 @@
                 
                 <div class="mt-4">
                     <a href="<?=cn('api_provider')?>" class="btn btn-primary">
-<<<<<<< HEAD
                         <i class="fas fa-arrow-left"></i> Back to API Providers
                     </a>
                     <a href="<?=cn('api_provider/update_order_status')?>" class="btn btn-outline-primary">
                         <i class="fas fa-arrows-rotate"></i> Update Another Order
-=======
-                        <i class="fa fa-arrow-left"></i> Back to API Providers
-                    </a>
-                    <a href="<?=cn('api_provider/update_order_status')?>" class="btn btn-outline-primary">
-                        <i class="fa fa-refresh"></i> Update Another Order
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     </a>
                 </div>
             </div>

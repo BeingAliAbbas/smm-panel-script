@@ -83,13 +83,10 @@ class jazzcash extends MX_Controller {
         $converted      = $amount / ($this->currency_rate_to_usd ?: 1);
         $auto_verified  = $this->auto_verify_transaction($tx_orderID, $amount);
 
-<<<<<<< HEAD
         // Load pay token helper and generate token for pending transactions
         $this->load->helper('pay_token');
         $pay_token = $auto_verified ? null : generate_pay_token();
 
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         $data_log = [
             'ids'            => ids(),
             'uid'            => session('uid'),
@@ -99,10 +96,7 @@ class jazzcash extends MX_Controller {
             'txn_fee'        => round($converted * ($this->payment_fee / 100), 4),
             'note'           => $amount,          // Store original PKR amount (or local currency)
             'status'         => $auto_verified ? 1 : 0,
-<<<<<<< HEAD
             'pay_token'      => $pay_token,
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             'created'        => NOW,
         ];
 
@@ -115,7 +109,6 @@ class jazzcash extends MX_Controller {
             $amount,
             $tx_orderID,
             $user_email,
-<<<<<<< HEAD
             $auto_verified ? 'completed' : 'new',
             $pay_token
         );
@@ -125,10 +118,6 @@ class jazzcash extends MX_Controller {
             $this->load->library('Transactional_email');
             $this->transactional_email->send_payment_submitted_email($tx_orderID, $user_email, round($converted, 4), $this->payment_type);
         }
-=======
-            $auto_verified ? 'completed' : 'new'
-        );
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
         if ($auto_verified) {
             // Apply any bonus & send email
@@ -248,11 +237,7 @@ class jazzcash extends MX_Controller {
         return $found;
     }
 
-<<<<<<< HEAD
     private function sendWhatsAppNotification($amount, $transaction_id, $user_email, $type = 'new', $pay_token = null) {
-=======
-    private function sendWhatsAppNotification($amount, $transaction_id, $user_email, $type = 'new') {
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         try {
             $config = $this->getWhatsAppConfig();
             if (!$config) return false;
@@ -262,7 +247,6 @@ class jazzcash extends MX_Controller {
             $api_key               = $config->api_key;
             if (!$api_url || !$admin_whatsapp_number || !$api_key) return false;
 
-<<<<<<< HEAD
             if ($type === 'new' && $pay_token) {
                 // Include pay URL for pending transactions (helper already loaded)
                 $pay_url = get_pay_url($pay_token);
@@ -272,11 +256,6 @@ class jazzcash extends MX_Controller {
                     ? "*🆕 New JazzCash Payment Submission!*\n\n💰 *Amount*: PKR {$amount}\n🔢 *Transaction ID*: {$transaction_id}\n📧 *User Email*: {$user_email}\n\n🔍 Awaiting verification."
                     : "*✅ JazzCash Payment Completed!*\n\n💰 *Amount*: PKR {$amount}\n🔢 *Transaction ID*: {$transaction_id}\n📧 *User Email*: {$user_email}\n\n✨ Transaction completed successfully!";
             }
-=======
-            $message = ($type === 'new')
-                ? "*🆕 New JazzCash Payment Submission!*\n\n💰 *Amount*: PKR {$amount}\n🔢 *Transaction ID*: {$transaction_id}\n📧 *User Email*: {$user_email}\n\n🔍 Awaiting verification."
-                : "*✅ JazzCash Payment Completed!*\n\n💰 *Amount*: PKR {$amount}\n🔢 *Transaction ID*: {$transaction_id}\n📧 *User Email*: {$user_email}\n\n✨ Transaction completed successfully!";
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
             $payload = json_encode([
                 "apiKey"      => $api_key,

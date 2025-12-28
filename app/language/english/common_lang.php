@@ -429,7 +429,6 @@ $lang["max_order_is_required"] = "Max order is required";
 $lang["max_order_must_to_be_greater_than_min_order"] = "Max order must to be greater than Min order";
 $lang["price_invalid"] = "Price invalid";
 $lang["currency_decimal_places_must_to_be_equal_than_2"] = "Currency decimal places must to be equal than 2";
-<<<<<<< HEAD
 $lang["Average_Completion_Time"] = "Average Completion Time";
 $lang["based_on_last_10_orders"] = "(Based on last 10 orders)";
 $lang["hour"] = "hour";
@@ -438,8 +437,6 @@ $lang["minute"] = "minute";
 $lang["minutes"] = "minutes";
 $lang["second"] = "second";
 $lang["seconds"] = "seconds";
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
 $lang["Details"] 			= "Details";
 $lang["__good_seller"] 		= "Good Seller";
@@ -525,10 +522,7 @@ $lang["you_must_confirm_to_the_conditions_before_place_order"] = "You must confi
 $lang["place_order_successfully"]                    = "Place Order successfully";
 $lang["field_cannot_be_blank"]                       = "Field cannot be blank";
 $lang["you_do_not_have_enough_funds_to_place_order"] = "You do not have enough funds to Place order";
-<<<<<<< HEAD
 $lang["An order with the same link is already in progress"] = "An order with the same link is already in progress. Please wait for it to complete before placing a new order.";
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 $lang["invalid_format_place_order"]                  = "Invalid format place order";
 $lang["link_is_required"]                            = "Link is required";
 $lang["start_counter_is_a_number_format"]            = "Start counter is a number format";
@@ -893,7 +887,6 @@ $lang["Set as Default"] = "Set as Default";
 $lang["Update"] = "Update";
 $lang["Add"] = "Add";
 
-<<<<<<< HEAD
 /*----------  Cron Logs  ----------*/
 $lang["Cron_Logs"] = "Cron Logs";
 $lang["Cron_Name"] = "Cron Name";
@@ -1088,5 +1081,3 @@ $lang["displays_account_activation_link"] = "Displays the account activation lin
 
 
 
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98

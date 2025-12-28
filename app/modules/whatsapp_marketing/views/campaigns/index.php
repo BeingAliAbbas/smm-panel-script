@@ -4,13 +4,8 @@
     <div class="page-header">
       <h1 class="page-title">
         <a href="<?php echo cn($module . '/campaign_create'); ?>" class="ajaxModal">
-<<<<<<< HEAD
           <span class="add-new" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add New Campaign">
             <i class="fas fa-plus-square text-primary" aria-hidden="true"></i>
-=======
-          <span class="add-new" data-toggle="tooltip" data-placement="bottom" title="Add New Campaign">
-            <i class="fa fa-plus-square text-primary" aria-hidden="true"></i>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </span>
         </a>
         WhatsApp Campaigns
@@ -31,11 +26,7 @@
       <div class="card-header">
         <h3 class="card-title">Campaign List</h3>
         <div class="card-options">
-<<<<<<< HEAD
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-=======
-          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         </div>
       </div>
       <div class="table-responsive">
@@ -96,17 +87,10 @@
               </td>
               <td>
                 <div class="clearfix">
-<<<<<<< HEAD
                   <div class="float-start">
                     <strong><?php echo $progress; ?>%</strong>
                   </div>
                   <div class="float-end">
-=======
-                  <div class="float-left">
-                    <strong><?php echo $progress; ?>%</strong>
-                  </div>
-                  <div class="float-right">
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     <small class="text-muted"><?php echo $campaign->sent_messages; ?> / <?php echo $campaign->total_messages; ?></small>
                   </div>
                 </div>
@@ -126,11 +110,7 @@
                 <div class="btn-group">
                   <a href="<?php echo cn($module . '/campaign_details/' . $campaign->ids); ?>" 
                     class="btn btn-sm btn-icon" 
-<<<<<<< HEAD
                     data-bs-toggle="tooltip" 
-=======
-                    data-toggle="tooltip" 
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     title="View Details">
                     <i class="fe fe-eye"></i>
                   </a>
@@ -138,11 +118,7 @@
                   <?php if($campaign->status == 'pending' || $campaign->status == 'paused'){ ?>
                   <a href="<?php echo cn($module . '/campaign_edit/' . $campaign->ids); ?>" 
                     class="btn btn-sm btn-icon ajaxModal" 
-<<<<<<< HEAD
                     data-bs-toggle="tooltip" 
-=======
-                    data-toggle="tooltip" 
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     title="Edit">
                     <i class="fe fe-edit"></i>
                   </a>
@@ -153,11 +129,7 @@
                     class="btn btn-sm btn-icon btn-success actionItem" 
                     data-id="<?php echo $campaign->ids; ?>" 
                     data-action="<?php echo cn($module . '/ajax_campaign_start'); ?>" 
-<<<<<<< HEAD
                     data-bs-toggle="tooltip" 
-=======
-                    data-toggle="tooltip" 
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     title="Start Campaign">
                     <i class="fe fe-play"></i>
                   </a>
@@ -168,11 +140,7 @@
                     class="btn btn-sm btn-icon btn-warning actionItem" 
                     data-id="<?php echo $campaign->ids; ?>" 
                     data-action="<?php echo cn($module . '/ajax_campaign_pause'); ?>" 
-<<<<<<< HEAD
                     data-bs-toggle="tooltip" 
-=======
-                    data-toggle="tooltip" 
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     title="Pause Campaign">
                     <i class="fe fe-pause"></i>
                   </a>
@@ -183,11 +151,7 @@
                     class="btn btn-sm btn-icon btn-success actionItem" 
                     data-id="<?php echo $campaign->ids; ?>" 
                     data-action="<?php echo cn($module . '/ajax_campaign_resume'); ?>" 
-<<<<<<< HEAD
                     data-bs-toggle="tooltip" 
-=======
-                    data-toggle="tooltip" 
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     title="Resume Campaign">
                     <i class="fe fe-play"></i>
                   </a>
@@ -198,11 +162,7 @@
                     class="btn btn-sm btn-icon btn-warning actionItem" 
                     data-id="<?php echo $campaign->ids; ?>" 
                     data-action="<?php echo cn($module . '/ajax_campaign_resend_failed'); ?>" 
-<<<<<<< HEAD
                     data-bs-toggle="tooltip" 
-=======
-                    data-toggle="tooltip" 
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     title="Resend Failed Messages (<?php echo $campaign->failed_messages; ?>)" 
                     data-confirm="Are you sure you want to resend <?php echo $campaign->failed_messages; ?> failed message(s)?">
                     <i class="fe fe-refresh-cw"></i>
@@ -214,11 +174,7 @@
                     class="btn btn-sm btn-icon btn-danger actionItem" 
                     data-id="<?php echo $campaign->ids; ?>" 
                     data-action="<?php echo cn($module . '/ajax_campaign_delete'); ?>" 
-<<<<<<< HEAD
                     data-bs-toggle="tooltip" 
-=======
-                    data-toggle="tooltip" 
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                     title="Delete" 
                     data-confirm="Are you sure you want to delete this campaign?">
                     <i class="fe fe-trash"></i>

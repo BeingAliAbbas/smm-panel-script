@@ -1,5 +1,4 @@
 
-<<<<<<< HEAD
 <?php if (get_code_part_by_position('signup', 'top', '') != '') { ?>
 <div class="row">
   <div class="col-sm-12">
@@ -8,8 +7,6 @@
 </div>
 <?php }?>
 
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 <div class="row">
   <div class="col-md-6 col-login mx-auto auth-form">
     <form class="card actionForm" action="<?=cn("auth/ajax_sign_up")?>" data-redirect="<?=cn()?>" method="POST">
@@ -51,11 +48,7 @@
           </div>  
           <div class="input-icon mb-3">
     <span class="input-icon-addon">
-<<<<<<< HEAD
       <i class="fab fa-whatsapp"></i>
-=======
-      <i class="fa fa-whatsapp"></i>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     </span>
     <input type="text" class="form-control" name="whatsapp_number" placeholder="WhatsApp Number" required>
   </div>
@@ -64,33 +57,21 @@
           ?>
           <div class="input-icon mb-3">
             <span class="input-icon-addon">
-<<<<<<< HEAD
               <i class="fab fa-skype"></i>
-=======
-              <i class="fa fa-skype"></i>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </span>
             <input type="text" class="form-control" name="skype_id" placeholder="<?=lang("Skype_id")?>" required>
           </div>    
           <?php } ?>      
           <div class="input-icon mb-3">
             <span class="input-icon-addon">
-<<<<<<< HEAD
               <i class="fas fa-key"></i>
-=======
-              <i class="fa fa-key"></i>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </span>
             <input type="password" class="form-control" name="password" placeholder="<?=lang("Password")?>" required>
           </div>    
 
           <div class="input-icon mb-3">
             <span class="input-icon-addon">
-<<<<<<< HEAD
               <i class="fas fa-key"></i>
-=======
-              <i class="fa fa-key"></i>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </span>
             <input type="password" class="form-control" name="re_password" placeholder="<?=lang("Confirm_password")?>" required>
           </div>
@@ -124,15 +105,9 @@
         <?php } ?> 
 
         <div class="form-group">
-<<<<<<< HEAD
           <label class="form-check">
             <input type="checkbox" name="terms" class="form-check-input" />
             <span class="form-check-label"><?=lang("i_agree_the")?> <a href="<?=cn('terms')?>"><?=lang("terms__policy")?></a></span>
-=======
-          <label class="custom-control custom-checkbox">
-            <input type="checkbox" name="terms" class="custom-control-input" />
-            <span class="custom-control-label"><?=lang("i_agree_the")?> <a href="<?=cn('terms')?>"><?=lang("terms__policy")?></a></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </label>
         </div>
         <div class="">
@@ -145,7 +120,6 @@
     </div>
   </div>
 </div>
-<<<<<<< HEAD
 
 <?php if (get_code_part_by_position('signup', 'bottom', '') != '') { ?>
 <div class="row">
@@ -154,5 +128,3 @@
   </div>
 </div>
 <?php }?>
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98

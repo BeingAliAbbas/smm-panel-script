@@ -1,13 +1,7 @@
 
-<<<<<<< HEAD
     <div class="card p-0 content">
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-credit-card"></i> <?=lang("payment_integration")?></h3>
-=======
-    <div class="card content">
-      <div class="card-header" style="border: 0.1px solid #1B78FC; border-radius: 3.5px 3.5px 0px 0px; background: #1B78FC;">
-        <h3 class="card-title"><i class="fe fe-credit-card"></i> <?=lang("payment_integration")?></h3>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
       </div>
       <div class="card-body">
         <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
@@ -18,17 +12,10 @@
               <div class="form-group">
                 <div class="form-label"><?=lang("Status")?></div>
                 <div class="custom-controls-stacked">
-<<<<<<< HEAD
                   <label class="form-check">
                     <input type="hidden" name="is_active_manual" value="0">
                     <input type="checkbox" class="form-check-input" name="is_active_manual" value="1" <?=(get_option('is_active_manual', "") == 1)? "checked" : ''?>>
                     <span class="form-check-label"><?=lang("Active")?></span>
-=======
-                  <label class="custom-control custom-checkbox">
-                    <input type="hidden" name="is_active_manual" value="0">
-                    <input type="checkbox" class="custom-control-input" name="is_active_manual" value="1" <?=(get_option('is_active_manual', "") == 1)? "checked" : ''?>>
-                    <span class="custom-control-label"><?=lang("Active")?></span>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                   </label>
                 </div>
               </div>

@@ -130,20 +130,14 @@ define("USER_BLOCK_IP", "general_user_block_ip");
 define("USER_MAIL_LOGS", "general_user_mail_logs");
 define("BALANCE_LOGS", "general_balance_logs");
 define("SUBSCRIBERS", "general_subscribers");
-<<<<<<< HEAD
 define("USER_NOTIFICATIONS", "general_user_notifications");
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
 define("PAYMENTS_METHOD", "payments");
 define("PAYMENTS_BONUSES", "payments_bonus");
 
-<<<<<<< HEAD
 // Cron Logs
 define("CRON_LOGS", "cron_logs");
 
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 // Email Marketing
 define("EMAIL_CAMPAIGNS", "email_campaigns");
 define("EMAIL_TEMPLATES", "email_templates");

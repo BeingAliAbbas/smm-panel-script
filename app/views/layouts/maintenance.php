@@ -17,13 +17,9 @@
     <meta name="MobileOptimized" content="320">
 
     
-<<<<<<< HEAD
     <link rel="stylesheet" href="<?=BASE?>assets/css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/all.min.css">
     <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/v4-shims.min.css">
-=======
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
     
     <script src="<?=BASE?>assets/js/vendors/jquery-3.2.1.min.js"></script>
@@ -71,10 +67,7 @@
     </section>
 
     <script src="<?=BASE?>assets/js/vendors/bootstrap.bundle.min.js"></script>
-<<<<<<< HEAD
     <script src="<?=BASE?>assets/js/bootstrap-toast.js"></script>
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
     <script src="<?=BASE?>assets/js/vendors/jquery.sparkline.min.js"></script>
     <script src="<?=BASE?>assets/js/core.js"></script>
     <script src="<?=BASE?>assets/plugins/particles-js/particles.js"></script>

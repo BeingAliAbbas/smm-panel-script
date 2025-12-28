@@ -12,13 +12,8 @@
         ?>
         <form class="form actionForm" action="<?=$url?>" data-redirect="<?=cn($module)?>" method="POST">
           <div class="modal-header bg-pantone">
-<<<<<<< HEAD
             <h4 class="modal-title"><i class="fas fa-edit"></i> <?=lang("Edit_Order")?></h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-=======
-            <h4 class="modal-title"><i class="fa fa-edit"></i> <?=lang("Edit_Order")?></h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             </button>
           </div>
           <div class="modal-body">
@@ -115,13 +110,8 @@
             </div>
           </div>
           <div class="modal-footer">
-<<<<<<< HEAD
             <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1"><?=lang("Submit")?></button>
             <button type="button" class="btn round btn-default btn-min-width me-1 mb-1" data-bs-dismiss="modal"><?=lang("Cancel")?></button>
-=======
-            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1"><?=lang("Submit")?></button>
-            <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal"><?=lang("Cancel")?></button>
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
           </div>
         </form>
       </div>

@@ -109,13 +109,10 @@ class easypaisa extends MX_Controller {
             ]);
         } else {
             // IMMEDIATE PENDING (no verification screen)
-<<<<<<< HEAD
             // Load pay token helper and generate token for pending transactions
             $this->load->helper('pay_token');
             $pay_token = generate_pay_token();
             
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             $data_log = [
                 'ids'            => ids(),
                 'uid'            => session('uid'),
@@ -125,25 +122,18 @@ class easypaisa extends MX_Controller {
                 'txn_fee'        => round($converted * ($this->payment_fee / 100), 4),
                 'note'           => $amount,
                 'status'         => 0, // Pending
-<<<<<<< HEAD
                 'pay_token'      => $pay_token,
-=======
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
                 'created'        => NOW,
             ];
             $this->db->insert($this->tb_transaction_logs, $data_log);
 
             $user_info  = session('user_current_info');
             $user_email = $user_info['email'] ?? 'N/A';
-<<<<<<< HEAD
             $this->sendWhatsAppNotification($amount, $tx_orderID, $user_email, 'new', $pay_token);
             
             // Send transactional email to admin about payment submission
             $this->load->library('Transactional_email');
             $this->transactional_email->send_payment_submitted_email($tx_orderID, $user_email, round($converted, 4), $this->payment_type);
-=======
-            $this->sendWhatsAppNotification($amount, $tx_orderID, $user_email, 'new');
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
             $this->load->view('easypaisa/redirect', [
                 'status'    => 'pending',
@@ -241,11 +231,7 @@ class easypaisa extends MX_Controller {
         return $found;
     }
 
-<<<<<<< HEAD
     private function sendWhatsAppNotification($amount, $transaction_id, $user_email, $type = 'new', $pay_token = null) {
-=======
-    private function sendWhatsAppNotification($amount, $transaction_id, $user_email, $type = 'new') {
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
         try {
             $config = $this->getWhatsAppConfig();
             if (!$config) return false;
@@ -256,7 +242,6 @@ class easypaisa extends MX_Controller {
 
             if (empty($api_url) || empty($admin_whatsapp_number) || empty($api_key)) return false;
 
-<<<<<<< HEAD
             if ($type === 'new' && $pay_token) {
                 // Include pay URL for pending transactions (helper already loaded)
                 $pay_url = get_pay_url($pay_token);
@@ -266,11 +251,6 @@ class easypaisa extends MX_Controller {
                     ? "*🆕 New Easypaisa Payment Submission!*\n\n💰 *Amount*: PKR {$amount}\n🔢 *Transaction ID*: {$transaction_id}\n📧 *User Email*: {$user_email}\n\n🔍 Awaiting manual verification."
                     : "*✅ Easypaisa Payment Completed!*\n\n💰 *Amount*: PKR {$amount}\n🔢 *Transaction ID*: {$transaction_id}\n📧 *User Email*: {$user_email}\n\n✨ Transaction completed successfully.";
             }
-=======
-            $message = ($type === 'new')
-                ? "*🆕 New Easypaisa Payment Submission!*\n\n💰 *Amount*: PKR {$amount}\n🔢 *Transaction ID*: {$transaction_id}\n📧 *User Email*: {$user_email}\n\n🔍 Awaiting manual verification."
-                : "*✅ Easypaisa Payment Completed!*\n\n💰 *Amount*: PKR {$amount}\n🔢 *Transaction ID*: {$transaction_id}\n📧 *User Email*: {$user_email}\n\n✨ Transaction completed successfully.";
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
 
             $data = [
                 "apiKey"      => $api_key,
