@@ -353,9 +353,7 @@ $(document).ready(function(){
       }
     });
   });
-});
-</script>
-
+  
   // Campaign toggle status (pause/resume)
   $('.campaign-toggle-status').on('click', function(e){
     e.preventDefault();
@@ -367,14 +365,18 @@ $(document).ready(function(){
     var originalHTML = $btn.html();
     $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...');
     
+    // Get CSRF token dynamically
+    var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>';
+    var csrfHash = $('input[name="' + csrfName + '"]').val();
+    
+    var postData = {ids: campaignId};
+    postData[csrfName] = csrfHash;
+    
     $.ajax({
       url: endpoint,
       type: 'POST',
       dataType: 'json',
-      data: {
-        ids: campaignId,
-        csrf_test_name: $('input[name="csrf_test_name"]').val()
-      },
+      data: postData,
       success: function(response){
         if(response.status == 'success' && response.success){
           showToast(response.message, 'success');
@@ -413,3 +415,5 @@ $(document).ready(function(){
       }
     });
   });
+});
+</script>
