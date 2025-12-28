@@ -1,3 +1,6 @@
+<!-- Include responsive CSS -->
+<link rel="stylesheet" href="<?php echo BASE; ?>assets/css/whatsapp_marketing-responsive.css">
+
 <div class="row justify-content-md-center">
   <div class="col-md-12">
     <div class="page-header">
@@ -16,7 +19,7 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row whatsapp-marketing-stats">
   <!-- Total Messages Sent -->
   <div class="col-lg-3 col-sm-6">
     <div class="card">
@@ -122,7 +125,7 @@
     <div class="row row-cards">
       
       <!-- Campaigns Card -->
-      <div class="col-sm-6 col-lg-3">
+      <div class="col-sm-6 col-lg-2">
         <div class="card p-3">
           <div class="d-flex align-items-center">
             <span class="stamp stamp-md bg-blue me-3">
@@ -130,14 +133,14 @@
             </span>
             <div>
               <h4 class="m-0"><a href="<?php echo cn($module . '/campaigns'); ?>" class="text-inherit">Campaigns</a></h4>
-              <small class="text-muted">Manage WhatsApp campaigns</small>
+              <small class="text-muted">Manage campaigns</small>
             </div>
           </div>
         </div>
       </div>
       
       <!-- Templates Card -->
-      <div class="col-sm-6 col-lg-3">
+      <div class="col-sm-6 col-lg-2">
         <div class="card p-3">
           <div class="d-flex align-items-center">
             <span class="stamp stamp-md bg-green me-3">
@@ -152,22 +155,22 @@
       </div>
       
       <!-- API Config Card -->
-      <div class="col-sm-6 col-lg-3">
+      <div class="col-sm-6 col-lg-2">
         <div class="card p-3">
           <div class="d-flex align-items-center">
             <span class="stamp stamp-md bg-orange me-3">
-              <i class="fe fe-settings"></i>
+              <i class="fe fe-server"></i>
             </span>
             <div>
-              <h4 class="m-0"><a href="<?php echo cn($module . '/api'); ?>" class="text-inherit">API Config</a></h4>
-              <small class="text-muted">API settings</small>
+              <h4 class="m-0"><a href="<?php echo cn($module . '/api'); ?>" class="text-inherit">API</a></h4>
+              <small class="text-muted">API servers</small>
             </div>
           </div>
         </div>
       </div>
       
       <!-- Reports Card -->
-      <div class="col-sm-6 col-lg-3">
+      <div class="col-sm-6 col-lg-2">
         <div class="card p-3">
           <div class="d-flex align-items-center">
             <span class="stamp stamp-md bg-purple me-3">
@@ -175,7 +178,22 @@
             </span>
             <div>
               <h4 class="m-0"><a href="<?php echo cn($module . '/reports'); ?>" class="text-inherit">Reports</a></h4>
-              <small class="text-muted">Analytics & Reports</small>
+              <small class="text-muted">Analytics</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Settings Card -->
+      <div class="col-sm-6 col-lg-2">
+        <div class="card p-3">
+          <div class="d-flex align-items-center">
+            <span class="stamp stamp-md bg-cyan me-3">
+              <i class="fe fe-settings"></i>
+            </span>
+            <div>
+              <h4 class="m-0"><a href="<?php echo cn($module . '/settings'); ?>" class="text-inherit">Settings</a></h4>
+              <small class="text-muted">Configuration</small>
             </div>
           </div>
         </div>
@@ -194,9 +212,9 @@
 
 <div class="row">
   <div class="col-lg-8">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title">Campaign Status Distribution</h3>
+        <h3 class="card-title" style="color:#fff !important;">Campaign Status Distribution</h3>
       </div>
       <div class="card-body">
         <div class="row">
@@ -308,9 +326,9 @@
 <?php if(!empty($recent_logs)){ ?>
 <div class="row mt-4">
   <div class="col-md-12">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title"><i class="fe fe-activity"></i> Recent Activity</h3>
+        <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-activity"></i> Recent Activity</h3>
       </div>
       <div class="table-responsive">
         <table class="table table-hover table-vcenter card-table table-sm">
@@ -351,9 +369,9 @@
 
 <div class="row mt-4">
   <div class="col-md-12">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title"><i class="fe fe-info"></i> Getting Started</h3>
+        <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-info"></i> Getting Started</h3>
       </div>
       <div class="card-body">
         <div class="row">

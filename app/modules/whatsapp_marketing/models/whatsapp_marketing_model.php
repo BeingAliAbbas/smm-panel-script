@@ -574,6 +574,44 @@ class Whatsapp_marketing_model extends MY_Model {
     // SETTINGS METHODS
     // ========================================
     
+    public function get_queue_metrics() {
+        // Get pending messages count
+        $this->db->where('status', 'pending');
+        $pending_count = $this->db->count_all_results($this->tb_recipients);
+        
+        // Get failed messages count
+        $this->db->where('status', 'failed');
+        $failed_count = $this->db->count_all_results($this->tb_recipients);
+        
+        // Get last cron info from settings
+        $last_cron_run = $this->get_setting('last_cron_run', 'Never');
+        $last_cron_duration = $this->get_setting('last_cron_duration_sec', 0);
+        $last_cron_sent = $this->get_setting('last_cron_sent', 0);
+        $last_cron_failed = $this->get_setting('last_cron_failed', 0);
+        $last_cron_rejected = $this->get_setting('last_cron_rejected_phone', 0);
+        
+        // Get phone filter settings
+        $phone_filter = $this->get_setting('phone_filter', 'disabled');
+        $allowed_country_codes = $this->get_setting('allowed_country_codes', '');
+        
+        // Get running campaigns count
+        $this->db->where('status', 'running');
+        $running_campaigns = $this->db->count_all_results($this->tb_campaigns);
+        
+        return (object) [
+            'queue_size' => $pending_count,
+            'failed_count' => $failed_count,
+            'running_campaigns' => $running_campaigns,
+            'last_cron_run' => $last_cron_run,
+            'last_cron_duration_sec' => $last_cron_duration,
+            'last_cron_sent' => $last_cron_sent,
+            'last_cron_failed' => $last_cron_failed,
+            'last_cron_rejected_phone' => $last_cron_rejected,
+            'phone_filter' => $phone_filter,
+            'allowed_country_codes' => $allowed_country_codes
+        ];
+    }
+    
     public function get_setting($key, $default = null) {
         $this->db->where('setting_key', $key);
         $query = $this->db->get($this->tb_settings);

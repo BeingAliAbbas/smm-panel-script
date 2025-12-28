@@ -325,7 +325,9 @@ class Whatsapp_marketing extends MX_Controller {
         if($this->model->update_campaign($ids, $update_data)){
             ms(array(
                 "status" => "success",
-                "message" => "Campaign paused successfully"
+                "success" => true,
+                "message" => "Campaign paused successfully",
+                "campaign_status" => "paused"
             ));
         }
     }
@@ -339,7 +341,9 @@ class Whatsapp_marketing extends MX_Controller {
         if($this->model->update_campaign($ids, $update_data)){
             ms(array(
                 "status" => "success",
-                "message" => "Campaign resumed successfully"
+                "success" => true,
+                "message" => "Campaign resumed successfully",
+                "campaign_status" => "running"
             ));
         }
     }
@@ -945,5 +949,79 @@ class Whatsapp_marketing extends MX_Controller {
         
         fclose($output);
         exit;
+    }
+    
+    // ========================================
+    // SETTINGS
+    // ========================================
+    
+    /**
+     * WhatsApp marketing settings page
+     */
+    public function settings(){
+        // Get current settings
+        $settings = [
+            'phone_filter' => $this->model->get_setting('phone_filter', 'disabled'),
+            'allowed_country_codes' => $this->model->get_setting('allowed_country_codes', ''),
+            'enable_read_tracking' => $this->model->get_setting('enable_read_tracking', 0),
+            'retry_attempts' => $this->model->get_setting('retry_attempts', 3)
+        ];
+        
+        // Get queue metrics for observability
+        $queue_metrics = $this->model->get_queue_metrics();
+        
+        $data = array(
+            "module" => $this->module,
+            "settings" => $settings,
+            "queue_metrics" => $queue_metrics
+        );
+        $this->template->build("settings/index", $data);
+    }
+    
+    /**
+     * Save WhatsApp marketing settings
+     */
+    public function ajax_save_settings(){
+        _is_ajax($this->module);
+        
+        $phone_filter = post("phone_filter");
+        $allowed_country_codes = post("allowed_country_codes");
+        $enable_read_tracking = post("enable_read_tracking");
+        $retry_attempts = post("retry_attempts");
+        
+        // Validate phone filter option
+        $valid_filters = ['disabled', 'country_code'];
+        if(!in_array($phone_filter, $valid_filters)){
+            ms(array(
+                "status" => "error",
+                "message" => "Invalid phone filter option"
+            ));
+        }
+        
+        // Validate country codes if filter is enabled
+        if($phone_filter === 'country_code' && empty($allowed_country_codes)){
+            ms(array(
+                "status" => "error",
+                "message" => "Please enter at least one country code"
+            ));
+        }
+        
+        // Sanitize country codes
+        if($phone_filter === 'country_code'){
+            $codes = array_map('trim', explode(',', $allowed_country_codes));
+            $codes = array_filter($codes); // Remove empty values
+            $allowed_country_codes = implode(',', $codes);
+        }
+        
+        // Save settings
+        $this->model->update_setting('phone_filter', $phone_filter);
+        $this->model->update_setting('allowed_country_codes', $allowed_country_codes);
+        $this->model->update_setting('enable_read_tracking', $enable_read_tracking ? 1 : 0);
+        $this->model->update_setting('retry_attempts', max(0, min(10, (int)$retry_attempts)));
+        
+        ms(array(
+            "status" => "success",
+            "message" => "Settings saved successfully"
+        ));
     }
 }
