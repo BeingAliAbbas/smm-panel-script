@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailwind CSS + Bootstrap - Component Showcase</title>
+    
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="assets/css/bootstrap/bootstrap.min.css">
+    
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="assets/css/tailwind-output.css">
+    
+    <!-- Enhanced Styles -->
+    <link rel="stylesheet" href="assets/css/tailwind-bootstrap-enhanced.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="assets/plugins/font-awesome/css/all.min.css">
+</head>
+<body class="tw-bg-body-bg">
+    <div class="container my-5">
+        <div class="tw-mb-8">
+            <h1 class="tw-text-4xl tw-font-bold tw-text-gray-900 tw-mb-2">
+                Tailwind CSS Integration Showcase
+            </h1>
+            <p class="tw-text-gray-600 tw-text-lg">
+                Modern UI components using Tailwind CSS + Bootstrap hybrid approach
+            </p>
+        </div>
+
+        <!-- Cards Section -->
+        <section class="tw-mb-12">
+            <h2 class="tw-text-2xl tw-font-bold tw-text-gray-800 tw-mb-6">Modern Cards</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="tw-card-modern tw-p-6 hover-lift">
+                        <div class="tw-flex tw-items-center tw-mb-4">
+                            <div class="tw-bg-primary tw-text-white tw-rounded-lg tw-p-3 tw-mr-3">
+                                <i class="fas fa-users tw-text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="tw-text-3xl tw-font-bold tw-text-gray-900">1,234</h3>
+                                <p class="tw-text-gray-600 tw-text-sm">Total Users</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card2 hover-lift">
+                        <div class="d-flex align-items-center">
+                            <span class="stamp stamp-md bg-success-gradient text-white me-3">
+                                <i class="fas fa-dollar-sign"></i>
+                            </span>
+                            <div class="ms-2">
+                                <h4 class="m-0 number">$45,678</h4>
+                                <small class="text-muted">Revenue</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="tw-card-modern tw-p-6 tw-gradient-info hover-lift">
+                        <div class="tw-text-white">
+                            <h3 class="tw-text-3xl tw-font-bold tw-mb-1">567</h3>
+                            <p class="tw-text-white/90">Active Orders</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Buttons Section -->
+        <section class="tw-mb-12">
+            <h2 class="tw-text-2xl tw-font-bold tw-text-gray-800 tw-mb-6">Modern Buttons</h2>
+            <div class="tw-flex tw-flex-wrap tw-gap-3 tw-mb-4">
+                <button class="tw-btn-primary">Primary Button</button>
+                <button class="tw-btn-success">Success Button</button>
+                <button class="tw-btn-danger">Danger Button</button>
+                <button class="btn btn-warning btn-modern">Warning Bootstrap</button>
+            </div>
+            
+            <div class="tw-flex tw-flex-wrap tw-gap-3">
+                <button class="tw-btn-modern tw-bg-purple tw-text-white">Custom Purple</button>
+                <button class="tw-btn-modern tw-bg-orange tw-text-white">Custom Orange</button>
+                <button class="tw-btn-modern tw-bg-pink tw-text-white">Custom Pink</button>
+            </div>
+        </section>
+
+        <!-- Forms Section -->
+        <section class="tw-mb-12">
+            <h2 class="tw-text-2xl tw-font-bold tw-text-gray-800 tw-mb-6">Modern Forms</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="tw-card-modern tw-p-6">
+                        <h3 class="tw-text-xl tw-font-semibold tw-mb-4">Tailwind Input</h3>
+                        <input type="text" class="tw-input-modern tw-mb-4" placeholder="Email address">
+                        <input type="password" class="tw-input-modern tw-mb-4" placeholder="Password">
+                        <button class="tw-btn-primary tw-w-full">Sign In</button>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card2 p-4">
+                        <h3 class="tw-text-xl tw-font-semibold tw-mb-4">Bootstrap Form</h3>
+                        <input type="text" class="form-control mb-3" placeholder="Username">
+                        <input type="email" class="form-control mb-3" placeholder="Email">
+                        <button class="btn btn-primary btn-modern w-100">Register</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alerts Section -->
+        <section class="tw-mb-12">
+            <h2 class="tw-text-2xl tw-font-bold tw-text-gray-800 tw-mb-6">Alerts & Notifications</h2>
+            
+            <div class="tw-alert-success tw-mb-3">
+                <i class="fas fa-check-circle"></i>
+                <span>Success! Your operation completed successfully.</span>
+            </div>
+            
+            <div class="tw-alert-danger tw-mb-3">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>Error! Something went wrong. Please try again.</span>
+            </div>
+            
+            <div class="tw-alert-info tw-mb-3">
+                <i class="fas fa-info-circle"></i>
+                <span>Information: System maintenance scheduled for tonight.</span>
+            </div>
+            
+            <div class="tw-alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Warning: Your account balance is running low.</span>
+            </div>
+        </section>
+
+        <!-- Tables Section -->
+        <section class="tw-mb-12">
+            <h2 class="tw-text-2xl tw-font-bold tw-text-gray-800 tw-mb-6">Modern Table</h2>
+            
+            <table class="tw-table-modern">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="tw-font-medium">#12345</td>
+                        <td>John Doe</td>
+                        <td class="tw-font-semibold tw-text-success">$250.00</td>
+                        <td>
+                            <span class="tw-badge-modern tw-bg-success tw-text-white">Completed</span>
+                        </td>
+                        <td>
+                            <button class="tw-text-primary hover:tw-text-primary-dark">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tw-font-medium">#12346</td>
+                        <td>Jane Smith</td>
+                        <td class="tw-font-semibold tw-text-success">$180.00</td>
+                        <td>
+                            <span class="tw-badge-modern tw-bg-warning tw-text-white">Pending</span>
+                        </td>
+                        <td>
+                            <button class="tw-text-primary hover:tw-text-primary-dark">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tw-font-medium">#12347</td>
+                        <td>Bob Johnson</td>
+                        <td class="tw-font-semibold tw-text-success">$99.00</td>
+                        <td>
+                            <span class="tw-badge-modern tw-bg-danger tw-text-white">Failed</span>
+                        </td>
+                        <td>
+                            <button class="tw-text-primary hover:tw-text-primary-dark">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Badges Section -->
+        <section class="tw-mb-12">
+            <h2 class="tw-text-2xl tw-font-bold tw-text-gray-800 tw-mb-6">Badges</h2>
+            
+            <div class="tw-flex tw-flex-wrap tw-gap-3">
+                <span class="tw-badge-modern tw-bg-primary tw-text-white">Primary</span>
+                <span class="tw-badge-modern tw-bg-success tw-text-white">Success</span>
+                <span class="tw-badge-modern tw-bg-danger tw-text-white">Danger</span>
+                <span class="tw-badge-modern tw-bg-warning tw-text-white">Warning</span>
+                <span class="tw-badge-modern tw-bg-info tw-text-white">Info</span>
+                <span class="tw-badge-modern tw-bg-gray-800 tw-text-white">Dark</span>
+            </div>
+        </section>
+
+        <!-- Gradient Section -->
+        <section class="tw-mb-12">
+            <h2 class="tw-text-2xl tw-font-bold tw-text-gray-800 tw-mb-6">Gradient Backgrounds</h2>
+            
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <div class="tw-gradient-primary tw-rounded-lg tw-p-6 tw-text-white tw-text-center">
+                        <h4 class="tw-font-bold">Primary Gradient</h4>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="tw-gradient-success tw-rounded-lg tw-p-6 tw-text-white tw-text-center">
+                        <h4 class="tw-font-bold">Success Gradient</h4>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="tw-gradient-danger tw-rounded-lg tw-p-6 tw-text-white tw-text-center">
+                        <h4 class="tw-font-bold">Danger Gradient</h4>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Responsive Grid Section -->
+        <section class="tw-mb-12">
+            <h2 class="tw-text-2xl tw-font-bold tw-text-gray-800 tw-mb-6">Responsive Grid (Tailwind)</h2>
+            
+            <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-4">
+                <div class="tw-card-modern tw-p-4 tw-text-center">
+                    <i class="fas fa-chart-line tw-text-4xl tw-text-primary tw-mb-2"></i>
+                    <h5 class="tw-font-semibold">Analytics</h5>
+                </div>
+                <div class="tw-card-modern tw-p-4 tw-text-center">
+                    <i class="fas fa-users tw-text-4xl tw-text-success tw-mb-2"></i>
+                    <h5 class="tw-font-semibold">Users</h5>
+                </div>
+                <div class="tw-card-modern tw-p-4 tw-text-center">
+                    <i class="fas fa-shopping-cart tw-text-4xl tw-text-warning tw-mb-2"></i>
+                    <h5 class="tw-font-semibold">Orders</h5>
+                </div>
+                <div class="tw-card-modern tw-p-4 tw-text-center">
+                    <i class="fas fa-cog tw-text-4xl tw-text-danger tw-mb-2"></i>
+                    <h5 class="tw-font-semibold">Settings</h5>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Note -->
+        <section class="tw-mb-12">
+            <div class="tw-card-modern tw-p-6 tw-text-center tw-bg-gray-50">
+                <h3 class="tw-text-xl tw-font-bold tw-text-gray-800 tw-mb-2">
+                    Fully Offline - No CDN Required
+                </h3>
+                <p class="tw-text-gray-600">
+                    All Tailwind CSS is compiled locally and served from your server.
+                    Bootstrap and Tailwind work seamlessly together using the <code class="tw-bg-gray-200 tw-px-2 tw-py-1 tw-rounded">tw-</code> prefix strategy.
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+</body>
+</html>
