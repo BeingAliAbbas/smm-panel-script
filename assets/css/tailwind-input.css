@@ -1,0 +1,131 @@
+/**
+ * Tailwind CSS Input File
+ * This file imports Tailwind's base, components, and utilities
+ * and will be compiled to tailwind-output.css
+ */
+
+/* Import Tailwind base styles */
+@tailwind base;
+
+/* Import Tailwind component classes */
+@tailwind components;
+
+/* Import Tailwind utility classes */
+@tailwind utilities;
+
+/* Custom component classes using @layer */
+@layer components {
+  /* Modern Card Component */
+  .tw-card-modern {
+    @apply tw-bg-white tw-rounded-card tw-shadow-card tw-transition-all tw-duration-300 hover:tw-shadow-card-hover;
+  }
+  
+  /* Enhanced Button Styles */
+  .tw-btn-modern {
+    @apply tw-px-6 tw-py-2.5 tw-rounded-lg tw-font-medium tw-transition-all tw-duration-200 tw-shadow-sm hover:tw-shadow-md active:tw-scale-95;
+  }
+  
+  .tw-btn-primary {
+    @apply tw-btn-modern tw-bg-primary tw-text-white hover:tw-bg-primary-dark;
+  }
+  
+  .tw-btn-success {
+    @apply tw-btn-modern tw-bg-success tw-text-white hover:tw-bg-success-dark;
+  }
+  
+  .tw-btn-danger {
+    @apply tw-btn-modern tw-bg-danger tw-text-white hover:tw-opacity-90;
+  }
+  
+  /* Modern Input Styles */
+  .tw-input-modern {
+    @apply tw-w-full tw-px-4 tw-py-2.5 tw-border tw-border-gray-300 tw-rounded-lg tw-transition-all tw-duration-200 focus:tw-ring-2 focus:tw-ring-primary focus:tw-border-primary focus:tw-outline-none;
+  }
+  
+  /* Badge Styles */
+  .tw-badge-modern {
+    @apply tw-inline-flex tw-items-center tw-px-2.5 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-medium;
+  }
+  
+  /* Table Modern Styles */
+  .tw-table-modern {
+    @apply tw-w-full tw-bg-white tw-rounded-card tw-shadow-card tw-overflow-hidden;
+  }
+  
+  .tw-table-modern thead {
+    @apply tw-bg-gray-50 tw-border-b tw-border-gray-200;
+  }
+  
+  .tw-table-modern th {
+    @apply tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-700 tw-uppercase tw-tracking-wider;
+  }
+  
+  .tw-table-modern td {
+    @apply tw-px-6 tw-py-4 tw-whitespace-nowrap tw-text-sm tw-text-gray-900;
+  }
+  
+  .tw-table-modern tbody tr {
+    @apply tw-border-b tw-border-gray-100 hover:tw-bg-gray-50 tw-transition-colors tw-duration-150;
+  }
+  
+  /* Alert/Notification Styles */
+  .tw-alert-modern {
+    @apply tw-p-4 tw-rounded-lg tw-border tw-mb-4;
+  }
+  
+  .tw-alert-success {
+    @apply tw-alert-modern tw-bg-green-50 tw-border-green-200 tw-text-green-800;
+  }
+  
+  .tw-alert-danger {
+    @apply tw-alert-modern tw-bg-red-50 tw-border-red-200 tw-text-red-800;
+  }
+  
+  .tw-alert-info {
+    @apply tw-alert-modern tw-bg-blue-50 tw-border-blue-200 tw-text-blue-800;
+  }
+  
+  .tw-alert-warning {
+    @apply tw-alert-modern tw-bg-yellow-50 tw-border-yellow-200 tw-text-yellow-800;
+  }
+}
+
+/* Custom utility classes using @layer */
+@layer utilities {
+  /* Gradient backgrounds */
+  .tw-gradient-primary {
+    background-image: linear-gradient(135deg, #467fcf 0%, #5d92e0 100%);
+  }
+  
+  .tw-gradient-success {
+    background-image: linear-gradient(135deg, #5eba00 0%, #7bd235 100%);
+  }
+  
+  .tw-gradient-info {
+    background-image: linear-gradient(135deg, #45aaf2 0%, #2bcbba 100%);
+  }
+  
+  .tw-gradient-warning {
+    background-image: linear-gradient(135deg, #f1c40f 0%, #fd9644 100%);
+  }
+  
+  .tw-gradient-danger {
+    background-image: linear-gradient(135deg, #cd201f 0%, #f66d9b 100%);
+  }
+  
+  /* Text gradients */
+  .tw-text-gradient-primary {
+    @apply tw-bg-clip-text tw-text-transparent;
+    background-image: linear-gradient(135deg, #467fcf 0%, #5d92e0 100%);
+  }
+  
+  /* Hover effects */
+  .tw-hover-lift {
+    @apply tw-transition-transform tw-duration-200 hover:tw--translate-y-1;
+  }
+  
+  /* Glass morphism effect */
+  .tw-glass {
+    @apply tw-backdrop-blur-md tw-bg-white/30 tw-border tw-border-white/50;
+  }
+}

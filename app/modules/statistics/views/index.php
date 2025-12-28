@@ -64,38 +64,38 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
 </div>
 <?php }?>
 
-<div class="row justify-content-center row-card2 statistics">
+<div class="row justify-content-center row-card2 statistics tw-animate-fade-in">
   <div class="col-sm-12">
-    <div class="row">
+    <div class="row tw-gap-y-4">
       <?php
         if (get_role("admin")) {
       ?>
-      <div class="col-sm-6 col-lg-3 item">
-        <div class="card2 p-3">
-          <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-success-gradient text-white me-3">
+      <div class="col-sm-6 col-lg-3 item tw-transition-all tw-duration-300">
+        <div class="card2 p-3 hover-lift tw-shadow-card hover:tw-shadow-card-hover">
+          <div class="d-flex align-items-center tw-gap-3">
+            <span class="stamp stamp-md bg-success-gradient text-white me-3 tw-flex tw-items-center tw-justify-center">
               <i class="fe fe-users"></i>
             </span>
             <div class="d-flex order-lg-2 ms-auto">
               <div class="ms-2 d-lg-block text-end">
-                <h4 style="color: #fff;" class="m-0 text-end number"><?=$data_log->total_users?></h4>
-                <small class="text-muted "><?=lang("total_users")?></small>
+                <h4 style="color: #fff;" class="m-0 text-end number tw-font-bold"><?=$data_log->total_users?></h4>
+                <small class="text-muted tw-text-xs tw-font-medium"><?=lang("total_users")?></small>
               </div>
             </div>
           </div>
         </div>
       </div>
       <?php }else{ ?>
-      <div class="col-sm-6 col-lg-3 item">
-        <div class="card2 p-3">
-          <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-success-gradient text-white me-3">
+      <div class="col-sm-6 col-lg-3 item tw-transition-all tw-duration-300">
+        <div class="card2 p-3 hover-lift tw-shadow-card hover:tw-shadow-card-hover">
+          <div class="d-flex align-items-center tw-gap-3">
+            <span class="stamp stamp-md bg-success-gradient text-white me-3 tw-flex tw-items-center tw-justify-center">
               <i class="fe fe-dollar-sign"></i>
             </span>
             <div class="d-flex order-lg-2 ms-auto">
               <div class="ms-2 d-lg-block text-end">
-                <h4 class="m-0 text-end number"><?=$currency_symbol?><?=(!empty($data_log->user_balance)) ? currency_format(convert_currency($data_log->user_balance), get_option('currency_decimal', 2), $decimalpoint, $separator) : 0?></h4>
-                <small class="text-muted "><?=lang("your_balance")?></small>
+                <h4 class="m-0 text-end number tw-font-bold"><?=$currency_symbol?><?=(!empty($data_log->user_balance)) ? currency_format(convert_currency($data_log->user_balance), get_option('currency_decimal', 2), $decimalpoint, $separator) : 0?></h4>
+                <small class="text-muted tw-text-xs tw-font-medium"><?=lang("your_balance")?></small>
               </div>
             </div>
           </div>
@@ -103,16 +103,16 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       </div>
       <?php } ?>
 
-      <div class="col-sm-6 col-lg-3 item">
-        <div class="card2 p-3">
-          <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-info-gradient text-white me-3">
+      <div class="col-sm-6 col-lg-3 item tw-transition-all tw-duration-300">
+        <div class="card2 p-3 hover-lift tw-shadow-card hover:tw-shadow-card-hover">
+          <div class="d-flex align-items-center tw-gap-3">
+            <span class="stamp stamp-md bg-info-gradient text-white me-3 tw-flex tw-items-center tw-justify-center">
               <i class="fe fe-dollar-sign"></i>
             </span>
             <div class="d-flex order-lg-2 ms-auto">
               <div class="ms-2 d-lg-block text-end">
-                <h4 class="m-0 text-end number"><?=$currency_symbol?><?=(!empty($data_log->total_spent_receive)) ? currency_format(convert_currency($data_log->total_spent_receive), get_option('currency_decimal', 2), $decimalpoint, $separator) : 0?></h4>
-                <small class="text-muted ">
+                <h4 class="m-0 text-end number tw-font-bold"><?=$currency_symbol?><?=(!empty($data_log->total_spent_receive)) ? currency_format(convert_currency($data_log->total_spent_receive), get_option('currency_decimal', 2), $decimalpoint, $separator) : 0?></h4>
+                <small class="text-muted tw-text-xs tw-font-medium">
                   <?=(get_role("admin") ? lang("total_amount_recieved") : lang("total_amount_spent"))?>
                 </small>
               </div>
@@ -121,32 +121,32 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
         </div>
       </div>
 
-      <div class="col-sm-6 col-lg-3 item">
-        <div class="card2 p-3">
-          <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-warning-gradient text-white me-3">
+      <div class="col-sm-6 col-lg-3 item tw-transition-all tw-duration-300">
+        <div class="card2 p-3 hover-lift tw-shadow-card hover:tw-shadow-card-hover">
+          <div class="d-flex align-items-center tw-gap-3">
+            <span class="stamp stamp-md bg-warning-gradient text-white me-3 tw-flex tw-items-center tw-justify-center">
               <i class="fe fe-shopping-cart"></i>
             </span>
             <div class="d-flex order-lg-2 ms-auto">
               <div class="ms-2 d-lg-block text-end">
-                <h4 class="m-0 text-end number"><?=$data_orders_log->total?></h4>
-                <small class="text-muted "><?=lang("total_orders")?></small>
+                <h4 class="m-0 text-end number tw-font-bold"><?=$data_orders_log->total?></h4>
+                <small class="text-muted tw-text-xs tw-font-medium"><?=lang("total_orders")?></small>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="col-sm-6 col-lg-3 item">
-        <div class="card2 p-3">
-          <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-danger-gradient text-white me-3">
+      <div class="col-sm-6 col-lg-3 item tw-transition-all tw-duration-300">
+        <div class="card2 p-3 hover-lift tw-shadow-card hover:tw-shadow-card-hover">
+          <div class="d-flex align-items-center tw-gap-3">
+            <span class="stamp stamp-md bg-danger-gradient text-white me-3 tw-flex tw-items-center tw-justify-center">
               <i class="fas fa-ticket"></i>
             </span>
             <div class="d-flex order-lg-2 ms-auto">
               <div class="ms-2 d-lg-block text-end">
-                <h4 class="m-0 text-end number"><?=$data_tickets_log->total?></h4>
-                <small class="text-muted "><?=lang("total_tickets")?></small>
+                <h4 class="m-0 text-end number tw-font-bold"><?=$data_tickets_log->total?></h4>
+                <small class="text-muted tw-text-xs tw-font-medium"><?=lang("total_tickets")?></small>
               </div>
             </div>
           </div>
