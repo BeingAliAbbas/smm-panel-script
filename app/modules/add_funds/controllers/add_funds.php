@@ -39,20 +39,12 @@ class add_funds extends MX_Controller {
         $transactions = $this->get_last_transactions(session('uid'));
 
         // Prepare data for view
-<<<<<<< HEAD
-        $data = array(
-            "module"          => get_class($this),
-            "payments"        => $payments,
-            "currency_code"   => get_option("currency_code",'USD'),
-            "currency_symbol" => get_option("currency_symbol",'$'),
-=======
         $current_currency = get_current_currency();
         $data = array(
             "module"          => get_class($this),
             "payments"        => $payments,
             "currency_code"   => $current_currency ? $current_currency->code : get_option("currency_code",'USD'),
             "currency_symbol" => $current_currency ? $current_currency->symbol : get_option("currency_symbol",'$'),
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             "transactions"     => $transactions // Add transactions to data
         );
 
