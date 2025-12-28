@@ -1,0 +1,958 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Email_marketing_model extends MY_Model {
+    
+    protected $tb_campaigns;
+    protected $tb_templates;
+    protected $tb_smtp_configs;
+    protected $tb_recipients;
+    protected $tb_logs;
+    protected $tb_settings;
+    
+    public function __construct(){
+        parent::__construct();
+        
+        // Define table names
+        $this->tb_campaigns = 'email_campaigns';
+        $this->tb_templates = 'email_templates';
+        $this->tb_smtp_configs = 'email_smtp_configs';
+        $this->tb_recipients = 'email_recipients';
+        $this->tb_logs = 'email_logs';
+        $this->tb_settings = 'email_settings';
+    }
+    
+    // ========================================
+    // CAMPAIGN METHODS
+    // ========================================
+    
+    public function get_campaigns($limit = -1, $page = -1, $status = null) {
+        if ($limit == -1) {
+            $this->db->select('count(*) as sum');
+        } else {
+            $this->db->select('c.*, t.name as template_name, s.name as smtp_name');
+        }
+        
+        $this->db->from($this->tb_campaigns . ' c');
+        $this->db->join($this->tb_templates . ' t', 'c.template_id = t.id', 'left');
+        $this->db->join($this->tb_smtp_configs . ' s', 'c.smtp_config_id = s.id', 'left');
+        
+        if ($status !== null) {
+            $this->db->where('c.status', $status);
+        }
+        
+        if ($limit != -1) {
+            $this->db->limit($limit, $page);
+        }
+        
+        $this->db->order_by('c.created_at', 'DESC');
+        $query = $this->db->get();
+        
+        if ($query->num_rows() > 0) {
+            if ($limit == -1) {
+                return $query->row()->sum;
+            } else {
+                return $query->result();
+            }
+        }
+        
+        return ($limit == -1) ? 0 : [];
+    }
+    
+    public function get_campaign($ids) {
+        $this->db->select('c.*, t.name as template_name, s.name as smtp_name');
+        $this->db->from($this->tb_campaigns . ' c');
+        $this->db->join($this->tb_templates . ' t', 'c.template_id = t.id', 'left');
+        $this->db->join($this->tb_smtp_configs . ' s', 'c.smtp_config_id = s.id', 'left');
+        $this->db->where('c.ids', $ids);
+        $query = $this->db->get();
+        
+        return $query->num_rows() > 0 ? $query->row() : null;
+    }
+    
+    public function create_campaign($data) {
+        $data['ids'] = ids();
+        $data['created_at'] = NOW;
+        $data['updated_at'] = NOW;
+        
+        return $this->db->insert($this->tb_campaigns, $data);
+    }
+    
+    public function update_campaign($ids, $data) {
+        $data['updated_at'] = NOW;
+        $this->db->where('ids', $ids);
+        return $this->db->update($this->tb_campaigns, $data);
+    }
+    
+    /**
+     * Update campaign SMTP rotation index by campaign ID (not ids)
+     * @param int $campaign_id Campaign primary key ID
+     * @param int $new_index New rotation index
+     * @return bool Success
+     */
+    public function update_campaign_rotation_index($campaign_id, $new_index) {
+        $this->db->where('id', $campaign_id);
+        $result = $this->db->update($this->tb_campaigns, [
+            'smtp_rotation_index' => (int)$new_index,
+            'updated_at' => NOW
+        ]);
+        
+        // Debug logging
+        log_message('debug', sprintf(
+            'SMTP Rotation Update: campaign_id=%d, new_index=%d, affected_rows=%d',
+            $campaign_id,
+            $new_index,
+            $this->db->affected_rows()
+        ));
+        
+        return $result;
+    }
+    
+    public function delete_campaign($ids) {
+        // Get campaign to delete related data
+        $campaign = $this->get_campaign($ids);
+        if ($campaign) {
+            // Delete recipients
+            $this->db->where('campaign_id', $campaign->id);
+            $this->db->delete($this->tb_recipients);
+            
+            // Delete logs
+            $this->db->where('campaign_id', $campaign->id);
+            $this->db->delete($this->tb_logs);
+            
+            // Delete campaign
+            $this->db->where('ids', $ids);
+            return $this->db->delete($this->tb_campaigns);
+        }
+        return false;
+    }
+    
+    public function update_campaign_stats($campaign_id) {
+        $this->db->select("
+            COUNT(*) as total,
+            SUM(CASE WHEN status = 'sent' THEN 1 ELSE 0 END) as sent,
+            SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) as failed,
+            SUM(CASE WHEN status = 'opened' THEN 1 ELSE 0 END) as opened,
+            SUM(CASE WHEN status = 'bounced' THEN 1 ELSE 0 END) as bounced,
+            SUM(CASE WHEN validation_status = 'valid' THEN 1 ELSE 0 END) as validated,
+            SUM(CASE WHEN validation_status = 'invalid' THEN 1 ELSE 0 END) as invalid,
+            SUM(CASE WHEN validation_status = 'skipped' THEN 1 ELSE 0 END) as validation_skipped
+        ");
+        $this->db->from($this->tb_recipients);
+        $this->db->where('campaign_id', $campaign_id);
+        $query = $this->db->get();
+        
+        if ($query->num_rows() > 0) {
+            $stats = $query->row();
+            $this->db->where('id', $campaign_id);
+            $this->db->update($this->tb_campaigns, [
+                'total_emails' => $stats->total,
+                'sent_emails' => $stats->sent,
+                'failed_emails' => $stats->failed,
+                'opened_emails' => $stats->opened,
+                'bounced_emails' => $stats->bounced,
+                'validated_emails' => $stats->validated ?? 0,
+                'invalid_emails' => $stats->invalid ?? 0,
+                'validation_skipped' => $stats->validation_skipped ?? 0,
+                'updated_at' => NOW
+            ]);
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Reset failed recipients to pending for resending
+     * @param int $campaign_id Campaign ID
+     * @return int Number of recipients reset
+     */
+    public function reset_failed_recipients($campaign_id) {
+        $this->db->where('campaign_id', $campaign_id);
+        $this->db->where('status', 'failed');
+        $this->db->update($this->tb_recipients, [
+            'status' => 'pending',
+            'sent_at' => null,
+            'error_message' => null,
+            'updated_at' => NOW
+        ]);
+        
+        return $this->db->affected_rows();
+    }
+    
+    /**
+     * Get overall email marketing statistics
+     * @return object Statistics object
+     */
+    public function get_overall_stats() {
+        // Get campaign stats
+        $this->db->select("
+            COUNT(*) as total_campaigns,
+            SUM(CASE WHEN status = 'running' THEN 1 ELSE 0 END) as running_campaigns,
+            SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_campaigns,
+            SUM(CASE WHEN status = 'paused' THEN 1 ELSE 0 END) as paused_campaigns,
+            SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_campaigns
+        ");
+        $campaign_stats = $this->db->get($this->tb_campaigns)->row();
+        
+        // Get email stats from all campaigns
+        $this->db->select("
+            SUM(total_emails) as total_emails,
+            SUM(sent_emails) as total_sent,
+            SUM(failed_emails) as total_failed,
+            SUM(opened_emails) as total_opened,
+            SUM(bounced_emails) as total_bounced
+        ");
+        $email_stats = $this->db->get($this->tb_campaigns)->row();
+        
+        // Calculate remaining emails
+        $remaining = ($email_stats->total_emails - $email_stats->total_sent - $email_stats->total_failed);
+        
+        return (object) [
+            'total_campaigns' => $campaign_stats->total_campaigns ?: 0,
+            'running_campaigns' => $campaign_stats->running_campaigns ?: 0,
+            'completed_campaigns' => $campaign_stats->completed_campaigns ?: 0,
+            'paused_campaigns' => $campaign_stats->paused_campaigns ?: 0,
+            'pending_campaigns' => $campaign_stats->pending_campaigns ?: 0,
+            'total_emails' => $email_stats->total_emails ?: 0,
+            'total_sent' => $email_stats->total_sent ?: 0,
+            'total_failed' => $email_stats->total_failed ?: 0,
+            'total_opened' => $email_stats->total_opened ?: 0,
+            'total_bounced' => $email_stats->total_bounced ?: 0,
+            'total_remaining' => max(0, $remaining),
+            'open_rate' => $email_stats->total_sent > 0 ? round(($email_stats->total_opened / $email_stats->total_sent) * 100, 1) : 0,
+            'failure_rate' => $email_stats->total_emails > 0 ? round(($email_stats->total_failed / $email_stats->total_emails) * 100, 1) : 0
+        ];
+    }
+    
+    /**
+     * Get recent activity logs across all campaigns
+     * @param int $limit Number of logs to fetch
+     * @return array Array of log objects
+     */
+    public function get_recent_logs($limit = 20) {
+        $this->db->select('l.*, c.name as campaign_name');
+        $this->db->from($this->tb_logs . ' l');
+        $this->db->join($this->tb_campaigns . ' c', 'l.campaign_id = c.id', 'left');
+        $this->db->order_by('l.created_at', 'DESC');
+        $this->db->limit($limit);
+        $query = $this->db->get();
+        
+        return $query->num_rows() > 0 ? $query->result() : [];
+    }
+    
+    // ========================================
+    // TEMPLATE METHODS
+    // ========================================
+    
+    public function get_templates($limit = -1, $page = -1) {
+        if ($limit == -1) {
+            $this->db->select('count(*) as sum');
+        } else {
+            $this->db->select('*');
+        }
+        
+        $this->db->from($this->tb_templates);
+        $this->db->where('status', 1);
+        
+        if ($limit != -1) {
+            $this->db->limit($limit, $page);
+        }
+        
+        $this->db->order_by('created_at', 'DESC');
+        $query = $this->db->get();
+        
+        if ($query->num_rows() > 0) {
+            if ($limit == -1) {
+                return $query->row()->sum;
+            } else {
+                return $query->result();
+            }
+        }
+        
+        return ($limit == -1) ? 0 : [];
+    }
+    
+    public function get_template($ids) {
+        $this->db->where('ids', $ids);
+        $query = $this->db->get($this->tb_templates);
+        return $query->num_rows() > 0 ? $query->row() : null;
+    }
+    
+    public function create_template($data) {
+        $data['ids'] = ids();
+        $data['created_at'] = NOW;
+        $data['updated_at'] = NOW;
+        
+        return $this->db->insert($this->tb_templates, $data);
+    }
+    
+    public function update_template($ids, $data) {
+        $data['updated_at'] = NOW;
+        $this->db->where('ids', $ids);
+        return $this->db->update($this->tb_templates, $data);
+    }
+    
+    public function delete_template($ids) {
+        // Check if template is being used by any campaign
+        $template = $this->get_template($ids);
+        if ($template) {
+            $this->db->where('template_id', $template->id);
+            $this->db->where('status !=', 'completed');
+            $count = $this->db->count_all_results($this->tb_campaigns);
+            
+            if ($count > 0) {
+                return false; // Cannot delete template in use
+            }
+            
+            $this->db->where('ids', $ids);
+            return $this->db->delete($this->tb_templates);
+        }
+        return false;
+    }
+    
+    // ========================================
+    // SMTP CONFIG METHODS
+    // ========================================
+    
+    public function get_smtp_configs($limit = -1, $page = -1) {
+        if ($limit == -1) {
+            $this->db->select('count(*) as sum');
+        } else {
+            $this->db->select('*');
+        }
+        
+        $this->db->from($this->tb_smtp_configs);
+        
+        if ($limit != -1) {
+            $this->db->limit($limit, $page);
+        }
+        
+        $this->db->order_by('is_default', 'DESC');
+        $this->db->order_by('created_at', 'DESC');
+        $query = $this->db->get();
+        
+        if ($query->num_rows() > 0) {
+            if ($limit == -1) {
+                return $query->row()->sum;
+            } else {
+                return $query->result();
+            }
+        }
+        
+        return ($limit == -1) ? 0 : [];
+    }
+    
+    public function get_smtp_config($ids) {
+        $this->db->where('ids', $ids);
+        $query = $this->db->get($this->tb_smtp_configs);
+        return $query->num_rows() > 0 ? $query->row() : null;
+    }
+    
+    public function get_default_smtp() {
+        $this->db->where('is_default', 1);
+        $this->db->where('status', 1);
+        $query = $this->db->get($this->tb_smtp_configs);
+        return $query->num_rows() > 0 ? $query->row() : null;
+    }
+    
+    public function create_smtp_config($data) {
+        $data['ids'] = ids();
+        $data['created_at'] = NOW;
+        $data['updated_at'] = NOW;
+        
+        // If this is set as default, unset others
+        if (isset($data['is_default']) && $data['is_default'] == 1) {
+            $this->db->update($this->tb_smtp_configs, ['is_default' => 0]);
+        }
+        
+        return $this->db->insert($this->tb_smtp_configs, $data);
+    }
+    
+    public function update_smtp_config($ids, $data) {
+        $data['updated_at'] = NOW;
+        
+        // If this is set as default, unset others
+        if (isset($data['is_default']) && $data['is_default'] == 1) {
+            $this->db->update($this->tb_smtp_configs, ['is_default' => 0]);
+        }
+        
+        $this->db->where('ids', $ids);
+        return $this->db->update($this->tb_smtp_configs, $data);
+    }
+    
+    public function delete_smtp_config($ids) {
+        $smtp = $this->get_smtp_config($ids);
+        if ($smtp) {
+            // Check if SMTP is being used
+            $this->db->where('smtp_config_id', $smtp->id);
+            $this->db->where('status !=', 'completed');
+            $count = $this->db->count_all_results($this->tb_campaigns);
+            
+            if ($count > 0) {
+                return false; // Cannot delete SMTP in use
+            }
+            
+            $this->db->where('ids', $ids);
+            return $this->db->delete($this->tb_smtp_configs);
+        }
+        return false;
+    }
+    
+    // ========================================
+    // RECIPIENT METHODS
+    // ========================================
+    
+    public function get_recipients($campaign_id, $limit = -1, $page = -1, $status = null) {
+        if ($limit == -1) {
+            $this->db->select('count(*) as sum');
+        } else {
+            $this->db->select('*');
+        }
+        
+        $this->db->from($this->tb_recipients);
+        $this->db->where('campaign_id', $campaign_id);
+        
+        if ($status !== null) {
+            $this->db->where('status', $status);
+        }
+        
+        if ($limit != -1) {
+            $this->db->limit($limit, $page);
+        }
+        
+        // Order by priority first (lower = higher priority), then by created_at
+        // Manual emails have priority=1, imported have priority=100
+        $this->db->order_by('priority', 'ASC');
+        $this->db->order_by('created_at', 'ASC');
+        $query = $this->db->get();
+        
+        if ($query->num_rows() > 0) {
+            if ($limit == -1) {
+                return $query->row()->sum;
+            } else {
+                return $query->result();
+            }
+        }
+        
+        return ($limit == -1) ? 0 : [];
+    }
+    
+    public function add_recipient($campaign_id, $email, $name = null, $user_id = null, $custom_data = null, $priority = 100) {
+        // Check if recipient already exists to prevent duplicates
+        $this->db->where('campaign_id', $campaign_id);
+        $this->db->where('email', $email);
+        $exists = $this->db->count_all_results($this->tb_recipients);
+        
+        if ($exists > 0) {
+            // Email already exists in this campaign, skip insertion
+            return false;
+        }
+        
+        $data = [
+            'ids' => ids(),
+            'campaign_id' => $campaign_id,
+            'email' => $email,
+            'name' => $name,
+            'user_id' => $user_id,
+            'custom_data' => $custom_data ? json_encode($custom_data) : null,
+            'priority' => $priority,
+            'tracking_token' => md5($campaign_id . $email . time() . rand(1000, 9999)),
+            'status' => 'pending',
+            'created_at' => NOW,
+            'updated_at' => NOW
+        ];
+        
+        return $this->db->insert($this->tb_recipients, $data);
+    }
+    
+    public function import_from_users($campaign_id, $filters = [], $limit = 0) {
+        try {
+            // More efficient approach: Use WHERE EXISTS instead of JOIN + GROUP BY
+            // This will be much faster for large datasets
+            // $limit = 0 means no limit (import all available users)
+            // Note: Using first_name (with underscore) as per actual database schema
+            $this->db->select('u.id, u.email, u.first_name as name, u.balance');
+            $this->db->from(USERS . ' u');
+            $this->db->where('u.status', 1);
+            $this->db->where('u.email IS NOT NULL', NULL, FALSE);
+            $this->db->where('u.email !=', '');
+            
+            // Apply filters if provided
+            if (!empty($filters['role'])) {
+                $this->db->where('u.role', $filters['role']);
+            }
+            
+            // Only get users who have at least one order
+            // Using uid column from orders table as per schema
+            $this->db->where("EXISTS (SELECT 1 FROM " . ORDER . " o WHERE o.uid = u.id LIMIT 1)", NULL, FALSE);
+            
+            // Apply limit if specified (0 = no limit)
+            if ($limit > 0) {
+                $this->db->limit($limit);
+            }
+            
+            $query = $this->db->get();
+            
+            // Check for database errors
+            if (!$query) {
+                log_message('error', 'Email Marketing: Failed to query users - ' . $this->db->error()['message']);
+                return 0;
+            }
+            
+            $users = $query->result();
+            
+            $imported = 0;
+            foreach ($users as $user) {
+                // Skip if email is invalid
+                if (empty($user->email) || !filter_var($user->email, FILTER_VALIDATE_EMAIL)) {
+                    continue;
+                }
+                
+                // Get order count for this user (with limit to prevent slow queries)
+                $this->db->where('uid', $user->id);
+                $order_count = $this->db->count_all_results(ORDER);
+                
+                $custom_data = [
+                    'username' => $user->name ? $user->name : 'User',
+                    'email' => $user->email,
+                    'balance' => $user->balance ? $user->balance : 0,
+                    'total_orders' => $order_count
+                ];
+                
+                // add_recipient now handles duplicate checking
+                if ($this->add_recipient($campaign_id, $user->email, $user->name, $user->id, $custom_data)) {
+                    $imported++;
+                }
+            }
+            
+            return $imported;
+        } catch (Exception $e) {
+            log_message('error', 'Email Marketing: Error in import_from_users - ' . $e->getMessage());
+            return 0;
+        }
+    }
+    
+    /**
+     * Import ALL users from general_users table (no order filtering)
+     * @param int $campaign_id Campaign ID
+     * @param array $filters Optional filters
+     * @param int $limit Maximum number of users to import (0 = no limit)
+     * @return int Number of imported users
+     */
+    public function import_all_users($campaign_id, $filters = [], $limit = 0) {
+        try {
+            // Import all users from general_users table without order filtering
+            $this->db->select('u.id, u.email, u.first_name as name, u.balance');
+            $this->db->from(USERS . ' u');
+            $this->db->where('u.status', 1);
+            $this->db->where('u.email IS NOT NULL', NULL, FALSE);
+            $this->db->where('u.email !=', '');
+            
+            // Apply filters if provided
+            if (!empty($filters['role'])) {
+                $this->db->where('u.role', $filters['role']);
+            }
+            
+            // Apply limit if specified (0 = no limit)
+            if ($limit > 0) {
+                $this->db->limit($limit);
+            }
+            
+            $query = $this->db->get();
+            
+            // Check for database errors
+            if (!$query) {
+                log_message('error', 'Email Marketing: Failed to query all users - ' . $this->db->error()['message']);
+                return 0;
+            }
+            
+            $users = $query->result();
+            
+            $imported = 0;
+            foreach ($users as $user) {
+                // Skip if email is invalid
+                if (empty($user->email) || !filter_var($user->email, FILTER_VALIDATE_EMAIL)) {
+                    continue;
+                }
+                
+                $custom_data = [
+                    'username' => !empty($user->name) ? $user->name : 'User',
+                    'email' => $user->email,
+                    'balance' => !empty($user->balance) ? $user->balance : 0,
+                    'total_orders' => 0 // Not checking orders for this import type
+                ];
+                
+                // add_recipient now handles duplicate checking
+                if ($this->add_recipient($campaign_id, $user->email, $user->name, $user->id, $custom_data)) {
+                    $imported++;
+                }
+            }
+            
+            return $imported;
+        } catch (Exception $e) {
+            log_message('error', 'Email Marketing: Error in import_all_users - ' . $e->getMessage());
+            return 0;
+        }
+    }
+    
+    public function import_from_csv($campaign_id, $file_path) {
+        if (!file_exists($file_path)) {
+            return 0;
+        }
+        
+        $imported = 0;
+        if (($handle = fopen($file_path, "r")) !== FALSE) {
+            $header = fgetcsv($handle); // Skip header row
+            
+            while (($data = fgetcsv($handle)) !== FALSE) {
+                if (isset($data[0]) && filter_var($data[0], FILTER_VALIDATE_EMAIL)) {
+                    $email = trim($data[0]);
+                    $name = isset($data[1]) ? trim($data[1]) : null;
+                    
+                    // add_recipient now handles duplicate checking
+                    if ($this->add_recipient($campaign_id, $email, $name)) {
+                        $imported++;
+                    }
+                }
+            }
+            fclose($handle);
+        }
+        
+        return $imported;
+    }
+    
+    public function get_next_pending_recipient($campaign_id) {
+        $this->db->where('campaign_id', $campaign_id);
+        $this->db->where('status', 'pending');
+        // Order by priority first (lower = higher priority), then by id
+        // Manual emails have priority=1, imported have priority=100
+        $this->db->order_by('priority', 'ASC');
+        $this->db->order_by('id', 'ASC');
+        $this->db->limit(1);
+        $query = $this->db->get($this->tb_recipients);
+        
+        return $query->num_rows() > 0 ? $query->row() : null;
+    }
+    
+    public function update_recipient_status($recipient_id, $status, $error_message = null) {
+        $data = [
+            'status' => $status,
+            'updated_at' => NOW
+        ];
+        
+        if ($status == 'sent') {
+            $data['sent_at'] = NOW;
+        } elseif ($status == 'opened') {
+            $data['opened_at'] = NOW;
+        }
+        
+        if ($error_message) {
+            $data['error_message'] = $error_message;
+        }
+        
+        $this->db->where('id', $recipient_id);
+        return $this->db->update($this->tb_recipients, $data);
+    }
+    
+    // ========================================
+    // LOG METHODS
+    // ========================================
+    
+    /**
+     * Add log entry (basic version for backward compatibility)
+     */
+    public function add_log($campaign_id, $recipient_id, $email, $subject, $status, $error_message = null, $smtp_config_id = null) {
+        return $this->add_log_with_timing($campaign_id, $recipient_id, $email, $subject, $status, $error_message, $smtp_config_id, 0);
+    }
+    
+    /**
+     * Add detailed log entry with timing information
+     * @param int $campaign_id Campaign ID
+     * @param int $recipient_id Recipient ID
+     * @param string $email Email address
+     * @param string $subject Email subject
+     * @param string $status Status (sent, failed, opened, etc.)
+     * @param string|null $error_message Error message if failed
+     * @param int|null $smtp_config_id SMTP config ID used
+     * @param float $time_taken_ms Time taken in milliseconds
+     * @return bool Success
+     */
+    public function add_log_with_timing($campaign_id, $recipient_id, $email, $subject, $status, $error_message = null, $smtp_config_id = null, $time_taken_ms = 0) {
+        $data = [
+            'ids' => ids(),
+            'campaign_id' => (int)$campaign_id,
+            'recipient_id' => (int)$recipient_id,
+            'smtp_config_id' => ($smtp_config_id !== null) ? (int)$smtp_config_id : null,
+            'email' => $email,
+            'subject' => $subject,
+            'status' => $status,
+            'error_message' => $error_message,
+            'time_taken_ms' => (float)$time_taken_ms,
+            'sent_at' => ($status == 'sent') ? NOW : null,
+            'ip_address' => $this->input->ip_address(),
+            'user_agent' => $this->input->user_agent(),
+            'created_at' => NOW
+        ];
+        
+        // Log the insert for debugging
+        log_message('debug', sprintf(
+            'Email Log Insert: smtp_config_id=%s, campaign_id=%d, email=%s, status=%s, time=%0.2fms',
+            ($smtp_config_id !== null ? $smtp_config_id : 'NULL'),
+            $campaign_id,
+            $email,
+            $status,
+            $time_taken_ms
+        ));
+        
+        return $this->db->insert($this->tb_logs, $data);
+    }
+    
+    public function get_logs($campaign_id, $limit = -1, $page = -1) {
+        if ($limit == -1) {
+            $this->db->select('count(*) as sum');
+            $this->db->from($this->tb_logs);
+            $this->db->where('campaign_id', $campaign_id);
+            $this->db->order_by('created_at', 'DESC');
+        } else {
+            // Select all log fields plus SMTP name via JOIN
+            $this->db->select('l.*, s.name as smtp_name');
+            $this->db->from($this->tb_logs . ' l');
+            $this->db->join($this->tb_smtp_configs . ' s', 'l.smtp_config_id = s.id', 'left');
+            $this->db->where('l.campaign_id', $campaign_id);
+            $this->db->limit($limit, $page);
+            $this->db->order_by('l.created_at', 'DESC');
+        }
+        
+        $query = $this->db->get();
+        
+        if ($query->num_rows() > 0) {
+            if ($limit == -1) {
+                return $query->row()->sum;
+            } else {
+                return $query->result();
+            }
+        }
+        
+        return ($limit == -1) ? 0 : [];
+    }
+    
+    /**
+     * Get queue metrics for observability dashboard
+     * @return object Queue metrics
+     */
+    public function get_queue_metrics() {
+        // Get pending emails count
+        $this->db->where('status', 'pending');
+        $pending_count = $this->db->count_all_results($this->tb_recipients);
+        
+        // Get failed emails count
+        $this->db->where('status', 'failed');
+        $failed_count = $this->db->count_all_results($this->tb_recipients);
+        
+        // Get last cron info from settings
+        $last_cron_run = $this->get_setting('last_cron_run', 'Never');
+        $last_cron_duration = $this->get_setting('last_cron_duration_sec', 0);
+        $last_cron_sent = $this->get_setting('last_cron_sent', 0);
+        $last_cron_failed = $this->get_setting('last_cron_failed', 0);
+        $last_cron_rejected = $this->get_setting('last_cron_rejected_domain', 0);
+        
+        // Get domain filter settings
+        $domain_filter = $this->get_setting('email_domain_filter', 'gmail_only');
+        $allowed_domains = $this->get_setting('email_allowed_domains', 'gmail.com');
+        
+        // Get running campaigns count
+        $this->db->where('status', 'running');
+        $running_campaigns = $this->db->count_all_results($this->tb_campaigns);
+        
+        return (object) [
+            'queue_size' => $pending_count,
+            'failed_count' => $failed_count,
+            'running_campaigns' => $running_campaigns,
+            'last_cron_run' => $last_cron_run,
+            'last_cron_duration_sec' => $last_cron_duration,
+            'last_cron_sent' => $last_cron_sent,
+            'last_cron_failed' => $last_cron_failed,
+            'last_cron_rejected_domain' => $last_cron_rejected,
+            'domain_filter' => $domain_filter,
+            'allowed_domains' => $allowed_domains
+        ];
+    }
+    
+    // ========================================
+    // SETTINGS METHODS
+    // ========================================
+    
+    public function get_setting($key, $default = null) {
+        $this->db->where('setting_key', $key);
+        $query = $this->db->get($this->tb_settings);
+        
+        if ($query->num_rows() > 0) {
+            return $query->row()->setting_value;
+        }
+        
+        return $default;
+    }
+    
+    public function update_setting($key, $value) {
+        $this->db->where('setting_key', $key);
+        $exists = $this->db->count_all_results($this->tb_settings);
+        
+        if ($exists > 0) {
+            $this->db->where('setting_key', $key);
+            return $this->db->update($this->tb_settings, [
+                'setting_value' => $value,
+                'updated_at' => NOW
+            ]);
+        } else {
+            return $this->db->insert($this->tb_settings, [
+                'setting_key' => $key,
+                'setting_value' => $value,
+                'updated_at' => NOW
+            ]);
+        }
+    }
+    
+    // ========================================
+    // HELPER METHODS
+    // ========================================
+    
+    public function process_template_variables($template_body, $variables) {
+        $body = $template_body;
+        
+        // Add default variables
+        $default_vars = [
+            'site_name' => get_option('website_name', 'SMM Panel'),
+            'site_url' => base_url(),
+            'current_date' => date('Y-m-d'),
+            'current_year' => date('Y')
+        ];
+        
+        $variables = array_merge($default_vars, $variables);
+        
+        // Replace variables
+        foreach ($variables as $key => $value) {
+            $body = str_replace('{' . $key . '}', $value, $body);
+        }
+        
+        return $body;
+    }
+    
+    /**
+     * Calculate spam risk score for email content
+     * Returns score between 0.0 (safe) and 1.0 (high risk)
+     * 
+     * @param string $subject Email subject
+     * @param string $body Email body (HTML or plain text)
+     * @return float Spam risk score
+     */
+    public function calculate_spam_risk_score($subject, $body) {
+        $score = 0.0;
+        $checks = 0;
+        
+        // Convert to lowercase for checking
+        $subject_lower = strtolower($subject);
+        $body_lower = strtolower(strip_tags($body));
+        
+        // High-risk spam trigger words
+        $spam_words = [
+            'free', 'winner', 'cash', 'prize', 'urgent', 'act now', 
+            'limited time', 'click here', 'buy now', 'guarantee',
+            'risk-free', 'no catch', 'cancel anytime', 'lowest price',
+            'viagra', 'cialis', 'weight loss', 'make money'
+        ];
+        
+        // Check for spam trigger words
+        $spam_word_count = 0;
+        foreach ($spam_words as $word) {
+            if (strpos($subject_lower, $word) !== false) {
+                $spam_word_count += 2; // Subject words count more
+            }
+            if (strpos($body_lower, $word) !== false) {
+                $spam_word_count++;
+            }
+        }
+        $score += min(0.3, $spam_word_count * 0.05);
+        $checks++;
+        
+        // Check for excessive capitalization in subject
+        $caps_ratio = 0;
+        if (strlen($subject) > 0) {
+            $caps_count = strlen(preg_replace('/[^A-Z]/', '', $subject));
+            $caps_ratio = $caps_count / strlen($subject);
+        }
+        if ($caps_ratio > 0.5) {
+            $score += 0.2; // High caps is spammy
+        }
+        $checks++;
+        
+        // Check for excessive exclamation marks
+        $exclamation_count = substr_count($subject, '!') + substr_count($body, '!');
+        if ($exclamation_count > 3) {
+            $score += min(0.2, $exclamation_count * 0.03);
+        }
+        $checks++;
+        
+        // Check for excessive links in body
+        $link_count = preg_match_all('/<a\s+href=/i', $body);
+        if ($link_count > 10) {
+            $score += 0.15; // Too many links is suspicious
+        }
+        $checks++;
+        
+        // Check for very short subject
+        if (strlen($subject) < 5) {
+            $score += 0.1; // Short subjects can be spammy
+        }
+        $checks++;
+        
+        // Check for dollar signs and money symbols
+        $money_symbols = substr_count($subject, '$') + substr_count($body, '$');
+        $money_symbols += substr_count($subject_lower, 'usd');
+        if ($money_symbols > 5) {
+            $score += 0.1;
+        }
+        $checks++;
+        
+        // Normalize score to 0.0 - 1.0 range
+        return min(1.0, max(0.0, $score));
+    }
+    
+    /**
+     * Get deliverability report for a campaign
+     * 
+     * @param int $campaign_id Campaign ID
+     * @return object Deliverability metrics
+     */
+    public function get_deliverability_report($campaign_id) {
+        $this->db->select("
+            COUNT(*) as total_sent,
+            SUM(CASE WHEN has_plain_text = 1 THEN 1 ELSE 0 END) as with_plaintext,
+            SUM(CASE WHEN has_unsubscribe = 1 THEN 1 ELSE 0 END) as with_unsubscribe,
+            SUM(CASE WHEN deliverability_status = 'inbox' THEN 1 ELSE 0 END) as inbox_count,
+            SUM(CASE WHEN deliverability_status = 'spam' THEN 1 ELSE 0 END) as spam_count,
+            SUM(CASE WHEN deliverability_status = 'bounced' THEN 1 ELSE 0 END) as bounced_count,
+            AVG(time_taken_ms) as avg_send_time_ms,
+            AVG(spam_risk_score) as avg_spam_risk
+        ");
+        $this->db->from($this->tb_logs);
+        $this->db->where('campaign_id', $campaign_id);
+        $this->db->where('status', 'sent');
+        $query = $this->db->get();
+        
+        if ($query->num_rows() > 0) {
+            $report = $query->row();
+            
+            // Calculate percentages
+            if ($report->total_sent > 0) {
+                $report->plaintext_rate = round(($report->with_plaintext / $report->total_sent) * 100, 1);
+                $report->unsubscribe_rate = round(($report->with_unsubscribe / $report->total_sent) * 100, 1);
+                $report->inbox_rate = round(($report->inbox_count / $report->total_sent) * 100, 1);
+                $report->spam_rate = round(($report->spam_count / $report->total_sent) * 100, 1);
+            }
+            
+            return $report;
+        }
+        
+        return null;
+    }
+}

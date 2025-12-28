@@ -1,0 +1,11 @@
+/* 
+ * DEPRECATED: This file has been refactored and split into organized CSS files.
+ * All styles have been moved to:
+ * - header.css (navigation and nav-tabs styles)
+ * - common.css (cards, forms, modals, tables, pagination)
+ * - auth.css (login/signup forms)
+ * - themes.css (theme-specific header and nav styles)
+ * 
+ * This file is kept as an empty placeholder to avoid breaking legacy references.
+ * It can be safely removed once all references are updated.
+ */

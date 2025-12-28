@@ -1,0 +1,713 @@
+.header-section {
+    padding: 0 !important;
+    background-color: #003a74;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.main-nav {
+    background: transparent !important;
+    display: flex !important;
+    flex-direction: column !important;
+    color: #fff !important;
+    position: relative !important;
+    z-index: 999 !important;
+    padding: 0 !important;
+}
+
+/* Top Section - Blue Gradient */
+.header-top {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    min-height: 60px !important;
+    padding: 10px 20px !important;
+    background: #003a74 !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3) !important;
+    position: relative !important;
+}
+
+.logo {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+}
+
+.logo img {
+    height: 40px !important;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1)) !important;
+    transition: transform 0.3s ease !important;
+}
+
+.logo img:hover {
+    transform: scale(1.05) !important;
+}
+
+.logo a {
+    text-decoration: none !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    color: #fff !important;
+    transition: color 0.3s ease !important;
+    padding: 0 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+}
+
+.logo a:hover {
+    color: #e0f7ff !important;
+}
+
+/* User Balance - Shown separately */
+.user-balance {
+    font-size: 14px !important;
+    color: black !important;
+    display: flex !important;
+    font-weight: 600 !important;
+    padding: 8px 16px !important;
+    background: #fff !important;
+    border-radius: 20px !important;
+    border: 2px solid rgba(0, 0, 0, 0.3) !important;
+    white-space: nowrap !important;
+    align-items: center !important;
+    gap: 5px !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+.header-right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+/* Currency Dropdown with Balance */
+.currency-dropdown {
+    position: relative !important;
+    white-space: nowrap !important;
+}
+
+.currency-dropdown .dropdown-toggle {
+    text-decoration: none !important;
+    color: #003a74 !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 8px 16px !important;
+    border: 2px solid rgba(30, 144, 215, 0.3) !important;
+    border-radius: 20px !important;
+    background-color: #fff !important;
+    transition: all 0.3s ease !important;
+    gap: 10px !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+.currency-dropdown .dropdown-toggle:hover {
+    background-color: #f0f9ff !important;
+    border-color: #003a74 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+}
+
+.currency-balance-info {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    line-height: 1.3 !important;
+}
+
+.currency-code {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #003a74 !important;
+}
+
+.currency-balance {
+    font-size: 12px !important;
+    color: #666 !important;
+    font-weight: 500 !important;
+}
+
+.currency-dropdown .dropdown-toggle i {
+    color: #003a74 !important;
+    font-size: 16px !important;
+}
+
+.currency-dropdown .currency-dropdown-menu {
+    display: none !important;
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
+    right: 0 !important;
+    background-color: white !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+    z-index: 9999 !important;
+    padding: 8px 0 !important;
+    min-width: 180px !important;
+    max-height: 300px !important;
+    overflow-y: auto !important;
+    border: 1px solid rgba(30, 144, 215, 0.2) !important;
+}
+
+.currency-dropdown .currency-dropdown-menu li {
+    list-style: none !important;
+}
+
+.currency-dropdown .dropdown-currency-item {
+    display: block !important;
+    text-decoration: none !important;
+    padding: 10px 18px !important;
+    color: #333 !important;
+    font-size: 14px !important;
+    transition: all 0.3s ease !important;
+    border-left: 3px solid transparent !important;
+}
+
+.currency-dropdown .dropdown-currency-item:hover {
+    background-color: rgba(30, 144, 215, 0.1) !important;
+    color: #003a74 !important;
+    border-left-color: #003a74 !important;
+    padding-left: 22px !important;
+}
+
+.currency-dropdown .dropdown-currency-item.active {
+    font-weight: 700 !important;
+    color: #003a74 !important;
+    background-color: rgba(30, 144, 215, 0.15) !important;
+    border-left-color: #003a74 !important;
+}
+
+.currency-dropdown.dropdown-show .currency-dropdown-menu {
+    display: block !important;
+    animation: slideDown 0.3s ease !important;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Menu Section - White Background with Black Text */
+.menu-wrapper {
+    background: #ffffff !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+    padding: 0 20px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+.menu {
+    list-style: none !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 5px !important;
+    margin: 0 !important;
+    padding: 10px 0 !important;
+    width: 100% !important;
+    justify-content: flex-start !important;
+}
+
+.menu-item {
+    position: relative !important;
+    white-space: nowrap !important;
+}
+
+.menu-link {
+    text-decoration: none !important;
+    color: #000 !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    padding: 8px 14px !important;
+    border-radius: 4px !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.menu-link i {
+    font-size: 16px !important;
+    color: #000 !important;
+}
+
+.menu-link:hover {
+    background: #003a74 !important;
+    color: #fff !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 2px 8px rgba(77, 179, 237, 0.3) !important;
+}
+
+.menu-link:hover i {
+    color: #fff !important;
+}
+
+.menu-link .badge {
+    margin-left: 5px !important;
+    background-color: #ff6b6b !important;
+    padding: 2px 6px !important;
+    border-radius: 10px !important;
+    font-size: 11px !important;
+    color: #fff !important;
+}
+
+.dropdown-item {
+    margin: 0 !important;
+}
+
+.dropdown-link {
+    text-decoration: none !important;
+    color: #1323b2 !important;
+    padding: 10px 16px !important;
+    display: block !important;
+    transition: all 0.3s ease !important;
+    font-size: 13px !important;
+}
+
+.dropdown-link:hover {
+    background-color: #003a74 !important;
+    color: #fff !important;
+    padding-left: 20px !important;
+}
+
+/* Active Menu Item - Top Header BG Color */
+.menu-item.active .menu-link {
+    background: #003a74 !important;
+    color: #fff !important;
+    box-shadow: 0 2px 4px rgba(77, 179, 237, 0.3) !important;
+}
+
+.menu-item.active .menu-link i {
+    color: #fff !important;
+}
+
+.menu-item.active .menu-link:hover {
+    background-color: #003a74;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 10px rgba(77, 179, 237, 0.4) !important;
+}
+
+.menu-toggle {
+    margin: 0 !important;
+    padding: 8px 14px !important;
+    display: none !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: 2px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 6px !important;
+    color: #fff !important;
+    font-size: 20px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+.menu-toggle:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+    transform: scale(1.05) !important;
+}
+
+.menu-toggle i {
+    transition: transform 0.3s ease !important;
+}
+
+.menu-toggle.up i {
+    transform: rotate(180deg) !important;
+}
+
+@media (max-width: 768px) {
+    .header-section {
+        padding: 0 !important;
+    }
+
+    .header-top {
+        flex-wrap: wrap !important;
+        padding: 10px 15px !important;
+        min-height: auto !important;
+        overflow: visible !important;
+    }
+
+    .logo {
+        flex: 1 !important;
+        min-width: 150px !important;
+    }
+
+    .logo img {
+        height: 32px !important;
+    }
+
+    .logo a {
+        font-size: 18px !important;
+        letter-spacing: 1px !important;
+    }
+
+    .header-right {
+        display: flex !important;
+        gap: 8px !important;
+        align-items: center !important;
+        position: relative !important;
+    }
+
+    .user-balance {
+        font-size: 12px !important;
+        padding: 6px 12px !important;
+        order: 3 !important;
+        width: 100% !important;
+        margin-top: 10px !important;
+        justify-content: center !important;
+    }
+
+    .currency-dropdown {
+        position: static !important;
+    }
+
+    .currency-dropdown .dropdown-toggle {
+        font-size: 12px !important;
+        padding: 6px 12px !important;
+    }
+
+    .currency-code {
+        font-size: 12px !important;
+    }
+
+    .currency-balance {
+        font-size: 10px !important;
+    }
+
+    /* Mobile Currency Dropdown - Fixed Position */
+    .currency-dropdown .currency-dropdown-menu {
+        position: fixed !important;
+        top: auto !important;
+        right: 15px !important;
+        left: 15px !important;
+        width: auto !important;
+        max-width: calc(100% - 30px) !important;
+        margin-top: 5px !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+        border: 1px solid rgba(30, 144, 215, 0.3) !important;
+        z-index: 99999 !important;
+    }
+
+    /* Calculate dropdown position based on header */
+    .header-top.has-dropdown-open .currency-dropdown .currency-dropdown-menu {
+        top: 100% !important;
+    }
+
+    .menu-toggle {
+        display: block !important;
+    }
+
+    .menu-wrapper {
+        padding: 0 !important;
+        background: #ffffff !important;
+    }
+
+    .menu {
+        padding: 0 !important;
+        margin: 0 !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        transform: translateY(-20px) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        background: #ffffff !important;
+        position: absolute !important;
+        top: 100% !important;
+        left: 0 !important;
+        width: 100% !important;
+        border-top: 2px solid rgba(77, 179, 237, 0.3) !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+        transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease !important;
+        z-index: 1000 !important;
+    }
+
+    .menu.show {
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+    }
+
+    .menu-item {
+        margin: 0 !important;
+        text-align: left !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .menu-item:last-child {
+        border-bottom: none !important;
+    }
+
+    .menu-item.active .menu-link {
+        background: #003a74 !important;
+        color: #fff !important;
+        border-left: 4px solid #2b9ee0 !important;
+    }
+
+    .menu-item.active .menu-link i {
+        color: #fff !important;
+    }
+
+    .menu-link {
+        margin: 0 !important;
+        display: flex !important;
+        width: 100% !important;
+        padding: 14px 20px !important;
+        text-align: left !important;
+        color: #000 !important;
+    }
+
+    .menu-link i {
+        color: #000 !important;
+    }
+
+    .menu-link:hover {
+        background: #003a74 !important;
+        color: #fff !important;
+        padding-left: 24px !important;
+        transform: none !important;
+    }
+
+    .menu-link:hover i {
+        color: #fff !important;
+    }
+}
+
+@media (min-width: 769px) {
+    .menu {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+    }
+
+    .menu-item {
+        margin: 0 !important;
+    }
+
+    .menu-toggle {
+        display: none !important;
+    }
+}
+
+
+
+/* AI Chat Widget */
+#aichat {
+    all: initial !important;
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif !important;
+    --aiw-primary: #1a73e8 !important;
+    --aiw-bg: #ffffff !important;
+    --aiw-border: #e5e7eb !important;
+    --aiw-text: #111827 !important;
+    --aiw-muted: #6b7280 !important;
+    --aiw-bot: #f3f4f6 !important;
+    --aiw-user: #e8f0fe !important;
+    --shadow-1: 0 6px 20px rgba(0,0,0,.18) !important;
+    --focus: 0 0 0 3px rgba(26,115,232,.22) !important;
+}
+
+#aichat,
+#aichat * {
+    box-sizing: border-box !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+#aichat .aiw-fab {
+    position: fixed !important;
+    right: 16px !important;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 16px) !important;
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 50% !important;
+    border: none !important;
+    cursor: pointer !important;
+    color: #fff !important;
+    background: var(--aiw-primary) !important;
+    display: grid !important;
+    place-items: center !important;
+    font-size: 22px !important;
+    box-shadow: var(--shadow-1) !important;
+    z-index: 2147483646 !important;
+    transition: transform .08s ease, filter .15s ease, box-shadow .15s ease !important;
+}
+
+#aichat .aiw-fab:focus {
+    outline: none !important;
+    box-shadow: var(--focus) !important;
+}
+
+#aichat .aiw-fab:hover {
+    filter: brightness(1.06) !important;
+}
+
+#aichat .aiw-fab:active {
+    transform: scale(.98) !important;
+}
+
+#aichat .aiw-panel {
+    position: fixed !important;
+    right: 16px !important;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 72px) !important;
+    width: 340px !important;
+    height: 480px !important;
+    display: none !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    background: var(--aiw-bg) !important;
+    color: var(--aiw-text) !important;
+    border: 1px solid var(--aiw-border) !important;
+    border-radius: 12px !important;
+    box-shadow: var(--shadow-1) !important;
+    z-index: 2147483647 !important;
+    will-change: transform, opacity !important;
+}
+
+#aichat .aiw-head {
+    height: 52px !important;
+    padding: 0 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    background: #fafafa !important;
+    border-bottom: 1px solid var(--aiw-border) !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+}
+
+#aichat .aiw-title {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+#aichat .aiw-title::before {
+    content: "" !important;
+    width: 10px !important;
+    height: 10px !important;
+    border-radius: 50% !important;
+    background: #22c55e !important;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, .22) !important;
+}
+
+#aichat .aiw-close {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 8px !important;
+    border: none !important;
+    background: transparent !important;
+    color: var(--aiw-muted) !important;
+    cursor: pointer !important;
+    font-size: 18px !important;
+    transition: background .15s ease, color .15s ease !important;
+}
+
+#aichat .aiw-close:hover {
+    background: rgba(0,0,0,.06) !important;
+    color: #111827 !important;
+}
+
+#aichat .aiw-close:focus {
+    outline: none !important;
+    box-shadow: inset var(--focus) !important;
+}
+
+#aichat .aiw-body {
+    flex: 1 !important;
+    overflow: auto !important;
+    padding: 12px !important;
+    background: #fbfbfc !important;
+}
+
+#aichat .aiw-msg {
+    max-width: 82% !important;
+    margin: 6px 0 !important;
+    padding: 9px 11px !important;
+    border-radius: 10px !important;
+    font-size: 14px !important;
+    line-height: 1.42 !important;
+    word-wrap: break-word !important;
+    white-space: pre-wrap !important;
+    box-shadow: 0 1px 0 rgba(0,0,0,.03) !important;
+}
+
+#aichat .aiw-bot {
+    background: var(--aiw-bot) !important;
+    margin-right: auto !important;
+}
+
+#aichat .aiw-user {
+    background: var(--aiw-user) !important;
+    margin-left: auto !important;
+}
+
+#aichat .aiw-foot {
+    border-top: 1px solid var(--aiw-border) !important;
+    background: #fff !important;
+    padding: 8px !important;
+    display: flex !important;
+    gap: 8px !important;
+}
+
+#aichat .aiw-input {
+    flex: 1 !important;
+    height: 40px !important;
+    border: 1px solid var(--aiw-border) !important;
+    border-radius: 8px !important;
+    padding: 0 12px !important;
+    font-size: 14px !important;
+    outline: none !important;
+    background: #fff !important;
+    transition: border-color .15s ease, box-shadow .15s ease !important;
+}
+
+#aichat .aiw-input:focus {
+    border-color: var(--aiw-primary) !important;
+    box-shadow: var(--focus) !important;
+}
+
+#aichat .aiw-send {
+    width: 44px !important;
+    height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: none !important;
+    border-radius: 8px !important;
+    color: #fff !important;
+    background: var(--aiw-primary) !important;
+    cursor: pointer !important;
+    transition: transform .06s ease, filter .12s ease, box-shadow .12s ease !important;
+}
+
+#aichat .aiw-send:hover {
+    filter: brightness(1.05) !important;
+}
+
+#aichat .aiw-send:active {
+    transform: translateY(1px) !important;
+}
+
+#aichat .aiw-send:focus {
+    outline: none !important;
+    box-shadow: var(--focus) !important;
+}
+
+#aichat .aiw-send svg {
+    width: 18px !important;
+    height: 18px !important;
+    pointer-events: none !important;
+}
+
+@media (max-width: 480px) {
+    #aichat .aiw-panel {
+        right: 10px !important;
+        left: 10px !important;
+        width: auto !important;
+        height: 70vh !important;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 72px) !important;
+    }
+}

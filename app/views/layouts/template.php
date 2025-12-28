@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Content-Language" content="en">
+    <meta name="description" content="<?=get_option('website_desc', "SmartPanel - #1 SMM Reseller Panel - Best SMM Panel for Resellers. Also well known for TOP SMM Panel and Cheap SMM Panel for all kind of Social Media Marketing Services. SMM Panel for Facebook, Instagram, YouTube and more services!")?>">
+    <meta name="keywords" content="<?=get_option('website_keywords', "smm panel, SmartPanel, smm reseller panel, smm provider panel, reseller panel, instagram panel, resellerpanel, social media reseller panel, smmpanel, panelsmm, smm, panel, socialmedia, instagram reseller panel")?>">
+    <title><?=get_option('website_title', "SmartPanel - SMM Panel Reseller Tool")?></title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="<?=get_option('website_favicon', BASE."assets/images/favicon.png")?>">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+
+    <link rel="stylesheet" href="<?php echo BASE; ?>assets/css/bootstrap/bootstrap.min.css?v=0.0.5">
+    <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/font-awesome/css/all.min.css?v=0.0.5">
+    <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/font-awesome/css/v4-shims.min.css?v=0.0.5">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="<?php echo BASE; ?>assets/js/vendors/jquery-3.2.1.min.js?v=0.0.5"></script>
+
+    <?php if(segment('1') == 'gallery' || segment('1') == 'setting'){ ?>
+      <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/jquery-upload/css/style.css?v=0.0.5">
+      <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/jquery-upload/css/jquery.fileupload.css?v=0.0.5">
+    <?php }?>  
+    
+    <!-- flag icon -->
+    <?php if (segment('1') == 'language') {
+    ?>
+    <link href="<?php echo BASE; ?>assets/plugins/flags/css/flag-icon.css?v=0.0.5" rel="stylesheet">
+    <?php }?>
+    <!-- Core -->
+    <link href="<?php echo BASE; ?>assets/css/core.css?v=0.0.5" rel="stylesheet">
+      
+    <!-- c3.js Charts Plugin -->
+    <?php if(segment('1') == 'statistics'){ ?>
+    <link href="<?php echo BASE; ?>assets/plugins/charts-c3/c3.css?v=0.0.5" rel="stylesheet">
+    <script src="<?php echo BASE; ?>assets/plugins/charts-c3/d3.v3.min.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/plugins/charts-c3/c3.min.js?v=0.0.5"></script>
+    <?php }?>
+    <!-- toast -->
+    
+    <link rel="stylesheet" type="text/css" href="<?php echo BASE; ?>assets/plugins/jquery-toast/css/jquery.toast.css?v=0.0.5">
+    <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/boostrap/colors.css?v=0.0.5" id="theme-stylesheet">
+    <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css?v=0.0.5" id="theme-stylesheet">
+    
+    <!-- emoji -->
+    <?php
+      if (in_array(segment('1'), ['services', 'api_provider', 'provider'])) {
+    ?>
+    <link rel="stylesheet" type="text/css" href="<?=BASE?>assets/plugins/emoji/emojionearea.min.css?v=0.0.5" media="screen">
+    <script type="text/javascript" src="<?=BASE?>assets/plugins/emoji/emojionearea.min.js?v=0.0.5"></script>
+    <?php }?>
+    <link href="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/css/emoji.css?v=0.0.5" rel="stylesheet">
+    
+    <!-- Organized CSS Structure -->
+    <link href="<?php echo BASE; ?>assets/css/common.css?v=0.0.5" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/header.css?v=0.0.5" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/footer.css?v=0.0.5" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/themes.css?v=0.0.5" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/auth.css?v=0.0.5" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/new-style.css?v=0.0.5" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/util.css?v=0.0.5" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/code_parts_visibility.css?v=0.0.5" rel="stylesheet">
+    
+    <!-- Modern Bootstrap 5.3+ Theme -->
+    <link href="<?php echo BASE; ?>assets/css/modern-bootstrap-theme.css?v=0.0.5" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/modern-dashboard.css?v=0.0.5" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/modern-tables.css?v=0.0.5" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/modern-forms.css?v=0.0.5" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/modern-utilities.css?v=0.0.5" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/responsive-fixes.css?v=0.0.5" rel="stylesheet">
+    
+    <!-- Custom Search Box Component -->
+    <link href="<?php echo BASE; ?>assets/css/custom-search-box.css?v=0.0.5" rel="stylesheet">
+
+    <script type="text/javascript">
+      var token = '<?php echo $this->security->get_csrf_hash(); ?>',
+          PATH  = '<?php echo PATH; ?>',
+          BASE  = '<?php echo BASE; ?>';
+      var    deleteItem = "<?=lang('Are_you_sure_you_want_to_delete_this_item')?>";
+      var    deleteItems = "<?=lang('Are_you_sure_you_want_to_delete_all_items')?>";
+    </script>
+    <?=htmlspecialchars_decode(get_option('embed_head_javascript', ''), ENT_QUOTES)?>
+  </head>
+  <?php
+    $theme_name = get_option('default_header_skin', 'default');
+    if ($theme_name == "") {
+      $theme_name = 'default';
+    }
+  ?>
+  <body class="theme-<?php echo $theme_name; ?>">
+    <div id="page-overlay" class="visible incoming">
+      <div class="loader-wrapper-outer">
+        <div class="loader-wrapper-inner">
+          <div class="lds-double-ring">
+            <div></div>
+            <div></div>
+            <div>
+              <div></div>
+            </div>
+            <div>
+              <div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page">
+      <div class="page-main">
+        <!-- header -->
+        <?=Modules::run("blocks/header");?>
+
+        <div class="my-3 my-md-5">
+          <div class="container" <?=(segment(1)=="services" || segment(1)=="dripfeed" || segment(1)=="subscriptions" || segment(2)=="log")? 'style="max-width: 96%"' : ""?>>
+            <div class="d-md-none">
+              <?php
+                if ( allowed_search_bar(segment(1)) || allowed_search_bar(segment(2)) ) {
+                  echo Modules::run("blocks/search_box");
+                }
+              ?>
+            </div>
+
+            <?=$template['body']?>
+          </div>
+        </div>
+        
+      </div>
+      <!-- modal -->
+      <div id="modal-ajax" class="modal fade" tabindex="-1"></div>
+      <div id="modal-ajax-notification" class="modal fade" tabindex="-1"></div>
+    </div>
+
+    <?=Modules::run("blocks/footer");?>
+    <!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include Selectize CSS and JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.default.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/standalone/selectize.min.js"></script>
+
+    <script src="<?php echo BASE; ?>assets/js/vendors/bootstrap.bundle.min.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/js/bootstrap-toast.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/js/vendors/jquery.sparkline.min.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/js/vendors/selectize.min.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/js/vendors/jquery.tablesorter.min.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/js/vendors/jquery-jvectormap-2.0.3.min.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/js/vendors/jquery-jvectormap-de-merc.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/js/vendors/jquery-jvectormap-world-mill.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/js/vendors/circle-progress.min.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/js/core.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/js/slide.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/js/general.js?v=0.0.5"></script>
+    <!-- toast -->
+    <script type="text/javascript" src="<?php echo BASE; ?>assets/plugins/jquery-toast/js/jquery.toast.js?v=0.0.5"></script>
+    <!-- TinyMCE Editor from jsDelivr CDN -->
+    
+
+    <!-- emoji picker -->
+    <script src="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/js/config.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/js/util.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/js/jquery.emojiarea.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/js/emoji-picker.js?v=0.0.5"></script>
+    <!-- flags icon -->
+    <script src="<?php echo BASE; ?>assets/plugins/flags/js/docs.js?v=0.0.5"></script>
+
+    <?php if(segment('1')== 'gallery' || segment('1') =='setting'){ ?>
+    <script src="<?php echo BASE; ?>assets/plugins/jquery-upload/js/vendor/jquery.ui.widget.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/plugins/jquery-upload/js/jquery.iframe-transport.js?v=0.0.5"></script>
+    <script src="<?php echo BASE; ?>assets/plugins/jquery-upload/js/jquery.fileupload.js?v=0.0.5"></script>
+    <?php } ?>
+
+    <?php if(segment('1') == 'statistics'){ ?>
+    <script src="<?php echo BASE; ?>assets/js/chart_template.js?v=0.0.5"></script>
+    <?php }?>
+    
+    
+    <!-- general JS -->
+    <script src="<?php echo BASE; ?>assets/js/process.js?v=0.0.5"></script>
+    
+    <script type="text/javascript" id="tinymce-js" src="<?= BASE ?>assets/plugins/tinymce/tinymce.min.js?v=0.0.5"></script>
+    <script type="text/javascript">
+tinymce.init({
+  selector: '.plugin_editor',
+  plugins: 'code advlist lists link image preview',
+ toolbar: 'code | undo redo | formatselect | bold italic underline | \
+            alignleft aligncenter alignright alignjustify | \
+            bullist numlist | link image | removeformat | preview'
+});
+</script>
+
+
+    
+    <!-- Visual Effects System -->
+    <?php if (get_option('visual_effects_enabled', 0) == 1): ?>
+    <script>
+      var VISUAL_EFFECTS_CONFIG = {
+        enabled: true,
+        type: '<?= get_option('visual_effects_type', 'snow') ?>',
+        color: '<?= get_option('visual_effects_color', '#ffffff') ?>',
+        size: '<?= get_option('visual_effects_size', 'medium') ?>',
+        density: '<?= get_option('visual_effects_density', 'medium') ?>',
+        speed: '<?= get_option('visual_effects_speed', 'normal') ?>'
+      };
+    </script>
+    <script src="<?php echo BASE; ?>assets/js/visual-effects.js?v=0.0.5"></script>
+    <?php endif; ?>
+    
+    <!-- Credit Notification Modal -->
+    <?php if (session('uid')): ?>
+      <?php echo Modules::run('notifications/get_notification_modal'); ?>
+    <?php endif; ?>
+    
+    <?=htmlspecialchars_decode(get_option('embed_javascript', ''), ENT_QUOTES)?>
+    
+    <!-- Service Worker Registration for Offline Support -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('<?=BASE?>service-worker.js')
+            .then(function(registration) {
+              console.log('Service Worker registered successfully:', registration.scope);
+            })
+            .catch(function(error) {
+              console.log('Service Worker registration failed:', error);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>
