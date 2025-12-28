@@ -370,11 +370,6 @@
             [csrfName]: csrfHash
           },
           success: function(response) {
-            // Update CSRF token with new value from response if available
-            if (response && typeof response === 'object' && response.csrf_token) {
-              csrfHash = response.csrf_token;
-            }
-            
             // Check if response is empty or contains error
             if (!response || response.trim() === '') {
               $tabPane.html('<div class="alert alert-danger">Payment form is empty. Please contact support.</div>');
