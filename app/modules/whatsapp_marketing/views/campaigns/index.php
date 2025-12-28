@@ -1,4 +1,6 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<!-- Include responsive CSS -->
+<link rel="stylesheet" href="<?php echo BASE; ?>assets/css/whatsapp_marketing-responsive.css">
+
 <div class="row justify-content-md-center">
   <div class="col-md-12">
     <div class="page-header">
@@ -22,9 +24,9 @@
 <div class="row" id="result_ajaxSearch">
   <?php if(!empty($campaigns)){ ?>
   <div class="col-md-12">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title">Campaign List</h3>
+        <h3 class="card-title" style="color:#fff !important;">Campaign List</h3>
         <div class="card-options">
           <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
         </div>
@@ -112,7 +114,7 @@
                     class="btn btn-sm btn-icon" 
                     data-bs-toggle="tooltip" 
                     title="View Details">
-                    <i class="fe fe-eye"></i>
+                    <i style="color: #007bff;" class="fe fe-eye"></i>
                   </a>
                   
                   <?php if($campaign->status == 'pending' || $campaign->status == 'paused'){ ?>

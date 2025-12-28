@@ -1,0 +1,255 @@
+/**
+ * WhatsApp Marketing Module - Responsive Styles
+ * Ensures all whatsapp_marketing views are fully responsive from 320px to desktop
+ */
+
+/* ========================================
+   Global Responsive Utilities
+   ======================================== */
+
+/* Campaign Stats Cards - Stack on mobile */
+@media (max-width: 767px) {
+    .whatsapp-marketing-stats .col-lg-3,
+    .whatsapp-marketing-stats .col-sm-6 {
+        margin-bottom: 1rem;
+    }
+    
+    .whatsapp-marketing-stats .card .h2 {
+        font-size: 1.75rem;
+    }
+}
+
+/* ========================================
+   Campaign Details Page Responsiveness
+   ======================================== */
+
+/* Campaign control buttons - Stack on mobile */
+@media (max-width: 576px) {
+    .campaign-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .campaign-controls .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .page-header .page-subtitle {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+    
+    .page-header .page-subtitle .btn {
+        width: 100%;
+    }
+}
+
+/* Campaign info card - Stack details on mobile */
+@media (max-width: 767px) {
+    .campaign-info-table td {
+        display: block;
+        width: 100% !important;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .campaign-info-table td:first-child {
+        font-weight: bold;
+        padding-bottom: 0.25rem;
+        border-bottom: none;
+    }
+    
+    .campaign-info-table td:last-child {
+        padding-top: 0.25rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .campaign-info-table tr:last-child td:last-child {
+        border-bottom: none;
+    }
+}
+
+/* Cron URL Display */
+.cron-url-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.cron-url-input {
+    flex: 1;
+    min-width: 200px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
+}
+
+@media (max-width: 576px) {
+    .cron-url-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .cron-url-input {
+        width: 100%;
+        min-width: unset;
+    }
+    
+    .cron-url-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .cron-url-buttons .btn {
+        flex: 1;
+    }
+}
+
+/* Campaign Pause/Run Toggle */
+.campaign-toggle-btn {
+    position: relative;
+    min-width: 120px;
+}
+
+.campaign-toggle-btn.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.campaign-toggle-btn.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.campaign-toggle-btn .spinner-border {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15rem;
+}
+
+@media (max-width: 576px) {
+    .campaign-toggle-btn {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+}
+
+/* ========================================
+   Templates Create/Edit Modal
+   ======================================== */
+
+/* Make modal full width on mobile */
+@media (max-width: 768px) {
+    .modal-right .modal-dialog {
+        margin: 0;
+        max-width: 100%;
+        height: 100%;
+    }
+    
+    .modal-right .modal-content {
+        height: 100%;
+        border-radius: 0;
+    }
+}
+
+/* Textarea in modal - Adjust height on mobile */
+@media (max-width: 576px) {
+    .whatsapp-message-textarea {
+        height: 300px !important;
+    }
+}
+
+/* ========================================
+   Reports Page
+   ======================================== */
+
+@media (max-width: 768px) {
+    .reports-chart-container {
+        height: 250px !important;
+    }
+}
+
+/* ========================================
+   Settings Page
+   ======================================== */
+
+@media (max-width: 576px) {
+    .settings-form .form-group {
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* ========================================
+   Toast notifications positioning
+   ======================================== */
+
+@media (max-width: 576px) {
+    .toast-container {
+        left: 1rem !important;
+        right: 1rem !important;
+        bottom: 1rem !important;
+    }
+    
+    .toast {
+        width: 100%;
+    }
+}
+
+/* Copy button feedback */
+.copy-btn-success {
+    animation: copySuccess 0.3s ease;
+}
+
+@keyframes copySuccess {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Health indicator responsiveness */
+@media (max-width: 576px) {
+    .health-indicator {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    
+    .health-score-bar {
+        width: 100% !important;
+        margin-top: 0.5rem;
+    }
+}
+
+/* Badge wrapping */
+@media (max-width: 576px) {
+    .badge-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+}
+
+/* ========================================
+   Print Styles
+   ======================================== */
+
+@media print {
+    .campaign-controls,
+    .btn,
+    .page-subtitle,
+    .sidebar,
+    .navbar {
+        display: none !important;
+    }
+    
+    .card {
+        page-break-inside: avoid;
+    }
+}
