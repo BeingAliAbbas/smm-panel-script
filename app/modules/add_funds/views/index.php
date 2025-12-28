@@ -310,6 +310,10 @@
     var paymentMethods = []; // Store loaded payment methods
     var isLoading = false;
     var hasLoaded = false;
+    
+    // CSRF token for AJAX requests
+    var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>';
+    var csrfHash = '<?php echo $this->security->get_csrf_hash(); ?>';
 
     // Visuals (no extra metadata)
     function getPaymentVisual(type){
@@ -362,9 +366,15 @@
           url: '<?php echo cn("add_funds/get_payment_form"); ?>',
           type: 'POST',
           data: { 
-            payment_type: type
+            payment_type: type,
+            [csrfName]: csrfHash
           },
           success: function(response) {
+            // Update CSRF token with new value from response if available
+            if (response && typeof response === 'object' && response.csrf_token) {
+              csrfHash = response.csrf_token;
+            }
+            
             // Check if response is empty or contains error
             if (!response || response.trim() === '') {
               $tabPane.html('<div class="alert alert-danger">Payment form is empty. Please contact support.</div>');
