@@ -20,31 +20,16 @@ class add_funds extends MX_Controller {
     }
 
     public function index(){
-        /*----------  Get Payment Gateway for user  ----------*/
-        $payments = $this->model->fetch('type, name, id, params', $this->tb_payments, ['status' => 1]);
-        $user_settings = $this->model->get('settings', $this->tb_users, ['id' => session('uid')])->settings;
-        $user_settings = json_decode($user_settings);
-        
-        // Filter payment methods based on user settings
-        if (isset($user_settings->limit_payments)) {
-            $limit_payments = (array)$user_settings->limit_payments;
-            foreach ($payments as $key => $payment) {
-                if (isset($limit_payments[$payment->type]) && !$limit_payments[$payment->type]) {
-                    unset($payments[$key]);
-                }
-            }
-        }
-
         // Fetch last 5 transactions
         $transactions = $this->get_last_transactions(session('uid'));
 
         // Prepare data for view
+        // Note: payments will be loaded dynamically via AJAX
         $data = array(
             "module"          => get_class($this),
-            "payments"        => $payments,
             "currency_code"   => get_option("currency_code",'USD'),
             "currency_symbol" => get_option("currency_symbol",'$'),
-            "transactions"     => $transactions // Add transactions to data
+            "transactions"    => $transactions
         );
 
         $this->template->build('index', $data);
@@ -53,6 +38,106 @@ class add_funds extends MX_Controller {
     // New method to fetch last 5 transactions for the logged-in user
     private function get_last_transactions($user_id, $limit = 5) {
         return $this->model->fetch('*', $this->tb_transaction_logs, ['uid' => $user_id], ['created' => 'DESC'], $limit);
+    }
+
+    // AJAX endpoint to fetch payment methods dynamically
+    public function get_payment_methods(){
+        // Set JSON header
+        header('Content-Type: application/json');
+        
+        try {
+            // Get payment methods from database
+            $payments = $this->model->fetch('type, name, id, params', $this->tb_payments, ['status' => 1]);
+            
+            // Get user settings to filter payment methods
+            $user_record = $this->model->get('settings', $this->tb_users, ['id' => session('uid')]);
+            
+            if ($user_record && isset($user_record->settings)) {
+                $user_settings = json_decode($user_record->settings);
+                
+                // Filter payment methods based on user settings
+                if (isset($user_settings->limit_payments)) {
+                    $limit_payments = (array)$user_settings->limit_payments;
+                    foreach ($payments as $key => $payment) {
+                        if (isset($limit_payments[$payment->type]) && !$limit_payments[$payment->type]) {
+                            unset($payments[$key]);
+                        }
+                    }
+                }
+            }
+            
+            // Re-index array after unset operations
+            $payments = array_values($payments);
+            
+            // Return success response with payment methods
+            echo json_encode([
+                'status' => 'success',
+                'data' => $payments
+            ]);
+        } catch (Exception $e) {
+            // Return error response
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Failed to load payment methods. Please try again.'
+            ]);
+        }
+    }
+
+    // AJAX endpoint to fetch payment method form HTML
+    public function get_payment_form(){
+        $payment_type = $this->input->post('payment_type');
+        
+        if (empty($payment_type)) {
+            echo '<div class="alert alert-danger">Invalid payment method.</div>';
+            return;
+        }
+        
+        // Sanitize payment type to prevent directory traversal - only allow alphanumeric and underscore
+        $payment_type = preg_replace('/[^a-z0-9_]/i', '', $payment_type);
+        
+        if (empty($payment_type)) {
+            echo '<div class="alert alert-danger">Invalid payment method format.</div>';
+            return;
+        }
+        
+        // Get payment method details - this validates against database
+        $payment = $this->model->get('id, type, name, params', $this->tb_payments, ['type' => $payment_type, 'status' => 1]);
+        
+        if (!$payment) {
+            echo '<div class="alert alert-danger">Payment method not found.</div>';
+            return;
+        }
+        
+        // Validate that sanitized type matches database type (additional security check)
+        if ($payment->type !== $payment_type) {
+            echo '<div class="alert alert-danger">Payment method mismatch.</div>';
+            return;
+        }
+        
+        // Check if user has access to this payment method
+        $user_record = $this->model->get('settings', $this->tb_users, ['id' => session('uid')]);
+        
+        if ($user_record && isset($user_record->settings)) {
+            $user_settings = json_decode($user_record->settings);
+            
+            if (isset($user_settings->limit_payments)) {
+                $limit_payments = (array)$user_settings->limit_payments;
+                if (isset($limit_payments[$payment->type]) && !$limit_payments[$payment->type]) {
+                    echo '<div class="alert alert-danger">You do not have access to this payment method.</div>';
+                    return;
+                }
+            }
+        }
+        
+        // Check if view file exists before trying to load it
+        $view_path = APPPATH . 'modules/add_funds/views/' . $payment_type . '/index.php';
+        if (!file_exists($view_path)) {
+            echo '<div class="alert alert-danger">Payment method form not available.</div>';
+            return;
+        }
+        
+        // Load and return the payment form view
+        $this->load->view($payment_type.'/index', ['payment_id'=>$payment->id, 'payment_params'=>$payment->params]);
     }
 
     public function process(){
