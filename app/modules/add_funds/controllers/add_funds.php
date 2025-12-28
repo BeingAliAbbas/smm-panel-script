@@ -92,14 +92,25 @@ class add_funds extends MX_Controller {
             return;
         }
         
-        // Sanitize payment type to prevent directory traversal
-        $payment_type = preg_replace('/[^a-z0-9_-]/i', '', $payment_type);
+        // Sanitize payment type to prevent directory traversal - only allow alphanumeric and underscore
+        $payment_type = preg_replace('/[^a-z0-9_]/i', '', $payment_type);
         
-        // Get payment method details
+        if (empty($payment_type)) {
+            echo '<div class="alert alert-danger">Invalid payment method format.</div>';
+            return;
+        }
+        
+        // Get payment method details - this validates against database
         $payment = $this->model->get('id, type, name, params', $this->tb_payments, ['type' => $payment_type, 'status' => 1]);
         
         if (!$payment) {
             echo '<div class="alert alert-danger">Payment method not found.</div>';
+            return;
+        }
+        
+        // Validate that sanitized type matches database type (additional security check)
+        if ($payment->type !== $payment_type) {
+            echo '<div class="alert alert-danger">Payment method mismatch.</div>';
             return;
         }
         
