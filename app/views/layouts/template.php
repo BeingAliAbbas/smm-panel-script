@@ -17,6 +17,10 @@
     <meta name="MobileOptimized" content="320">
 
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/css/bootstrap/bootstrap.min.css?v=0.0.5">
+    
+    <!-- Tailwind CSS - Local Build (No CDN) -->
+    <link rel="stylesheet" href="<?php echo BASE; ?>assets/css/tailwind-output.css?v=0.0.5">
+    
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/font-awesome/css/all.min.css?v=0.0.5">
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/font-awesome/css/v4-shims.min.css?v=0.0.5">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
