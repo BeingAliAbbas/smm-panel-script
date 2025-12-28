@@ -345,8 +345,9 @@
     }
 
     // Function to load payment methods from server
-    function loadPaymentMethods() {
+    function loadPaymentMethods(callback) {
       if (paymentMethodsLoaded || isLoadingPaymentMethods) {
+        if (callback && paymentMethodsLoaded) callback();
         return;
       }
 
@@ -383,6 +384,9 @@
                 $dd.val(prev).trigger('change');
               }
             } catch(e) {}
+
+            // Execute callback after loading is complete
+            if (callback) callback();
 
           } else {
             // No payment methods available
@@ -424,13 +428,10 @@
       // Load payment methods when dropdown is about to open
       if (!paymentMethodsLoaded) {
         e.preventDefault();
-        loadPaymentMethods();
-        // Re-open the dropdown after loading
-        setTimeout(function() {
-          if (paymentMethodsLoaded) {
-            $dd.select2('open');
-          }
-        }, 100);
+        // Load payment methods and re-open dropdown after completion
+        loadPaymentMethods(function() {
+          $dd.select2('open');
+        });
       }
     })
     .on('select2:open', function(){

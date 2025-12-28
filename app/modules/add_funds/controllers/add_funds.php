@@ -21,19 +21,7 @@ class add_funds extends MX_Controller {
 
     public function index(){
         /*----------  Get Payment Gateway for user  ----------*/
-        $payments = $this->model->fetch('type, name, id, params', $this->tb_payments, ['status' => 1]);
-        $user_settings = $this->model->get('settings', $this->tb_users, ['id' => session('uid')])->settings;
-        $user_settings = json_decode($user_settings);
-        
-        // Filter payment methods based on user settings
-        if (isset($user_settings->limit_payments)) {
-            $limit_payments = (array)$user_settings->limit_payments;
-            foreach ($payments as $key => $payment) {
-                if (isset($limit_payments[$payment->type]) && !$limit_payments[$payment->type]) {
-                    unset($payments[$key]);
-                }
-            }
-        }
+        $payments = $this->get_filtered_payment_methods();
 
         // Fetch last 5 transactions
         $transactions = $this->get_last_transactions(session('uid'));
@@ -56,18 +44,17 @@ class add_funds extends MX_Controller {
         return $this->model->fetch('*', $this->tb_transaction_logs, ['uid' => $user_id], ['created' => 'DESC'], $limit);
     }
 
-    // API endpoint to fetch payment methods dynamically
-    public function get_payment_methods(){
-        // Return JSON response
-        header('Content-Type: application/json');
+    // Shared method to get and filter payment methods based on user settings
+    private function get_filtered_payment_methods(){
+        // Get payment methods
+        $payments = $this->model->fetch('type, name, id, params', $this->tb_payments, ['status' => 1]);
         
-        try {
-            // Get payment methods
-            $payments = $this->model->fetch('type, name, id, params', $this->tb_payments, ['status' => 1]);
-            
-            // Get user settings to filter payment methods
-            $user_settings = $this->model->get('settings', $this->tb_users, ['id' => session('uid')])->settings;
-            $user_settings = json_decode($user_settings);
+        // Get user record
+        $user = $this->model->get('settings', $this->tb_users, ['id' => session('uid')]);
+        
+        // Check if user exists and has settings
+        if ($user && !empty($user->settings)) {
+            $user_settings = json_decode($user->settings);
             
             // Filter payment methods based on user settings
             if (isset($user_settings->limit_payments)) {
@@ -78,6 +65,19 @@ class add_funds extends MX_Controller {
                     }
                 }
             }
+        }
+        
+        return $payments;
+    }
+
+    // API endpoint to fetch payment methods dynamically
+    public function get_payment_methods(){
+        // Set header first before any output
+        header('Content-Type: application/json');
+        
+        try {
+            // Get filtered payment methods using shared method
+            $payments = $this->get_filtered_payment_methods();
             
             // Re-index array to ensure proper JSON array encoding
             $payments = array_values($payments);
