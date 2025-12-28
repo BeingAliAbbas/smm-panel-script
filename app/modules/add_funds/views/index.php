@@ -220,11 +220,6 @@
               <label for="paymentTypeDropdown" class="mb-2"><b>Please select a payment Method</b></label>
               <select id="paymentTypeDropdown" class="form-control">
                 <option value="">Select Payment Type</option>
-                <?php foreach ($payments as $row): ?>
-                  <option value="<?php echo htmlspecialchars($row->type); ?>">
-                    <?php echo htmlspecialchars($row->name); ?>
-                  </option>
-                <?php endforeach; ?>
               </select>
             </div>
           </div>
@@ -243,11 +238,6 @@
                   <label for="paymentTypeDropdown" class="mb-2"><b>Please select a payment Method</b></label>
                   <select id="paymentTypeDropdown" class="form-control">
                     <option value="">Select Payment Type</option>
-                    <?php foreach ($payments as $row): ?>
-                      <option value="<?php echo htmlspecialchars($row->type); ?>">
-                        <?php echo htmlspecialchars($row->name); ?>
-                      </option>
-                    <?php endforeach; ?>
                   </select>
                 </div>
               </div>
@@ -359,6 +349,10 @@
     var $dd = $('#paymentTypeDropdown');
     if (!$dd.length || typeof $.fn.select2 !== 'function') return;
 
+    // Flag to track if payment methods have been loaded
+    var paymentMethodsLoaded = false;
+    var isLoadingPaymentMethods = false;
+
     // Visuals (no extra metadata)
     function getPaymentVisual(type){
       type = (type||'').toLowerCase();
@@ -389,6 +383,66 @@
       if (type) $('#'+type).addClass('in active show');
     }
 
+    // Function to load payment methods from server
+    function loadPaymentMethods() {
+      if (paymentMethodsLoaded || isLoadingPaymentMethods) {
+        return;
+      }
+
+      isLoadingPaymentMethods = true;
+
+      // Show loading state
+      $dd.prop('disabled', true);
+      var $placeholder = $dd.find('option[value=""]');
+      $placeholder.text('Loading payment methods...');
+
+      // Fetch payment methods via AJAX
+      $.ajax({
+        url: '<?php echo cn("add_funds/get_payment_methods"); ?>',
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+          if (response.status === 'success' && response.data && response.data.length > 0) {
+            // Clear existing options except placeholder
+            $dd.find('option:not([value=""])').remove();
+            
+            // Add payment methods
+            $.each(response.data, function(index, payment) {
+              var option = new Option(payment.name, payment.type, false, false);
+              $dd.append(option);
+            });
+
+            paymentMethodsLoaded = true;
+            $placeholder.text('Select Payment Type');
+
+            // Restore previous selection if exists
+            try {
+              var prev = localStorage.getItem('selectedPaymentType');
+              if (prev && $dd.find('option[value="'+prev+'"]').length) {
+                $dd.val(prev).trigger('change');
+              }
+            } catch(e) {}
+
+          } else {
+            // No payment methods available
+            $placeholder.text('No payment methods available');
+            console.warn(response.message || 'No payment methods available');
+          }
+        },
+        error: function(xhr, status, error) {
+          // Error loading payment methods
+          var $placeholder = $dd.find('option[value=""]');
+          $placeholder.text('Error loading payment methods. Please refresh the page.');
+          console.error('Error loading payment methods:', error);
+        },
+        complete: function() {
+          isLoadingPaymentMethods = false;
+          $dd.prop('disabled', false);
+        }
+      });
+    }
+
+    // Initialize Select2
     $dd.select2({
       placeholder: 'Select Payment Type',
       allowClear: false,
@@ -405,19 +459,27 @@
       activatePane(v);
       try { localStorage.setItem('selectedPaymentType', v || ''); } catch(e){}
     })
+    .on('select2:opening', function(e){
+      // Load payment methods when dropdown is about to open
+      if (!paymentMethodsLoaded) {
+        e.preventDefault();
+        loadPaymentMethods();
+        // Re-open the dropdown after loading
+        setTimeout(function() {
+          if (paymentMethodsLoaded) {
+            $dd.select2('open');
+          }
+        }, 100);
+      }
+    })
     .on('select2:open', function(){
       // Safety: keep dropdown at least as wide as the trigger
       var w = $dd.data('select2').$container.outerWidth();
       $('.select2-container--open .select2-dropdown').css('min-width', w);
     });
 
-    // Restore selection, if any
-    try {
-      var prev = localStorage.getItem('selectedPaymentType');
-      if (prev && $dd.find('option[value="'+prev+'"]').length) {
-        $dd.val(prev).trigger('change');
-      }
-    } catch(e) {}
+    // Load payment methods immediately on page load for better UX
+    loadPaymentMethods();
   });
 })(jQuery);
 </script>

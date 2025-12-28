@@ -64,6 +64,49 @@ class add_funds extends MX_Controller {
         return $this->model->fetch('*', $this->tb_transaction_logs, ['uid' => $user_id], ['created' => 'DESC'], $limit);
     }
 
+    // API endpoint to fetch payment methods dynamically
+    public function get_payment_methods(){
+        // Return JSON response
+        header('Content-Type: application/json');
+        
+        try {
+            // Get payment methods
+            $payments = $this->model->fetch('type, name, id, params', $this->tb_payments, ['status' => 1]);
+            
+            // Get user settings to filter payment methods
+            $user_settings = $this->model->get('settings', $this->tb_users, ['id' => session('uid')])->settings;
+            $user_settings = json_decode($user_settings);
+            
+            // Filter payment methods based on user settings
+            if (isset($user_settings->limit_payments)) {
+                $limit_payments = (array)$user_settings->limit_payments;
+                foreach ($payments as $key => $payment) {
+                    if (isset($limit_payments[$payment->type]) && !$limit_payments[$payment->type]) {
+                        unset($payments[$key]);
+                    }
+                }
+            }
+            
+            // Re-index array to ensure proper JSON array encoding
+            $payments = array_values($payments);
+            
+            // Return success response with payment methods
+            echo json_encode([
+                'status' => 'success',
+                'data' => $payments,
+                'message' => count($payments) > 0 ? '' : 'No payment methods available'
+            ]);
+        } catch (Exception $e) {
+            // Return error response
+            echo json_encode([
+                'status' => 'error',
+                'data' => [],
+                'message' => 'Unable to load payment methods. Please try again later.'
+            ]);
+        }
+        exit;
+    }
+
     public function process(){
         _is_ajax($this->module);
         $payment_id     = (int)post("payment_id");
