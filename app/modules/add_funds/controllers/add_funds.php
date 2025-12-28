@@ -21,38 +21,18 @@ class add_funds extends MX_Controller {
 
     public function index(){
         /*----------  Get Payment Gateway for user  ----------*/
-        $payments = $this->model->fetch('type, name, id, params', $this->tb_payments, ['status' => 1]);
-        $user_settings = $this->model->get('settings', $this->tb_users, ['id' => session('uid')])->settings;
-        $user_settings = json_decode($user_settings);
-        
-        // Filter payment methods based on user settings
-        if (isset($user_settings->limit_payments)) {
-            $limit_payments = (array)$user_settings->limit_payments;
-            foreach ($payments as $key => $payment) {
-                if (isset($limit_payments[$payment->type]) && !$limit_payments[$payment->type]) {
-                    unset($payments[$key]);
-                }
-            }
-        }
+        $payments = $this->get_filtered_payment_methods();
 
         // Fetch last 5 transactions
         $transactions = $this->get_last_transactions(session('uid'));
 
         // Prepare data for view
-<<<<<<< HEAD
-        $data = array(
-            "module"          => get_class($this),
-            "payments"        => $payments,
-            "currency_code"   => get_option("currency_code",'USD'),
-            "currency_symbol" => get_option("currency_symbol",'$'),
-=======
         $current_currency = get_current_currency();
         $data = array(
             "module"          => get_class($this),
             "payments"        => $payments,
             "currency_code"   => $current_currency ? $current_currency->code : get_option("currency_code",'USD'),
             "currency_symbol" => $current_currency ? $current_currency->symbol : get_option("currency_symbol",'$'),
->>>>>>> dd720c81418616f5ea5455fb1a7b66ce0090eb98
             "transactions"     => $transactions // Add transactions to data
         );
 
@@ -62,6 +42,61 @@ class add_funds extends MX_Controller {
     // New method to fetch last 5 transactions for the logged-in user
     private function get_last_transactions($user_id, $limit = 5) {
         return $this->model->fetch('*', $this->tb_transaction_logs, ['uid' => $user_id], ['created' => 'DESC'], $limit);
+    }
+
+    // Shared method to get and filter payment methods based on user settings
+    private function get_filtered_payment_methods(){
+        // Get payment methods
+        $payments = $this->model->fetch('type, name, id, params', $this->tb_payments, ['status' => 1]);
+        
+        // Get user record
+        $user = $this->model->get('settings', $this->tb_users, ['id' => session('uid')]);
+        
+        // Check if user exists and has settings
+        if ($user && !empty($user->settings)) {
+            $user_settings = json_decode($user->settings);
+            
+            // Filter payment methods based on user settings
+            if (isset($user_settings->limit_payments)) {
+                $limit_payments = (array)$user_settings->limit_payments;
+                foreach ($payments as $key => $payment) {
+                    if (isset($limit_payments[$payment->type]) && !$limit_payments[$payment->type]) {
+                        unset($payments[$key]);
+                    }
+                }
+            }
+        }
+        
+        return $payments;
+    }
+
+    // API endpoint to fetch payment methods dynamically
+    public function get_payment_methods(){
+        // Set header first before any output
+        header('Content-Type: application/json');
+        
+        try {
+            // Get filtered payment methods using shared method
+            $payments = $this->get_filtered_payment_methods();
+            
+            // Re-index array to ensure proper JSON array encoding
+            $payments = array_values($payments);
+            
+            // Return success response with payment methods
+            echo json_encode([
+                'status' => 'success',
+                'data' => $payments,
+                'message' => count($payments) > 0 ? '' : 'No payment methods available'
+            ]);
+        } catch (Exception $e) {
+            // Return error response
+            echo json_encode([
+                'status' => 'error',
+                'data' => [],
+                'message' => 'Unable to load payment methods. Please try again later.'
+            ]);
+        }
+        exit;
     }
 
     public function process(){
