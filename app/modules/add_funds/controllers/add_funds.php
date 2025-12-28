@@ -50,15 +50,18 @@ class add_funds extends MX_Controller {
             $payments = $this->model->fetch('type, name, id, params', $this->tb_payments, ['status' => 1]);
             
             // Get user settings to filter payment methods
-            $user_settings = $this->model->get('settings', $this->tb_users, ['id' => session('uid')])->settings;
-            $user_settings = json_decode($user_settings);
+            $user_record = $this->model->get('settings', $this->tb_users, ['id' => session('uid')]);
             
-            // Filter payment methods based on user settings
-            if (isset($user_settings->limit_payments)) {
-                $limit_payments = (array)$user_settings->limit_payments;
-                foreach ($payments as $key => $payment) {
-                    if (isset($limit_payments[$payment->type]) && !$limit_payments[$payment->type]) {
-                        unset($payments[$key]);
+            if ($user_record && isset($user_record->settings)) {
+                $user_settings = json_decode($user_record->settings);
+                
+                // Filter payment methods based on user settings
+                if (isset($user_settings->limit_payments)) {
+                    $limit_payments = (array)$user_settings->limit_payments;
+                    foreach ($payments as $key => $payment) {
+                        if (isset($limit_payments[$payment->type]) && !$limit_payments[$payment->type]) {
+                            unset($payments[$key]);
+                        }
                     }
                 }
             }
@@ -98,14 +101,17 @@ class add_funds extends MX_Controller {
         }
         
         // Check if user has access to this payment method
-        $user_settings = $this->model->get('settings', $this->tb_users, ['id' => session('uid')])->settings;
-        $user_settings = json_decode($user_settings);
+        $user_record = $this->model->get('settings', $this->tb_users, ['id' => session('uid')]);
         
-        if (isset($user_settings->limit_payments)) {
-            $limit_payments = (array)$user_settings->limit_payments;
-            if (isset($limit_payments[$payment->type]) && !$limit_payments[$payment->type]) {
-                echo '<div class="alert alert-danger">You do not have access to this payment method.</div>';
-                return;
+        if ($user_record && isset($user_record->settings)) {
+            $user_settings = json_decode($user_record->settings);
+            
+            if (isset($user_settings->limit_payments)) {
+                $limit_payments = (array)$user_settings->limit_payments;
+                if (isset($limit_payments[$payment->type]) && !$limit_payments[$payment->type]) {
+                    echo '<div class="alert alert-danger">You do not have access to this payment method.</div>';
+                    return;
+                }
             }
         }
         

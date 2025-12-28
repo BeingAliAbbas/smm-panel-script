@@ -474,14 +474,7 @@
       } catch(e) {}
     }
 
-    // Load payment methods when user opens the dropdown
-    $dd.on('select2:opening', function() {
-      if (!hasLoaded) {
-        loadPaymentMethods();
-      }
-    });
-
-    // Also load payment methods on page load for better UX
+    // Load payment methods on page load for better UX
     loadPaymentMethods();
   });
 })(jQuery);
