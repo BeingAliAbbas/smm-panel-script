@@ -157,7 +157,7 @@ class auth extends MX_Controller {
 			if (!empty($user)) {
 				// User exists, update google_id if not set
 				if (empty($user->google_id)) {
-					$this->db->update($this->tb_users, ['google_id' => $google_id, 'login_type' => 'google'], ['id' => $user->id]);
+					$this->db->update($this->tb_users, ['google_id' => $google_id, 'login_type' => 'google', 'signup_type' => 'google'], ['id' => $user->id]);
 					if ($debug_mode) file_put_contents($debug_log, "Updated existing user with google_id\n", FILE_APPEND);
 				}
 
@@ -180,12 +180,17 @@ class auth extends MX_Controller {
 				
 				if ($debug_mode) {
 					file_put_contents($debug_log, "Session set for user ID: " . $user->id . "\n", FILE_APPEND);
-					file_put_contents($debug_log, "About to redirect to statistics\n", FILE_APPEND);
 				}
 
 				// Log the user activity
 				$this->model->history_ip($user->id);
 				$this->insert_user_activity_logs();
+
+				// Check if WhatsApp is verified
+				if (empty($user->whatsapp_verified) || $user->whatsapp_verified != 1) {
+					if ($debug_mode) file_put_contents($debug_log, "WhatsApp not verified, redirecting to setup\n", FILE_APPEND);
+					redirect(cn('whatsapp_verify'));
+				}
 
 				// Send WhatsApp alert on successful sign-in (don't wait for response)
 				if ($debug_mode) file_put_contents($debug_log, "Before WhatsApp alert\n", FILE_APPEND);
@@ -211,6 +216,7 @@ class auth extends MX_Controller {
 					"email"                  => $email,
 					"google_id"              => $google_id,
 					"login_type"             => 'google',
+					"signup_type"            => 'google',
 					"password"               => '', // No password for Google login
 					"timezone"               => 'Asia/Karachi', // Default timezone
 					"status"                 => 1, // Auto-activate Google users
@@ -222,6 +228,7 @@ class auth extends MX_Controller {
 					"activation_key"         => create_random_string_key(32),
 					"created"                => NOW,
 					"changed"                => NOW,
+					"whatsapp_verified"      => 0, // Not verified yet
 				);
 
 				if($this->db->insert($this->tb_users, $data)){
@@ -272,11 +279,11 @@ class auth extends MX_Controller {
 					
 					if ($debug_mode) {
 						file_put_contents($debug_log, "New user created with ID: " . $uid . "\n", FILE_APPEND);
-						file_put_contents($debug_log, "Redirecting to statistics\n", FILE_APPEND);
+						file_put_contents($debug_log, "Redirecting to WhatsApp setup\n", FILE_APPEND);
 					}
 
-					// Redirect to dashboard
-					redirect(cn('statistics'));
+					// Redirect to WhatsApp verification (mandatory for Google users)
+					redirect(cn('whatsapp_verify'));
 				} else {
 					if ($debug_mode) file_put_contents($debug_log, "Failed to insert new user\n", FILE_APPEND);
 					redirect(cn('auth/login'));
@@ -468,6 +475,9 @@ class auth extends MX_Controller {
         "reset_key"              => create_random_string_key(32),
         "activation_key"         => create_random_string_key(32),
         "changed"                => NOW,
+        "signup_type"            => 'manual',
+        "login_type"             => 'manual',
+        "whatsapp_verified"      => 1, // Manual signup users are auto-verified for WhatsApp
     );
 
     if(get_option("enable_signup_skype_field", '')){

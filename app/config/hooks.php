@@ -11,3 +11,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |	https://codeigniter.com/user_guide/general/hooks.html
 |
 */
+
+/*
+| -------------------------------------------------------------------------
+| WhatsApp Verification Guard
+| -------------------------------------------------------------------------
+| Check if Google sign-in users have verified their WhatsApp number
+| before accessing protected pages.
+|
+*/
+$hook['post_controller_constructor'][] = array(
+    'class'    => 'Whatsapp_verification_guard',
+    'function' => 'check_whatsapp_verification',
+    'filename' => 'Whatsapp_verification_guard.php',
+    'filepath' => 'hooks'
+);
+
