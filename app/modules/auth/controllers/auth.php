@@ -20,7 +20,12 @@ class auth extends MX_Controller {
 			$this->recaptcha = new \ReCaptcha\ReCaptcha(get_option('google_capcha_secret_key'));
 		}
 
-		if(session("uid") && segment(2) != 'logout' && segment(2) != 'google_callback'){
+		if(session("uid") && segment(2) != 'logout' && segment(2) != 'google_callback' && segment(2) != 'whatsapp_setup' && segment(2) != 'ajax_whatsapp_setup' && segment(2) != 'ajax_send_otp' && segment(2) != 'ajax_verify_otp'){
+			// Check if user needs to complete WhatsApp setup
+			$user = $this->model->get("signup_type, whatsapp_setup_completed", $this->tb_users, ['id' => session("uid")]);
+			if ($user && $user->signup_type == 'google' && !$user->whatsapp_setup_completed) {
+				redirect(cn("auth/whatsapp_setup"));
+			}
 			redirect(cn("statistics"));
 		}
 	}
@@ -155,9 +160,9 @@ class auth extends MX_Controller {
 			}
 
 			if (!empty($user)) {
-				// User exists, update google_id if not set
+				// User exists, update google_id and signup_type if not set
 				if (empty($user->google_id)) {
-					$this->db->update($this->tb_users, ['google_id' => $google_id, 'login_type' => 'google'], ['id' => $user->id]);
+					$this->db->update($this->tb_users, ['google_id' => $google_id, 'login_type' => 'google', 'signup_type' => 'google'], ['id' => $user->id]);
 					if ($debug_mode) file_put_contents($debug_log, "Updated existing user with google_id\n", FILE_APPEND);
 				}
 
@@ -180,12 +185,17 @@ class auth extends MX_Controller {
 				
 				if ($debug_mode) {
 					file_put_contents($debug_log, "Session set for user ID: " . $user->id . "\n", FILE_APPEND);
-					file_put_contents($debug_log, "About to redirect to statistics\n", FILE_APPEND);
 				}
 
 				// Log the user activity
 				$this->model->history_ip($user->id);
 				$this->insert_user_activity_logs();
+
+				// Check if WhatsApp setup is completed for Google users
+				if ($user->signup_type == 'google' && !$user->whatsapp_setup_completed) {
+					if ($debug_mode) file_put_contents($debug_log, "Redirecting to WhatsApp setup\n", FILE_APPEND);
+					redirect(cn('auth/whatsapp_setup'));
+				}
 
 				// Send WhatsApp alert on successful sign-in (don't wait for response)
 				if ($debug_mode) file_put_contents($debug_log, "Before WhatsApp alert\n", FILE_APPEND);
@@ -211,6 +221,7 @@ class auth extends MX_Controller {
 					"email"                  => $email,
 					"google_id"              => $google_id,
 					"login_type"             => 'google',
+					"signup_type"            => 'google',
 					"password"               => '', // No password for Google login
 					"timezone"               => 'Asia/Karachi', // Default timezone
 					"status"                 => 1, // Auto-activate Google users
@@ -272,11 +283,11 @@ class auth extends MX_Controller {
 					
 					if ($debug_mode) {
 						file_put_contents($debug_log, "New user created with ID: " . $uid . "\n", FILE_APPEND);
-						file_put_contents($debug_log, "Redirecting to statistics\n", FILE_APPEND);
+						file_put_contents($debug_log, "Redirecting to WhatsApp setup\n", FILE_APPEND);
 					}
 
-					// Redirect to dashboard
-					redirect(cn('statistics'));
+					// Redirect to WhatsApp setup for new Google users
+					redirect(cn('auth/whatsapp_setup'));
 				} else {
 					if ($debug_mode) file_put_contents($debug_log, "Failed to insert new user\n", FILE_APPEND);
 					redirect(cn('auth/login'));
@@ -459,6 +470,9 @@ class auth extends MX_Controller {
         "whatsapp_number"        => $whatsapp_number, // Add WhatsApp number here
         "password"               => $this->model->app_password_hash($password),
         "timezone"               => $timezone,
+        "signup_type"            => 'manual', // Mark as manual signup
+        "whatsapp_verified"      => 1, // Manual signup users already provide WhatsApp number
+        "whatsapp_setup_completed" => 1, // Manual signup already includes WhatsApp
         "status"                 => get_option('is_verification_new_account', 0) ? 0 : 1,
         "api_key"                => create_random_string_key(32),
         "referral_id"            => $referral,
@@ -1019,5 +1033,137 @@ public function ajax_sign_in() {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * WhatsApp Setup Page (for Google users)
+	 */
+	public function whatsapp_setup(){
+		// Ensure user is logged in
+		if (!session("uid")) {
+			redirect(cn('auth/login'));
+		}
+
+		// Get user info
+		$user = $this->model->get("signup_type, whatsapp_setup_completed", $this->tb_users, ['id' => session("uid")]);
+		
+		// Only Google users who haven't completed setup should access this
+		if (!$user || $user->signup_type != 'google' || $user->whatsapp_setup_completed) {
+			redirect(cn('statistics'));
+		}
+
+		$this->lang->load('../../../../themes/'.get_theme().'/language/english/'.get_theme());
+		$data = array();
+		$this->template->set_layout('blank_page');
+		$this->template->build('../../../themes/'.get_theme().'/views/whatsapp_setup', $data);
+	}
+
+	/**
+	 * Ajax: Submit WhatsApp number without OTP (when OTP is disabled)
+	 */
+	public function ajax_whatsapp_setup(){
+		// Ensure user is logged in
+		if (!session("uid")) {
+			ms(array(
+				'status'  => 'error',
+				'message' => 'Unauthorized access'
+			));
+		}
+
+		$whatsapp_number = post('whatsapp_number');
+
+		// Validate WhatsApp number
+		if (empty($whatsapp_number)) {
+			ms(array(
+				'status'  => 'error',
+				'message' => 'WhatsApp number is required'
+			));
+		}
+
+		// Validate international format
+		if (!preg_match('/^\+[1-9]\d{1,14}$/', $whatsapp_number)) {
+			ms(array(
+				'status'  => 'error',
+				'message' => 'Invalid WhatsApp number format'
+			));
+		}
+
+		// Load WhatsApp OTP library
+		$this->load->library('whatsapp_otp');
+
+		// Skip OTP verification (when OTP is disabled)
+		$result = $this->whatsapp_otp->skip_otp_verification(session("uid"), $whatsapp_number);
+
+		ms($result);
+	}
+
+	/**
+	 * Ajax: Send OTP to WhatsApp number
+	 */
+	public function ajax_send_otp(){
+		// Ensure user is logged in
+		if (!session("uid")) {
+			ms(array(
+				'status'  => 'error',
+				'message' => 'Unauthorized access'
+			));
+		}
+
+		$whatsapp_number = post('whatsapp_number');
+
+		// Validate WhatsApp number
+		if (empty($whatsapp_number)) {
+			ms(array(
+				'status'  => 'error',
+				'message' => 'WhatsApp number is required'
+			));
+		}
+
+		// Validate international format
+		if (!preg_match('/^\+[1-9]\d{1,14}$/', $whatsapp_number)) {
+			ms(array(
+				'status'  => 'error',
+				'message' => 'Invalid WhatsApp number format'
+			));
+		}
+
+		// Load WhatsApp OTP library
+		$this->load->library('whatsapp_otp');
+
+		// Send OTP
+		$result = $this->whatsapp_otp->send_otp(session("uid"), $whatsapp_number);
+
+		ms($result);
+	}
+
+	/**
+	 * Ajax: Verify OTP code
+	 */
+	public function ajax_verify_otp(){
+		// Ensure user is logged in
+		if (!session("uid")) {
+			ms(array(
+				'status'  => 'error',
+				'message' => 'Unauthorized access'
+			));
+		}
+
+		$otp_code = post('otp_code');
+
+		// Validate OTP code
+		if (empty($otp_code) || strlen($otp_code) != 6) {
+			ms(array(
+				'status'  => 'error',
+				'message' => 'Invalid OTP code'
+			));
+		}
+
+		// Load WhatsApp OTP library
+		$this->load->library('whatsapp_otp');
+
+		// Verify OTP
+		$result = $this->whatsapp_otp->verify_otp(session("uid"), $otp_code);
+
+		ms($result);
 	}
 }
