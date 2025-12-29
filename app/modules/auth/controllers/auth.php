@@ -74,7 +74,7 @@ class auth extends MX_Controller {
 		$debug_mode = true; // Set to false after debugging
 		
 		if ($debug_mode) {
-			file_put_contents($debug_log, date('Y-m-d H:i:s') . " - Callback started\n", FILE_APPEND);
+			file_put_contents($debug_log, "\n" . date('Y-m-d H:i:s') . " - Callback started\n", FILE_APPEND);
 		}
 		
 		// Check if Google login is enabled
@@ -161,6 +161,10 @@ class auth extends MX_Controller {
 
 			if (!empty($user)) {
 				// User exists, update google_id and signup_type if not set
+				if ($debug_mode) {
+					file_put_contents($debug_log, "Existing user found - ID: {$user->id}, signup_type: " . (isset($user->signup_type) ? $user->signup_type : 'NOT SET') . ", whatsapp_setup_completed: " . (isset($user->whatsapp_setup_completed) ? $user->whatsapp_setup_completed : 'NOT SET') . "\n", FILE_APPEND);
+				}
+				
 				$needs_update = false;
 				$update_data = [];
 				
@@ -168,12 +172,14 @@ class auth extends MX_Controller {
 					$update_data['google_id'] = $google_id;
 					$update_data['login_type'] = 'google';
 					$needs_update = true;
+					if ($debug_mode) file_put_contents($debug_log, "Will update google_id\n", FILE_APPEND);
 				}
 				
 				// Ensure signup_type is set to 'google' for Google users
 				if (empty($user->signup_type) || $user->signup_type != 'google') {
 					$update_data['signup_type'] = 'google';
 					$needs_update = true;
+					if ($debug_mode) file_put_contents($debug_log, "Will update signup_type to google\n", FILE_APPEND);
 				}
 				
 				if ($needs_update) {
@@ -182,6 +188,9 @@ class auth extends MX_Controller {
 					
 					// Reload user data after update to get current values
 					$user = $this->model->get("*", $this->tb_users, ['id' => $user->id]);
+					if ($debug_mode) {
+						file_put_contents($debug_log, "Reloaded user data - signup_type: " . (isset($user->signup_type) ? $user->signup_type : 'NOT SET') . ", whatsapp_setup_completed: " . (isset($user->whatsapp_setup_completed) ? $user->whatsapp_setup_completed : 'NOT SET') . "\n", FILE_APPEND);
+					}
 				}
 
 				// Check if user is activated
@@ -211,8 +220,12 @@ class auth extends MX_Controller {
 
 				// Check if WhatsApp setup is completed for Google users
 				if ($user->signup_type == 'google' && !$user->whatsapp_setup_completed) {
-					if ($debug_mode) file_put_contents($debug_log, "Redirecting to WhatsApp setup\n", FILE_APPEND);
+					if ($debug_mode) file_put_contents($debug_log, "User is Google type and WhatsApp setup NOT completed - Redirecting to WhatsApp setup\n", FILE_APPEND);
 					redirect(cn('auth/whatsapp_setup'));
+				}
+
+				if ($debug_mode) {
+					file_put_contents($debug_log, "WhatsApp setup check passed - signup_type: {$user->signup_type}, whatsapp_setup_completed: {$user->whatsapp_setup_completed}\n", FILE_APPEND);
 				}
 
 				// Send WhatsApp alert on successful sign-in (don't wait for response)
@@ -1057,17 +1070,49 @@ public function ajax_sign_in() {
 	 * WhatsApp Setup Page (for Google users)
 	 */
 	public function whatsapp_setup(){
+		$debug_log = APPPATH . 'logs/google_oauth_debug.txt';
+		$debug_mode = true;
+		
+		if ($debug_mode) {
+			file_put_contents($debug_log, "\n" . date('Y-m-d H:i:s') . " - WhatsApp setup page accessed\n", FILE_APPEND);
+		}
+		
 		// Ensure user is logged in
 		if (!session("uid")) {
+			if ($debug_mode) file_put_contents($debug_log, "No session UID - redirecting to login\n", FILE_APPEND);
 			redirect(cn('auth/login'));
+		}
+
+		if ($debug_mode) {
+			file_put_contents($debug_log, "Session UID exists: " . session("uid") . "\n", FILE_APPEND);
 		}
 
 		// Get user info
 		$user = $this->model->get("signup_type, whatsapp_setup_completed", $this->tb_users, ['id' => session("uid")]);
 		
+		if ($debug_mode) {
+			file_put_contents($debug_log, "User loaded: " . ($user ? 'yes' : 'no') . "\n", FILE_APPEND);
+			if ($user) {
+				file_put_contents($debug_log, "signup_type: " . (isset($user->signup_type) ? $user->signup_type : 'NOT SET') . ", whatsapp_setup_completed: " . (isset($user->whatsapp_setup_completed) ? $user->whatsapp_setup_completed : 'NOT SET') . "\n", FILE_APPEND);
+			}
+		}
+		
 		// Only Google users who haven't completed setup should access this
 		if (!$user || $user->signup_type != 'google' || $user->whatsapp_setup_completed) {
+			if ($debug_mode) {
+				if (!$user) {
+					file_put_contents($debug_log, "User not found - redirecting to statistics\n", FILE_APPEND);
+				} elseif ($user->signup_type != 'google') {
+					file_put_contents($debug_log, "User is not Google type ('{$user->signup_type}') - redirecting to statistics\n", FILE_APPEND);
+				} elseif ($user->whatsapp_setup_completed) {
+					file_put_contents($debug_log, "WhatsApp setup already completed - redirecting to statistics\n", FILE_APPEND);
+				}
+			}
 			redirect(cn('statistics'));
+		}
+
+		if ($debug_mode) {
+			file_put_contents($debug_log, "Rendering WhatsApp setup page\n", FILE_APPEND);
 		}
 
 		$this->lang->load('../../../../themes/'.get_theme().'/language/english/'.get_theme());
