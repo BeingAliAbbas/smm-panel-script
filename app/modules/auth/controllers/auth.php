@@ -161,9 +161,27 @@ class auth extends MX_Controller {
 
 			if (!empty($user)) {
 				// User exists, update google_id and signup_type if not set
+				$needs_update = false;
+				$update_data = [];
+				
 				if (empty($user->google_id)) {
-					$this->db->update($this->tb_users, ['google_id' => $google_id, 'login_type' => 'google', 'signup_type' => 'google'], ['id' => $user->id]);
-					if ($debug_mode) file_put_contents($debug_log, "Updated existing user with google_id\n", FILE_APPEND);
+					$update_data['google_id'] = $google_id;
+					$update_data['login_type'] = 'google';
+					$needs_update = true;
+				}
+				
+				// Ensure signup_type is set to 'google' for Google users
+				if (empty($user->signup_type) || $user->signup_type != 'google') {
+					$update_data['signup_type'] = 'google';
+					$needs_update = true;
+				}
+				
+				if ($needs_update) {
+					$this->db->update($this->tb_users, $update_data, ['id' => $user->id]);
+					if ($debug_mode) file_put_contents($debug_log, "Updated existing user with Google data\n", FILE_APPEND);
+					
+					// Reload user data after update to get current values
+					$user = $this->model->get("*", $this->tb_users, ['id' => $user->id]);
 				}
 
 				// Check if user is activated
