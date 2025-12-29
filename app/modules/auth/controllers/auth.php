@@ -155,10 +155,18 @@ class auth extends MX_Controller {
 			}
 
 			if (!empty($user)) {
-				// User exists, update google_id if not set
+				// User exists, update google_id and signup_type if not set
+				$update_data = array();
 				if (empty($user->google_id)) {
-					$this->db->update($this->tb_users, ['google_id' => $google_id, 'login_type' => 'google'], ['id' => $user->id]);
+					$update_data['google_id'] = $google_id;
+					$update_data['login_type'] = 'google';
 					if ($debug_mode) file_put_contents($debug_log, "Updated existing user with google_id\n", FILE_APPEND);
+				}
+				if (empty($user->signup_type) || $user->signup_type === null) {
+					$update_data['signup_type'] = 'google';
+				}
+				if (!empty($update_data)) {
+					$this->db->update($this->tb_users, $update_data, ['id' => $user->id]);
 				}
 
 				// Check if user is activated
@@ -180,17 +188,22 @@ class auth extends MX_Controller {
 				
 				if ($debug_mode) {
 					file_put_contents($debug_log, "Session set for user ID: " . $user->id . "\n", FILE_APPEND);
-					file_put_contents($debug_log, "About to redirect to statistics\n", FILE_APPEND);
 				}
 
 				// Log the user activity
 				$this->model->history_ip($user->id);
 				$this->insert_user_activity_logs();
 
-				// Send WhatsApp alert on successful sign-in (don't wait for response)
-				if ($debug_mode) file_put_contents($debug_log, "Before WhatsApp alert\n", FILE_APPEND);
-				// Comment out WhatsApp for now to avoid blocking
-				// $this->send_signin_alert($user->id);
+				// Check WhatsApp verification status for Google users
+				$whatsapp_verified = isset($user->whatsapp_verified) ? $user->whatsapp_verified : 0;
+				if ($debug_mode) file_put_contents($debug_log, "WhatsApp verified: " . $whatsapp_verified . "\n", FILE_APPEND);
+				
+				if (!$whatsapp_verified) {
+					// Redirect to WhatsApp verification
+					if ($debug_mode) file_put_contents($debug_log, "Redirecting to WhatsApp verification\n", FILE_APPEND);
+					redirect(cn('whatsapp_verify'));
+					return;
+				}
 
 				// Redirect to dashboard
 				if ($debug_mode) file_put_contents($debug_log, "Redirecting to statistics\n", FILE_APPEND);
@@ -211,9 +224,11 @@ class auth extends MX_Controller {
 					"email"                  => $email,
 					"google_id"              => $google_id,
 					"login_type"             => 'google',
+					"signup_type"            => 'google',
 					"password"               => '', // No password for Google login
 					"timezone"               => 'Asia/Karachi', // Default timezone
 					"status"                 => 1, // Auto-activate Google users
+					"whatsapp_verified"      => 0, // Not verified yet
 					"api_key"                => create_random_string_key(32),
 					"affiliate_id"           => rand(10000,99999999),
 					"settings"               => json_encode($settings),
@@ -265,18 +280,14 @@ class auth extends MX_Controller {
 
 						$this->model->send_email($subject, $email_content, $admin_id, false);
 					}
-
-					// Send Signup Alert to Admin via WhatsApp
-					// Comment out for now to avoid blocking
-					// $this->send_signup_alert($uid);
 					
 					if ($debug_mode) {
 						file_put_contents($debug_log, "New user created with ID: " . $uid . "\n", FILE_APPEND);
-						file_put_contents($debug_log, "Redirecting to statistics\n", FILE_APPEND);
+						file_put_contents($debug_log, "Redirecting to WhatsApp verification\n", FILE_APPEND);
 					}
 
-					// Redirect to dashboard
-					redirect(cn('statistics'));
+					// Redirect to WhatsApp verification for new Google users
+					redirect(cn('whatsapp_verify'));
 				} else {
 					if ($debug_mode) file_put_contents($debug_log, "Failed to insert new user\n", FILE_APPEND);
 					redirect(cn('auth/login'));
@@ -457,6 +468,8 @@ class auth extends MX_Controller {
         "first_name"             => $first_name,
         "last_name"              => $last_name,
         "whatsapp_number"        => $whatsapp_number, // Add WhatsApp number here
+        "whatsapp_verified"      => 1, // Manual signup with WhatsApp is pre-verified
+        "signup_type"            => 'manual', // Mark as manual signup
         "password"               => $this->model->app_password_hash($password),
         "timezone"               => $timezone,
         "status"                 => get_option('is_verification_new_account', 0) ? 0 : 1,
