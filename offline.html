@@ -270,7 +270,8 @@
             button.disabled = true;
             
             // Attempt to fetch a small resource to check connectivity
-            fetch('/', { method: 'HEAD', cache: 'no-store' })
+            // Using 'no-cache' allows conditional requests while ensuring freshness
+            fetch('/', { method: 'HEAD', cache: 'no-cache' })
                 .then(() => {
                     button.textContent = 'Connected! Reloading...';
                     setTimeout(() => {

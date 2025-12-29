@@ -1,9 +1,9 @@
 // Service Worker for Offline Fallback Handling
 // Version: 1.0.0
 
-const CACHE_VERSION = 'smm-panel-v1.0.0';
+const CACHE_NAME = 'smm-panel-offline-v1';
+const CACHE_PREFIX = 'smm-panel-';
 const OFFLINE_PAGE = '/offline.html';
-const OFFLINE_CACHE = 'offline-cache-v1';
 
 // Assets to cache for offline use
 const OFFLINE_ASSETS = [
@@ -19,12 +19,12 @@ self.addEventListener('install', (event) => {
   console.log('[Service Worker] Installing service worker...');
   
   event.waitUntil(
-    caches.open(OFFLINE_CACHE)
+    caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('[Service Worker] Caching offline assets');
         return cache.addAll(OFFLINE_ASSETS.map(url => {
-          // Ensure relative URLs work correctly
-          return new Request(url, { cache: 'reload' });
+          // Validate cached resources before using them
+          return new Request(url, { cache: 'no-cache' });
         }));
       })
       .catch((error) => {
@@ -47,8 +47,8 @@ self.addEventListener('activate', (event) => {
         return Promise.all(
           cacheNames
             .filter((cacheName) => {
-              // Remove old caches
-              return cacheName !== OFFLINE_CACHE && cacheName.startsWith('smm-panel-');
+              // Remove old caches that start with our prefix but aren't the current cache
+              return cacheName !== CACHE_NAME && cacheName.startsWith(CACHE_PREFIX);
             })
             .map((cacheName) => {
               console.log('[Service Worker] Deleting old cache:', cacheName);
@@ -101,7 +101,7 @@ self.addEventListener('fetch', (event) => {
         if (response.ok) {
           const responseToCache = response.clone();
           
-          caches.open(OFFLINE_CACHE)
+          caches.open(CACHE_NAME)
             .then((cache) => {
               cache.put(event.request, responseToCache);
             });
