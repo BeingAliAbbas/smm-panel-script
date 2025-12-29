@@ -29,7 +29,7 @@ class Whatsapp_verify extends MX_Controller {
         // Get user data
         $user = $this->db->select('whatsapp_number, whatsapp_otp_expires_at')
                          ->where('id', $user_id)
-                         ->get('users')
+                         ->get('general_users')
                          ->row();
 
         $data = array(
@@ -119,7 +119,7 @@ class Whatsapp_verify extends MX_Controller {
         // Get current phone number
         $user = $this->db->select('whatsapp_number')
                          ->where('id', $user_id)
-                         ->get('users')
+                         ->get('general_users')
                          ->row();
 
         if (empty($user->whatsapp_number)) {

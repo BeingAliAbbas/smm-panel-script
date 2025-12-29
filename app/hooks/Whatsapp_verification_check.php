@@ -47,7 +47,7 @@ class Whatsapp_verification_check {
         // Get user data
         $user = $this->CI->db->select('whatsapp_verified, signup_type')
                              ->where('id', $user_id)
-                             ->get('users')
+                             ->get('general_users')
                              ->row();
 
         // If user not found, logout

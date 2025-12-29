@@ -55,7 +55,7 @@ class Whatsapp_otp {
         // Check cooldown period
         $user = $this->CI->db->select('whatsapp_otp_expires_at')
                              ->where('id', $user_id)
-                             ->get('users')
+                             ->get('general_users')
                              ->row();
 
         if ($user && $user->whatsapp_otp_expires_at) {
@@ -127,7 +127,7 @@ class Whatsapp_otp {
         // Get user data
         $user = $this->CI->db->select('whatsapp_otp, whatsapp_otp_expires_at, whatsapp_otp_attempts, whatsapp_number')
                              ->where('id', $user_id)
-                             ->get('users')
+                             ->get('general_users')
                              ->row();
 
         if (!$user) {
@@ -224,7 +224,7 @@ class Whatsapp_otp {
     public function is_verified($user_id) {
         $user = $this->CI->db->select('whatsapp_verified')
                              ->where('id', $user_id)
-                             ->get('users')
+                             ->get('general_users')
                              ->row();
 
         return $user && $user->whatsapp_verified == 1;

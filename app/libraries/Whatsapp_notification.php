@@ -420,7 +420,7 @@ class Whatsapp_notification {
         try {
             $this->CI->db->select('id, first_name, last_name, email, whatsapp_number, balance');
             $this->CI->db->where('id', $user_id);
-            return $this->CI->db->get('users')->row();
+            return $this->CI->db->get('general_users')->row();
         } catch (Exception $e) {
             log_message('error', 'WhatsApp Notification: Failed to get user details - ' . $e->getMessage());
             return null;
