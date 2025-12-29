@@ -200,6 +200,21 @@
         </div>
       </div>
       
+      <!-- Bounces Card -->
+      <div class="col-sm-6 col-lg-2">
+        <div class="card p-3">
+          <div class="d-flex align-items-center">
+            <span class="stamp stamp-md bg-red me-3">
+              <i class="fe fe-alert-circle"></i>
+            </span>
+            <div>
+              <h4 class="m-0"><a href="<?php echo cn($module . '/bounces'); ?>" class="text-inherit">Bounces</a></h4>
+              <small class="text-muted">Suppression list</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
     </div>
   </div>
 </div>
