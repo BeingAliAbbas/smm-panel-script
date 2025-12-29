@@ -64,6 +64,28 @@
                 </ul>
               </div>
 
+              <hr class="my-4">
+
+              <h5 class="text-info"><i class="fab fa-whatsapp"></i> <?=lang("WhatsApp Verification Settings")?></h5>
+              <div class="alert alert-info">
+                <strong><i class="fe fe-info"></i> <?=lang("WhatsApp Number Setup")?></strong>
+                <p class="mt-2 mb-0"><?=lang("After Google sign-in, users will be required to provide their WhatsApp number. Enable OTP verification below if you want to verify the number before allowing access.")?></p>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label"><?=lang("Enable WhatsApp OTP Verification")?></label>
+                <label class="custom-switch">
+                  <input type="hidden" name="whatsapp_otp_verification_enabled" value="0">
+                  <input type="checkbox" name="whatsapp_otp_verification_enabled" class="custom-switch-input" <?=(get_option("whatsapp_otp_verification_enabled", 0) == 1) ? "checked" : ""?> value="1">
+                  <span class="custom-switch-indicator"></span>
+                  <span class="custom-switch-description"><?=lang("Active")?></span>
+                </label>
+                <br>
+                <small class="text-muted">
+                  <?=lang("When enabled, users must verify their WhatsApp number with an OTP after Google sign-in. When disabled, WhatsApp numbers are accepted without verification.")?>
+                </small>
+              </div>
+
             </div>
 
           </div>

@@ -148,6 +148,28 @@
         </small>
     </div>
 
+    <!-- Show signup type -->
+    <div class="sub">
+        <small>
+            <span style="display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 3px; <?php echo ($row->signup_type == 'google') ? 'background-color: rgba(66, 133, 244, 0.1); border: 1px solid #4285f4;' : 'background-color: rgba(76, 175, 80, 0.1); border: 1px solid #4caf50;'; ?>">
+                <?php if ($row->signup_type == 'google'): ?>
+                    <i class="fab fa-google" style="margin-right: 4px; color: #4285f4;"></i>
+                    <span style="color: #4285f4;">Google</span>
+                <?php else: ?>
+                    <i class="fe fe-user" style="margin-right: 4px; color: #4caf50;"></i>
+                    <span style="color: #4caf50;">Manual</span>
+                <?php endif; ?>
+                <?php if ($row->signup_type == 'google'): ?>
+                    <?php if ($row->whatsapp_verified): ?>
+                        <i class="fe fe-check-circle" style="margin-left: 4px; color: #4caf50;" title="WhatsApp Verified"></i>
+                    <?php else: ?>
+                        <i class="fe fe-alert-circle" style="margin-left: 4px; color: #ffc107;" title="WhatsApp Not Verified"></i>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </span>
+        </small>
+    </div>
+
     <!-- Show total orders -->
     <div class="sub">
         <small>
