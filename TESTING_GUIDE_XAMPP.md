@@ -1,5 +1,25 @@
 # Quick Testing Guide for XAMPP/Localhost
 
+## ⚠️ IMPORTANT: Updated Fix (v1.0.1)
+
+**If you're still seeing "ERR_INTERNET_DISCONNECTED" after following the steps, the service worker has been updated to fix path issues.**
+
+### What Changed:
+- Service worker now automatically detects the correct base path
+- Works whether your app is at `http://localhost/` or `http://localhost/myproject/`
+- Better error logging to help diagnose issues
+
+### Quick Diagnostic:
+After visiting your site, open DevTools Console and check for:
+- ✓ "Service Worker registered successfully" ← Good!
+- ✓ "Base path detected: /your-path/" ← Good!
+- ✓ "Cached: /your-path/offline.html" ← Good!
+- ✗ "Failed to cache" errors ← Problem!
+
+If you see cache failures, the offline page won't work. See troubleshooting below.
+
+---
+
 ## How to Test Offline Fallback on XAMPP
 
 ### ⚠️ Common Mistake
@@ -128,15 +148,75 @@ DevTools (F12)
 3. Hard refresh (Ctrl+F5)
 4. Check browser console for errors
 
-### Offline page doesn't appear
+### Offline page doesn't appear (shows ERR_INTERNET_DISCONNECTED)
 
-**Symptoms:** Blank page or normal error when offline mode enabled
+**Symptoms:** Browser's default offline error appears instead of custom page
+
+**Root Causes:**
+1. Service worker never cached the offline page successfully
+2. Service worker registered but caching failed
+3. Path mismatch (common in subdirectory installations)
+
+**Diagnostic Steps:**
+```javascript
+// Paste in Console to check what's cached
+caches.keys().then(keys => {
+  console.log('Cache keys:', keys);
+  keys.forEach(k => caches.open(k).then(c => c.keys().then(r => 
+    console.log(k + ':', r.map(req => req.url))
+  )));
+});
+```
 
 **Solutions:**
-1. Clear all browser data for localhost
-2. Re-visit the site with Apache running
-3. Wait for "Service Worker registered successfully"
-4. Try offline mode again
+1. **Clear everything and start fresh:**
+   - DevTools > Application > Storage > Clear site data
+   - Close and reopen browser
+   - Visit site again with Apache running
+   - Watch Console for cache success messages
+
+2. **Check console for caching errors:**
+   - Look for "Failed to cache" messages
+   - If you see 404 errors, files aren't in the right location
+   - Service worker auto-detects base path now (v1.0.1+)
+
+3. **Verify service worker is active:**
+   ```javascript
+   navigator.serviceWorker.getRegistration().then(reg => {
+     console.log('State:', reg?.active?.state);
+   });
+   ```
+   Should show "activated"
+
+4. **Force re-register:**
+   - DevTools > Application > Service Workers
+   - Click "Unregister"
+   - Refresh page to re-register
+   - Wait for caching to complete
+
+### Still not working?
+
+**Check your project structure:**
+```
+http://localhost/myproject/
+  ├── service-worker.js  ← Must be here
+  ├── offline.html       ← Must be here  
+  ├── assets/
+  ├── themes/
+  └── ...
+```
+
+**Console should show:**
+```
+✓ Service Worker registered successfully
+  Scope: http://localhost/myproject/
+  Active: Yes
+[Service Worker] Base path detected: /myproject/
+[Service Worker] Cached: /myproject/offline.html
+[Service Worker] Cached: /myproject/assets/css/core.css
+```
+
+If you don't see "Cached" messages, the service worker couldn't find the files.
 
 ---
 

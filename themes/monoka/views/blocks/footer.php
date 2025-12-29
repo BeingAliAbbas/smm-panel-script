@@ -231,12 +231,27 @@
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('<?=BASE?>service-worker.js')
             .then(function(registration) {
-              console.log('Service Worker registered successfully:', registration.scope);
+              console.log('✓ Service Worker registered successfully');
+              console.log('  Scope:', registration.scope);
+              console.log('  Active:', registration.active ? 'Yes' : 'No');
+              
+              // Log when service worker updates
+              registration.addEventListener('updatefound', function() {
+                console.log('Service Worker update found!');
+              });
             })
             .catch(function(error) {
-              console.log('Service Worker registration failed:', error);
+              console.error('✗ Service Worker registration failed:', error);
+              console.log('  Make sure service-worker.js is accessible at:', '<?=BASE?>service-worker.js');
             });
+            
+          // Log service worker state changes
+          navigator.serviceWorker.addEventListener('controllerchange', function() {
+            console.log('Service Worker controller changed - page now controlled by SW');
+          });
         });
+      } else {
+        console.warn('Service Workers are not supported in this browser');
       }
     </script>
 </body>

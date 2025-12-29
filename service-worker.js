@@ -1,38 +1,55 @@
 // Service Worker for Offline Fallback Handling
-// Version: 1.0.0
+// Version: 1.0.1
 
-const CACHE_NAME = 'smm-panel-offline-v1';
+const CACHE_NAME = 'smm-panel-offline-v1.1';
 const CACHE_PREFIX = 'smm-panel-';
-const OFFLINE_PAGE = '/offline.html';
 
-// Assets to cache for offline use
+// Get the base path from the service worker's own location
+// If SW is at /myproject/service-worker.js, base will be /myproject/
+const swPath = self.location.pathname;
+const BASE_PATH = swPath.substring(0, swPath.lastIndexOf('/') + 1);
+
+const OFFLINE_PAGE = BASE_PATH + 'offline.html';
+
+// Assets to cache for offline use (relative to base path)
 const OFFLINE_ASSETS = [
   OFFLINE_PAGE,
-  '/assets/css/core.css',
-  '/assets/css/bootstrap/bootstrap.min.css',
-  '/assets/js/vendors/jquery-3.2.1.min.js',
-  '/assets/plugins/font-awesome/css/all.min.css'
+  BASE_PATH + 'assets/css/core.css',
+  BASE_PATH + 'assets/css/bootstrap/bootstrap.min.css',
+  BASE_PATH + 'assets/js/vendors/jquery-3.2.1.min.js',
+  BASE_PATH + 'assets/plugins/font-awesome/css/all.min.css'
 ];
 
 // Install event - cache offline assets
 self.addEventListener('install', (event) => {
   console.log('[Service Worker] Installing service worker...');
+  console.log('[Service Worker] Base path detected:', BASE_PATH);
+  console.log('[Service Worker] Offline page path:', OFFLINE_PAGE);
   
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('[Service Worker] Caching offline assets');
-        return cache.addAll(OFFLINE_ASSETS.map(url => {
-          // Validate cached resources before using them
-          return new Request(url, { cache: 'no-cache' });
-        }));
-      })
-      .catch((error) => {
-        console.error('[Service Worker] Failed to cache offline assets:', error);
+        // Try to cache each asset individually to identify which ones fail
+        return Promise.allSettled(
+          OFFLINE_ASSETS.map(url => {
+            return cache.add(new Request(url, { cache: 'no-cache' }))
+              .then(() => {
+                console.log('[Service Worker] Cached:', url);
+              })
+              .catch((error) => {
+                console.warn('[Service Worker] Failed to cache:', url, error);
+                // Don't fail the entire installation if one asset fails
+              });
+          })
+        );
       })
       .then(() => {
         console.log('[Service Worker] Installation complete');
         return self.skipWaiting(); // Activate immediately
+      })
+      .catch((error) => {
+        console.error('[Service Worker] Installation failed:', error);
       })
   );
 });
@@ -86,7 +103,17 @@ self.addEventListener('fetch', (event) => {
       event.respondWith(
         fetch(event.request)
           .catch(() => {
-            return caches.match(OFFLINE_PAGE);
+            console.log('[Service Worker] Navigation failed, showing offline page');
+            return caches.match(OFFLINE_PAGE).then(response => {
+              if (response) {
+                return response;
+              }
+              // If offline page not in cache, return a basic offline message
+              return new Response(
+                '<html><body><h1>Offline</h1><p>No internet connection. Please try again later.</p></body></html>',
+                { headers: { 'Content-Type': 'text/html' } }
+              );
+            });
           })
       );
     }
@@ -114,12 +141,23 @@ self.addEventListener('fetch', (event) => {
         return caches.match(event.request)
           .then((cachedResponse) => {
             if (cachedResponse) {
+              console.log('[Service Worker] Serving from cache:', event.request.url);
               return cachedResponse;
             }
             
             // If it's a navigation request and not in cache, show offline page
             if (event.request.mode === 'navigate') {
-              return caches.match(OFFLINE_PAGE);
+              console.log('[Service Worker] Navigation failed, showing offline page');
+              return caches.match(OFFLINE_PAGE).then(response => {
+                if (response) {
+                  return response;
+                }
+                // Fallback offline message
+                return new Response(
+                  '<html><body><h1>Offline</h1><p>No internet connection. Please try again later.</p></body></html>',
+                  { headers: { 'Content-Type': 'text/html' } }
+                );
+              });
             }
             
             // For other requests, return a basic error response
