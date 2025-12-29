@@ -75,6 +75,75 @@
                     </label>
                   </div>
                   
+                  <hr class="my-4">
+                  
+                  <h5 class="mb-3">
+                    <i class="fas fa-inbox"></i> IMAP Configuration (for Bounce Detection)
+                  </h5>
+                  
+                  <div class="form-group">
+                    <label class="form-check">
+                      <input type="checkbox" class="form-check-input" name="imap_enabled" id="imap_enabled" value="1" <?php echo !empty($smtp->imap_enabled) ? 'checked' : ''; ?>>
+                      <span class="form-check-label">Enable IMAP bounce detection</span>
+                    </label>
+                    <small class="form-text text-muted">
+                      Automatically detect bounced emails by monitoring inbox
+                    </small>
+                  </div>
+                  
+                  <div id="imap_fields" style="display:<?php echo !empty($smtp->imap_enabled) ? 'block' : 'none'; ?>;">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <div class="form-group">
+                          <label>IMAP Host</label>
+                          <input type="text" class="form-control square" name="imap_host" value="<?php echo htmlspecialchars($smtp->imap_host ?? ''); ?>" placeholder="e.g., imap.gmail.com">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label>IMAP Port</label>
+                          <input type="number" class="form-control square" name="imap_port" value="<?php echo $smtp->imap_port ?? 993; ?>">
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label>IMAP Encryption</label>
+                      <select class="form-control square" name="imap_encryption">
+                        <option value="ssl" <?php echo (isset($smtp->imap_encryption) && $smtp->imap_encryption == 'ssl') ? 'selected' : ''; ?>>SSL</option>
+                        <option value="tls" <?php echo (isset($smtp->imap_encryption) && $smtp->imap_encryption == 'tls') ? 'selected' : ''; ?>>TLS</option>
+                        <option value="none" <?php echo (isset($smtp->imap_encryption) && $smtp->imap_encryption == 'none') ? 'selected' : ''; ?>>None</option>
+                      </select>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label>IMAP Username</label>
+                      <input type="text" class="form-control square" name="imap_username" value="<?php echo htmlspecialchars($smtp->imap_username ?? ''); ?>" placeholder="Leave empty to use SMTP username">
+                      <small class="form-text text-muted">Usually same as SMTP username</small>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label>IMAP Password</label>
+                      <input type="password" class="form-control square" name="imap_password" placeholder="Leave empty to use SMTP password">
+                      <small class="form-text text-muted">Leave blank to keep existing password</small>
+                    </div>
+                    
+                    <?php if(!empty($smtp->imap_last_check)){ ?>
+                    <div class="alert alert-info">
+                      <i class="fas fa-info-circle"></i>
+                      Last IMAP check: <?php echo date('Y-m-d H:i:s', strtotime($smtp->imap_last_check)); ?>
+                    </div>
+                    <?php } ?>
+                    
+                    <div class="form-group">
+                      <button type="button" class="btn btn-sm btn-info" id="test_imap">
+                        <i class="fas fa-check-circle"></i> Test IMAP Connection
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <hr class="my-4">
+                  
                   <div class="form-group">
                     <label class="form-check">
                       <input type="checkbox" class="form-check-input" name="status" value="1" <?php echo $smtp->status ? 'checked' : ''; ?>>
@@ -95,3 +164,45 @@
     </div>
   </div>
 </div>
+
+<script>
+$(document).ready(function() {
+  // Toggle IMAP fields
+  $('#imap_enabled').change(function() {
+    if($(this).is(':checked')) {
+      $('#imap_fields').slideDown();
+    } else {
+      $('#imap_fields').slideUp();
+    }
+  });
+  
+  // Test IMAP connection
+  $('#test_imap').click(function() {
+    var $btn = $(this);
+    $btn.prop('disabled', true);
+    var original_html = $btn.html();
+    $btn.html('<i class="fa fa-spinner fa-spin"></i> Testing...');
+    
+    $.ajax({
+      url: '<?php echo cn($module . '/ajax_test_imap'); ?>',
+      type: 'POST',
+      dataType: 'JSON',
+      data: { smtp_ids: '<?php echo $smtp->ids; ?>' },
+      success: function(response) {
+        if(response.status == 'success') {
+          show_message('success', response.message);
+        } else {
+          show_message('error', response.message);
+        }
+        $btn.prop('disabled', false);
+        $btn.html(original_html);
+      },
+      error: function() {
+        show_message('error', 'Failed to test IMAP connection');
+        $btn.prop('disabled', false);
+        $btn.html(original_html);
+      }
+    });
+  });
+});
+</script>
