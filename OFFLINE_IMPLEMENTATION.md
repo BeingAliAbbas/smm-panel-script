@@ -40,28 +40,76 @@ This implementation provides a Progressive Web App (PWA) offline experience for 
 
 ### Local Testing (localhost):
 
+#### For XAMPP/WAMP/Apache Users:
+
+**IMPORTANT:** The service worker ONLY works when the server is running. If Apache is stopped completely, the browser shows "ERR_CONNECTION_REFUSED" - this is **expected and correct behavior**.
+
+**Step-by-Step Testing Procedure:**
+
+1. **Initial Setup** (Server MUST be running):
+   - ✓ Start XAMPP/WAMP Apache
+   - ✓ Visit http://localhost/your-project (or http://localhost:8080)
+   - ✓ Open browser console (F12)
+   - ✓ Verify message: "Service Worker registered successfully"
+   - ✓ Keep the browser tab open
+
+2. **Test Offline Mode Using Browser DevTools** (Recommended Method):
+   - ✓ With Apache still running and page loaded
+   - ✓ Open Chrome DevTools (F12)
+   - ✓ Go to: Application tab > Service Workers section
+   - ✓ Check the "Offline" checkbox
+   - ✓ Try to navigate or refresh the page
+   - ✓ You should see the custom offline page
+
+3. **Alternative: Network Throttling Method**:
+   - ✓ With Apache still running
+   - ✓ Open DevTools (F12) > Network tab
+   - ✓ Select "Offline" from the throttling dropdown
+   - ✓ Refresh the page
+   - ✓ Custom offline page appears
+
+4. **Test Recovery**:
+   - ✓ Uncheck "Offline" in DevTools
+   - ✓ Click "Retry Connection" button on offline page
+   - ✓ Page automatically reloads with connection restored
+
+**Why It Doesn't Work When Apache Is Stopped:**
+
+Service workers are registered and cached by the browser when you visit the site. They intercept network requests for pages you've visited before. However:
+
+- If Apache is completely stopped, the browser never reaches your domain
+- The browser shows native "ERR_CONNECTION_REFUSED" error
+- This happens BEFORE the service worker can intercept anything
+- This is standard browser behavior and cannot be changed
+
+**The Correct Scenario:**
+
+The offline page is designed for situations like:
+- ✓ WiFi disconnects while browsing (simulate with DevTools)
+- ✓ Mobile data runs out mid-session
+- ✓ Network drops temporarily
+- ✓ User goes into airplane mode AFTER visiting the site
+
+It is NOT designed for:
+- ✗ Server being completely down/stopped
+- ✗ Apache/XAMPP not started at all
+- ✗ First-time visitors who never registered the service worker
+
+#### For PHP Built-in Server:
+
 1. **Start the Application**:
    ```bash
-   # Start your local PHP server
+   # Navigate to your project directory
+   cd /path/to/your/project
+   
+   # Start PHP built-in server
    php -S localhost:8080
    ```
 
-2. **Initial Visit**:
-   - Open the application in a browser
-   - Service worker will register automatically
-   - Check browser console for: "Service Worker registered successfully"
-
-3. **Test Offline Mode**:
-   - Open Chrome DevTools (F12)
-   - Go to Application tab > Service Workers
-   - Check "Offline" checkbox
-   - Refresh the page or navigate to a new page
-   - You should see the custom offline page
-
-4. **Test Recovery**:
-   - Uncheck the "Offline" checkbox in DevTools
-   - Click the "Retry Connection" button on the offline page
-   - The page should automatically reload with internet restored
+2. **Follow the same testing steps as XAMPP above**
+   - Initial visit with server running
+   - Use DevTools offline mode to test
+   - Keep server running during tests
 
 ### Production Testing (Linux Hosting):
 
