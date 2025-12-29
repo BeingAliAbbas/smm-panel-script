@@ -77,6 +77,21 @@ class auth extends MX_Controller {
 			file_put_contents($debug_log, "\n" . date('Y-m-d H:i:s') . " - Callback started\n", FILE_APPEND);
 		}
 		
+		// Check if required database columns exist
+		$columns_exist = $this->check_whatsapp_columns_exist();
+		if (!$columns_exist) {
+			if ($debug_mode) {
+				file_put_contents($debug_log, "ERROR: Required database columns missing! Please run: database/whatsapp_auth_enhancement.sql\n", FILE_APPEND);
+			}
+			// Show error message to user
+			echo '<h1>Database Migration Required</h1>';
+			echo '<p>Please run the WhatsApp authentication database migration:</p>';
+			echo '<pre>mysql -u username -p database_name < database/whatsapp_auth_enhancement.sql</pre>';
+			echo '<p>Or import the file via phpMyAdmin: <code>database/whatsapp_auth_enhancement.sql</code></p>';
+			echo '<p><a href="' . cn('auth/login') . '">Return to Login</a></p>';
+			exit;
+		}
+		
 		// Check if Google login is enabled
 		if (!get_option('enable_google_login')) {
 			if ($debug_mode) file_put_contents($debug_log, "Google login disabled\n", FILE_APPEND);
@@ -1054,6 +1069,30 @@ public function ajax_sign_in() {
 		}
 	}
 
+	/**
+	 * Check if required WhatsApp authentication columns exist in the database
+	 * @return bool
+	 */
+	private function check_whatsapp_columns_exist() {
+		// Check if the required columns exist in general_users table
+		$query = $this->db->query("SHOW COLUMNS FROM {$this->tb_users} LIKE 'signup_type'");
+		if ($query->num_rows() == 0) {
+			return false;
+		}
+		
+		$query = $this->db->query("SHOW COLUMNS FROM {$this->tb_users} LIKE 'whatsapp_setup_completed'");
+		if ($query->num_rows() == 0) {
+			return false;
+		}
+		
+		$query = $this->db->query("SHOW COLUMNS FROM {$this->tb_users} LIKE 'whatsapp_verified'");
+		if ($query->num_rows() == 0) {
+			return false;
+		}
+		
+		return true;
+	}
+
 	private function is_banned_ip_address(){
 		if (!$this->db->table_exists($this->tb_user_block_ip)) {
 			return false;
@@ -1075,6 +1114,21 @@ public function ajax_sign_in() {
 		
 		if ($debug_mode) {
 			file_put_contents($debug_log, "\n" . date('Y-m-d H:i:s') . " - WhatsApp setup page accessed\n", FILE_APPEND);
+		}
+		
+		// Check if required database columns exist
+		$columns_exist = $this->check_whatsapp_columns_exist();
+		if (!$columns_exist) {
+			if ($debug_mode) {
+				file_put_contents($debug_log, "ERROR: Required database columns missing!\n", FILE_APPEND);
+			}
+			// Show error message to user
+			echo '<h1>Database Migration Required</h1>';
+			echo '<p>Please run the WhatsApp authentication database migration:</p>';
+			echo '<pre>mysql -u username -p database_name < database/whatsapp_auth_enhancement.sql</pre>';
+			echo '<p>Or import the file via phpMyAdmin: <code>database/whatsapp_auth_enhancement.sql</code></p>';
+			echo '<p><a href="' . cn('auth/login') . '">Return to Login</a></p>';
+			exit;
 		}
 		
 		// Ensure user is logged in
