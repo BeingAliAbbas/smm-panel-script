@@ -19,6 +19,10 @@ class Whatsapp_verification_check {
 
     public function __construct() {
         $this->CI =& get_instance();
+        // Ensure URL helper is loaded for redirect function
+        if (!function_exists('redirect')) {
+            $this->CI->load->helper('url');
+        }
     }
 
     /**

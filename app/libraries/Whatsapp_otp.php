@@ -84,7 +84,7 @@ class Whatsapp_otp {
         );
 
         $this->CI->db->where('id', $user_id);
-        $this->CI->db->update('users', $data);
+        $this->CI->db->update('general_users', $data);
 
         if ($this->CI->db->affected_rows() === 0) {
             return array(
@@ -168,7 +168,7 @@ class Whatsapp_otp {
         // Increment attempts
         $this->CI->db->where('id', $user_id);
         $this->CI->db->set('whatsapp_otp_attempts', 'whatsapp_otp_attempts + 1', FALSE);
-        $this->CI->db->update('users');
+        $this->CI->db->update('general_users');
 
         // Verify OTP
         if ($user->whatsapp_otp !== $otp) {
@@ -188,7 +188,7 @@ class Whatsapp_otp {
         );
 
         $this->CI->db->where('id', $user_id);
-        $this->CI->db->update('users', $update_data);
+        $this->CI->db->update('general_users', $update_data);
 
         return array(
             'status' => 'success',
@@ -210,7 +210,7 @@ class Whatsapp_otp {
         );
 
         $this->CI->db->where('id', $user_id);
-        $this->CI->db->update('users', $data);
+        $this->CI->db->update('general_users', $data);
 
         return $this->CI->db->affected_rows() > 0;
     }
