@@ -975,7 +975,7 @@ class Email_marketing_model extends MY_Model {
      */
     public function is_email_suppressed($email) {
         $this->db->where('email', $email);
-        $this->db->where('status', 'active');
+        $this->db->where_in('status', ['active', 'temporary']);
         $bounce = $this->db->get('email_bounces')->row();
         
         if (!$bounce) {

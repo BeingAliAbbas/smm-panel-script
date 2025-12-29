@@ -23,6 +23,12 @@ class EmailBounceDetector
     protected $time_window_hours;
     protected $max_emails_per_check;
     
+    // Constants
+    const MAILER_DAEMON_PATTERN = '/(mailer-daemon|postmaster|mail.*delivery.*subsystem)/i';
+    const SYSTEM_EMAIL_PATTERNS = ['mailer-daemon', 'postmaster', 'noreply', 'no-reply'];
+    const RAW_MESSAGE_LENGTH = 1000;
+    const REASON_TRUNCATE_LENGTH = 50;
+    
     // Bounce type patterns
     protected $hard_bounce_patterns = [
         '/address.*?not.*?found/i',
@@ -220,7 +226,7 @@ class EmailBounceDetector
     protected function parse_bounce_message($subject, $body, $from)
     {
         // Check if from mailer-daemon or similar
-        if (!preg_match('/(mailer-daemon|postmaster|mail.*delivery.*subsystem)/i', $from)) {
+        if (!preg_match(self::MAILER_DAEMON_PATTERN, $from)) {
             return false;
         }
         
@@ -248,7 +254,7 @@ class EmailBounceDetector
             'bounce_type' => $bounce_type,
             'bounce_reason' => $bounce_reason,
             'bounce_code' => $bounce_code,
-            'raw_message' => substr($text, 0, 1000) // Store first 1000 chars
+            'raw_message' => substr($text, 0, self::RAW_MESSAGE_LENGTH)
         ];
     }
     
@@ -267,7 +273,15 @@ class EmailBounceDetector
                 $email = strtolower(trim($email));
                 
                 // Skip mailer-daemon and system addresses
-                if (preg_match('/(mailer-daemon|postmaster|noreply|no-reply)/i', $email)) {
+                $is_system = false;
+                foreach (self::SYSTEM_EMAIL_PATTERNS as $pattern) {
+                    if (stripos($email, $pattern) !== false) {
+                        $is_system = true;
+                        break;
+                    }
+                }
+                
+                if ($is_system) {
                     continue;
                 }
                 
@@ -589,7 +603,7 @@ class EmailBounceDetector
     public function is_suppressed($email)
     {
         $this->db->where('email', $email);
-        $this->db->where('status', 'active');
+        $this->db->where_in('status', ['active', 'temporary']);
         $bounce = $this->db->get('email_bounces')->row();
         
         if (!$bounce) {

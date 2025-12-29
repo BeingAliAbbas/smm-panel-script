@@ -83,7 +83,7 @@ INSERT INTO `email_settings` (`setting_key`, `setting_value`) VALUES
 ('bounce_check_interval_minutes', '30'),
 ('bounce_time_window_hours', '48'),
 ('bounce_max_emails_per_check', '50')
-ON DUPLICATE KEY UPDATE `setting_key` = VALUES(`setting_key`);
+ON DUPLICATE KEY UPDATE `setting_value` = VALUES(`setting_value`);
 
 -- =====================================================
 -- Update email_recipients table to track suppression
