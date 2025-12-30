@@ -1,0 +1,75 @@
+# ======================================================
+# Email Marketing Module - Cron Jobs Configuration
+# ======================================================
+# Add these cron jobs to your server's crontab
+# Edit with: crontab -e
+# ======================================================
+
+# ------------------------------------------------------
+# 1. Email Campaign Sender
+# ------------------------------------------------------
+# Sends pending emails from running campaigns
+# Runs every minute to maintain consistent sending
+# ------------------------------------------------------
+* * * * * curl -X GET "https://yourdomain.com/email_cron/run?token=YOUR_EMAIL_CRON_TOKEN" >/dev/null 2>&1
+
+# Alternative with wget:
+# * * * * * wget -q -O- "https://yourdomain.com/email_cron/run?token=YOUR_EMAIL_CRON_TOKEN" >/dev/null 2>&1
+
+
+# ------------------------------------------------------
+# 2. IMAP Bounce Detection (NEW)
+# ------------------------------------------------------
+# Checks SMTP inboxes for bounced emails via IMAP
+# Runs every 30 minutes (adjust as needed)
+# ------------------------------------------------------
+*/30 * * * * curl -X GET "https://yourdomain.com/bounce_cron/run?token=YOUR_BOUNCE_CRON_TOKEN" >/dev/null 2>&1
+
+# Alternative with wget:
+# */30 * * * * wget -q -O- "https://yourdomain.com/bounce_cron/run?token=YOUR_BOUNCE_CRON_TOKEN" >/dev/null 2>&1
+
+# Alternative intervals:
+# Every hour:    0 * * * *
+# Every 2 hours: 0 */2 * * *
+# Every 15 mins: */15 * * * *
+
+
+# ======================================================
+# IMPORTANT NOTES
+# ======================================================
+# 
+# 1. REPLACE TOKENS:
+#    - YOUR_EMAIL_CRON_TOKEN: Get from system settings or use:
+#      md5('email_marketing_cron_' . ENCRYPTION_KEY)
+#    - YOUR_BOUNCE_CRON_TOKEN: Get from system settings or use:
+#      md5('bounce_detection_cron_' . ENCRYPTION_KEY)
+# 
+# 2. REPLACE DOMAIN:
+#    - Change "yourdomain.com" to your actual domain
+# 
+# 3. PHP IMAP EXTENSION:
+#    - Ensure PHP IMAP extension is installed for bounce detection
+#    - Test with: php -m | grep imap
+#    - Install: sudo apt-get install php-imap (Ubuntu/Debian)
+# 
+# 4. SMTP/IMAP CONFIGURATION:
+#    - Enable IMAP in Email Marketing → SMTP Configurations
+#    - Configure IMAP host, port, credentials
+#    - Use App Passwords for Gmail/Outlook
+# 
+# 5. MONITORING:
+#    - Check cron logs: tail -f /var/log/cron
+#    - Check application logs for errors
+#    - Monitor bounce detection in admin panel
+# 
+# 6. RATE LIMITING:
+#    - Email cron has 60-second minimum interval
+#    - Bounce cron has 5-minute minimum interval
+#    - Running more frequently will be rate limited
+# 
+# 7. TESTING:
+#    - Test email sending: Run email_cron URL in browser
+#    - Test bounce detection: Run bounce_cron URL in browser
+#    - Or use test script: php test_imap_bounce.php
+# 
+# ======================================================
