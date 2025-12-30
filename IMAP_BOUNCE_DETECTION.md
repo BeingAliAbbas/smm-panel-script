@@ -50,15 +50,43 @@ php -m | grep imap
 
 ### 3. Cron Job Setup
 
+**IMPORTANT:** You must generate the correct token first!
+
+#### Step 3a: Generate Your Token
+
+Run the token generator script:
+```bash
+php generate_bounce_token.php
+```
+
+This will output your actual token. **Do NOT use "YOUR_TOKEN" literally!**
+
+Alternatively, generate manually:
+```bash
+# Replace YOUR_ENCRYPTION_KEY with the actual key from app/config/config.php
+php -r "echo md5('bounce_detection_cron_' . 'YOUR_ENCRYPTION_KEY') . PHP_EOL;"
+```
+
+#### Step 3b: Test the Endpoint (Optional)
+
+First, verify the cron endpoint is accessible:
+```bash
+curl "https://yourdomain.com/cron/bounce_detection/test"
+```
+
+This should return JSON with instructions.
+
+#### Step 3c: Add Cron Job
+
 Add this cron job to run bounce detection every 30 minutes:
 
 ```bash
-*/30 * * * * curl -X GET "https://yourdomain.com/cron/bounce_detection?token=YOUR_TOKEN" >/dev/null 2>&1
+*/30 * * * * curl -X GET "https://yourdomain.com/cron/bounce_detection?token=PASTE_YOUR_ACTUAL_TOKEN_HERE" >/dev/null 2>&1
 ```
 
 Replace:
 - `yourdomain.com` with your actual domain
-- `YOUR_TOKEN` with the token from system settings (auto-generated based on ENCRYPTION_KEY)
+- `PASTE_YOUR_ACTUAL_TOKEN_HERE` with the token from step 3a (32-character hash)
 
 You can also set custom check intervals via settings.
 

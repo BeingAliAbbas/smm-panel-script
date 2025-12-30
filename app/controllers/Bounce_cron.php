@@ -28,13 +28,38 @@ class Bounce_cron extends CI_Controller {
      * URL: /cron/bounce_detection?token=YOUR_TOKEN&smtp_id=SMTP_ID (optional)
      */
     public function run(){
+        // Start logging
         $log_id = $this->cron_logger->start('cron/bounce_detection');
         
         // Verify token
         $token = $this->input->get('token', true);
-        if(!$token || !hash_equals($this->requiredToken, $token)){
-            $this->cron_logger->end($log_id, 'Failed', 403, 'Invalid or missing token');
-            show_404();
+        
+        // Debug: Check if we have a token
+        if(!$token){
+            $error_response = [
+                'status' => 'error',
+                'message' => 'No token provided. Please add ?token=YOUR_ACTUAL_TOKEN to the URL',
+                'example' => base_url('cron/bounce_detection?token=YOUR_ACTUAL_TOKEN'),
+                'help' => 'The token is generated from your ENCRYPTION_KEY. Check your settings or use the token from admin panel.',
+                'time' => date('c')
+            ];
+            $this->cron_logger->end($log_id, 'Failed', 401, 'No token provided');
+            $this->respond($error_response);
+            return;
+        }
+        
+        // Check if token matches
+        if(!hash_equals($this->requiredToken, $token)){
+            $error_response = [
+                'status' => 'error',
+                'message' => 'Invalid token provided. The token does not match.',
+                'provided_token_length' => strlen($token),
+                'expected_token_length' => strlen($this->requiredToken),
+                'help' => 'Make sure you are using the correct token from your system settings. Do not use "YOUR_TOKEN" literally.',
+                'time' => date('c')
+            ];
+            $this->cron_logger->end($log_id, 'Failed', 403, 'Invalid token');
+            $this->respond($error_response);
             return;
         }
         
@@ -180,5 +205,36 @@ class Bounce_cron extends CI_Controller {
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($data, JSON_PRETTY_PRINT));
+    }
+    
+    /**
+     * Test endpoint to verify the cron is accessible
+     * URL: /cron/bounce_detection/test
+     * No authentication required - for testing only
+     */
+    public function test(){
+        $response = [
+            'status' => 'success',
+            'message' => 'Bounce detection cron endpoint is accessible',
+            'controller' => 'Bounce_cron',
+            'method' => 'test',
+            'url' => current_url(),
+            'instructions' => [
+                'step1' => 'This test endpoint confirms the route is working',
+                'step2' => 'To use the actual cron, you need a valid token',
+                'step3' => 'Get your token from the admin panel or use: md5("bounce_detection_cron_" . ENCRYPTION_KEY)',
+                'step4' => 'Then call: ' . base_url('cron/bounce_detection?token=YOUR_ACTUAL_TOKEN')
+            ],
+            'token_help' => [
+                'note' => 'Do NOT use "YOUR_TOKEN" literally - it must be the actual generated token',
+                'format' => 'The token is a 32-character MD5 hash',
+                'generation' => 'Token = md5("bounce_detection_cron_" . ENCRYPTION_KEY)'
+            ],
+            'time' => date('c')
+        ];
+        
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($response, JSON_PRETTY_PRINT));
     }
 }
