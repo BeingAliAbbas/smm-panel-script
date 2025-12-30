@@ -112,15 +112,15 @@
                         <small><?php echo date('Y-m-d H:i:s', strtotime($log->detected_at)); ?></small>
                       </td>
                       <td>
-                        <button class="btn btn-sm btn-info view-details" data-log="<?php echo htmlspecialchars(json_encode([
-                          'email' => $log->bounced_email,
-                          'type' => $log->bounce_type,
-                          'reason' => $log->bounce_reason,
-                          'code' => $log->bounce_code,
-                          'smtp' => $log->smtp_name,
-                          'detected' => $log->detected_at,
-                          'details' => $log->parsed_details
-                        ])); ?>">
+                        <button class="btn btn-sm btn-info view-details" 
+                                data-bounce-id="<?php echo $log->id; ?>"
+                                data-email="<?php echo htmlspecialchars($log->bounced_email, ENT_QUOTES); ?>"
+                                data-type="<?php echo htmlspecialchars($log->bounce_type, ENT_QUOTES); ?>"
+                                data-reason="<?php echo htmlspecialchars($log->bounce_reason ?: 'Unknown', ENT_QUOTES); ?>"
+                                data-code="<?php echo htmlspecialchars($log->bounce_code ?: '', ENT_QUOTES); ?>"
+                                data-smtp="<?php echo htmlspecialchars($log->smtp_name ?: 'Unknown', ENT_QUOTES); ?>"
+                                data-detected="<?php echo htmlspecialchars(date('Y-m-d H:i:s', strtotime($log->detected_at)), ENT_QUOTES); ?>"
+                                data-details="<?php echo htmlspecialchars($log->parsed_details ?: '', ENT_QUOTES); ?>">
                           <i class="fas fa-eye"></i> View
                         </button>
                       </td>
@@ -161,13 +161,13 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Bounce Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <button type="button" class="btn-close" data-dismiss="modal"></button>
       </div>
       <div class="modal-body">
         <div id="bounceDetailsContent"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -196,25 +196,34 @@ $(document).ready(function() {
   
   // View bounce details
   $('.view-details').on('click', function() {
-    var log = JSON.parse($(this).data('log'));
+    var $btn = $(this);
+    var log = {
+      email: $btn.data('email'),
+      type: $btn.data('type'),
+      reason: $btn.data('reason'),
+      code: $btn.data('code'),
+      smtp: $btn.data('smtp'),
+      detected: $btn.data('detected'),
+      details: $btn.data('details')
+    };
     
     var html = '<dl class="row">';
-    html += '<dt class="col-sm-4">Email:</dt><dd class="col-sm-8"><strong>' + log.email + '</strong></dd>';
+    html += '<dt class="col-sm-4">Email:</dt><dd class="col-sm-8"><strong>' + escapeHtml(log.email) + '</strong></dd>';
     html += '<dt class="col-sm-4">Bounce Type:</dt><dd class="col-sm-8"><span class="badge bg-' + 
             (log.type == 'hard' ? 'danger' : (log.type == 'soft' ? 'warning' : 'info')) + '">' + 
-            log.type.toUpperCase() + '</span></dd>';
-    html += '<dt class="col-sm-4">Reason:</dt><dd class="col-sm-8">' + (log.reason || 'Unknown') + '</dd>';
+            escapeHtml(log.type.toUpperCase()) + '</span></dd>';
+    html += '<dt class="col-sm-4">Reason:</dt><dd class="col-sm-8">' + escapeHtml(log.reason || 'Unknown') + '</dd>';
     if(log.code) {
-      html += '<dt class="col-sm-4">SMTP Code:</dt><dd class="col-sm-8"><code>' + log.code + '</code></dd>';
+      html += '<dt class="col-sm-4">SMTP Code:</dt><dd class="col-sm-8"><code>' + escapeHtml(log.code) + '</code></dd>';
     }
-    html += '<dt class="col-sm-4">SMTP Config:</dt><dd class="col-sm-8">' + (log.smtp || 'Unknown') + '</dd>';
-    html += '<dt class="col-sm-4">Detected At:</dt><dd class="col-sm-8">' + log.detected + '</dd>';
+    html += '<dt class="col-sm-4">SMTP Config:</dt><dd class="col-sm-8">' + escapeHtml(log.smtp || 'Unknown') + '</dd>';
+    html += '<dt class="col-sm-4">Detected At:</dt><dd class="col-sm-8">' + escapeHtml(log.detected) + '</dd>';
     
     if(log.details) {
       try {
         var details = JSON.parse(log.details);
-        html += '<dt class="col-sm-4">Subject:</dt><dd class="col-sm-8">' + (details.subject || '-') + '</dd>';
-        html += '<dt class="col-sm-4">From:</dt><dd class="col-sm-8">' + (details.from || '-') + '</dd>';
+        html += '<dt class="col-sm-4">Subject:</dt><dd class="col-sm-8">' + escapeHtml(details.subject || '-') + '</dd>';
+        html += '<dt class="col-sm-4">From:</dt><dd class="col-sm-8">' + escapeHtml(details.from || '-') + '</dd>';
       } catch(e) {}
     }
     
@@ -223,5 +232,18 @@ $(document).ready(function() {
     $('#bounceDetailsContent').html(html);
     $('#bounceDetailsModal').modal('show');
   });
+  
+  // Helper function to escape HTML
+  function escapeHtml(text) {
+    if(!text) return '';
+    var map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    return text.toString().replace(/[&<>"']/g, function(m) { return map[m]; });
+  }
 });
 </script>

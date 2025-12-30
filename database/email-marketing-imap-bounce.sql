@@ -13,7 +13,7 @@ ADD COLUMN `imap_host` VARCHAR(255) DEFAULT NULL COMMENT 'IMAP server host' AFTE
 ADD COLUMN `imap_port` INT(11) DEFAULT 993 COMMENT 'IMAP server port' AFTER `imap_host`,
 ADD COLUMN `imap_encryption` ENUM('none', 'ssl', 'tls') DEFAULT 'ssl' COMMENT 'IMAP encryption type' AFTER `imap_port`,
 ADD COLUMN `imap_username` VARCHAR(255) DEFAULT NULL COMMENT 'IMAP username (often same as SMTP)' AFTER `imap_encryption`,
-ADD COLUMN `imap_password` TEXT DEFAULT NULL COMMENT 'IMAP password or app password' AFTER `imap_username`,
+ADD COLUMN `imap_password` TEXT DEFAULT NULL COMMENT 'IMAP password - NOTE: Should be encrypted at application level' AFTER `imap_username`,
 ADD COLUMN `imap_last_check` DATETIME DEFAULT NULL COMMENT 'Last successful IMAP check' AFTER `imap_password`,
 ADD COLUMN `imap_last_error` TEXT DEFAULT NULL COMMENT 'Last IMAP connection error' AFTER `imap_last_check`;
 
@@ -99,6 +99,7 @@ INSERT INTO `email_settings` (`setting_key`, `setting_value`) VALUES
 ('imap_auto_suppress_bounces', '1'),
 ('imap_max_emails_per_check', '50'),
 ('imap_delete_processed_bounces', '0'),
+('imap_validate_ssl_cert', '0'),
 ('imap_last_global_check', 'never')
 ON DUPLICATE KEY UPDATE `setting_value` = VALUES(`setting_value`);
 

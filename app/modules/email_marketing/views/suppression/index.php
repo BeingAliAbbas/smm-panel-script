@@ -167,7 +167,7 @@
       <form class="actionForm" action="<?php echo cn($module . '/ajax_add_to_suppression'); ?>" method="POST" data-redirect="<?php echo cn($module . '/suppression_list'); ?>">
         <div class="modal-header">
           <h5 class="modal-title">Add Email to Suppression List</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button type="button" class="btn-close" data-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div class="form-group">
@@ -191,7 +191,7 @@
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary">Add to Suppression List</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         </div>
       </form>
     </div>

@@ -14,6 +14,10 @@ class ImapBounceDetector {
     private $connection;
     private $smtp_config;
     
+    // Configuration constants
+    const MAX_BOUNCE_MESSAGE_SIZE = 10000; // Maximum size for stored bounce messages
+    const IMAP_RETRY_ATTEMPTS = 3; // Number of connection retry attempts
+    
     // Bounce patterns for detection
     private $bounce_patterns = [
         'hard_bounce' => [
@@ -74,15 +78,23 @@ class ImapBounceDetector {
             // Build connection string
             $connection_string = $this->build_connection_string($smtp_config);
             
+            // Clear any previous errors
+            imap_errors();
+            imap_alerts();
+            
             // Attempt connection
-            $this->connection = @imap_open(
+            $this->connection = imap_open(
                 $connection_string,
                 $smtp_config->imap_username ?: $smtp_config->username,
-                $smtp_config->imap_password ?: $smtp_config->password
+                $smtp_config->imap_password ?: $smtp_config->password,
+                0,
+                self::IMAP_RETRY_ATTEMPTS
             );
             
             if (!$this->connection) {
-                $error = imap_last_error();
+                $errors = imap_errors();
+                $error = $errors ? implode('; ', $errors) : 'Unknown IMAP error';
+                
                 log_message('error', sprintf(
                     'IMAP Bounce Detector: Connection failed for %s: %s',
                     $smtp_config->imap_host,
@@ -130,8 +142,13 @@ class ImapBounceDetector {
             $flags[] = 'tls';
         }
         
-        // Add common flags
-        $flags[] = 'novalidate-cert'; // For self-signed certs
+        // Check if SSL certificate validation should be disabled
+        // For production, this should be enabled (remove novalidate-cert)
+        // For testing or self-signed certs, keep it disabled
+        $validate_cert = $this->CI->email_model->get_setting('imap_validate_ssl_cert', 0);
+        if (!$validate_cert) {
+            $flags[] = 'novalidate-cert';
+        }
         
         $flag_string = implode('/', $flags);
         
@@ -413,7 +430,7 @@ class ImapBounceDetector {
             'bounce_type' => $bounce_data['bounce_type'],
             'bounce_reason' => $bounce_data['bounce_reason'],
             'bounce_code' => $bounce_data['bounce_code'],
-            'raw_bounce_message' => substr($raw_message, 0, 10000), // Limit size
+            'raw_bounce_message' => substr($raw_message, 0, self::MAX_BOUNCE_MESSAGE_SIZE),
             'parsed_details' => json_encode([
                 'subject' => $bounce_data['subject'],
                 'from' => $bounce_data['from'],
