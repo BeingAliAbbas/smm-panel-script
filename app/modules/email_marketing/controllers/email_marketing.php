@@ -580,6 +580,14 @@ class Email_marketing extends MX_Controller {
         $is_default = post("is_default");
         $status = post("status");
         
+        // IMAP fields
+        $imap_enabled = post("imap_enabled");
+        $imap_host = post("imap_host");
+        $imap_port = post("imap_port");
+        $imap_encryption = post("imap_encryption");
+        $imap_username = post("imap_username");
+        $imap_password = post("imap_password");
+        
         if(empty($name) || empty($host) || empty($port) || empty($username) || empty($from_email)){
             ms(array(
                 "status" => "error",
@@ -598,7 +606,13 @@ class Email_marketing extends MX_Controller {
             'from_email' => $from_email,
             'reply_to' => $reply_to,
             'is_default' => $is_default ? 1 : 0,
-            'status' => $status ? 1 : 0
+            'status' => $status ? 1 : 0,
+            'imap_enabled' => $imap_enabled ? 1 : 0,
+            'imap_host' => $imap_host,
+            'imap_port' => $imap_port ? (int)$imap_port : 993,
+            'imap_encryption' => $imap_encryption ?: 'ssl',
+            'imap_username' => $imap_username,
+            'imap_password' => $imap_password
         );
         
         if($this->model->create_smtp_config($smtp_data)){
@@ -645,6 +659,14 @@ class Email_marketing extends MX_Controller {
         $is_default = post("is_default");
         $status = post("status");
         
+        // IMAP fields
+        $imap_enabled = post("imap_enabled");
+        $imap_host = post("imap_host");
+        $imap_port = post("imap_port");
+        $imap_encryption = post("imap_encryption");
+        $imap_username = post("imap_username");
+        $imap_password = post("imap_password");
+        
         if(empty($name) || empty($host) || empty($port) || empty($username) || empty($from_email)){
             ms(array(
                 "status" => "error",
@@ -662,12 +684,22 @@ class Email_marketing extends MX_Controller {
             'from_email' => $from_email,
             'reply_to' => $reply_to,
             'is_default' => $is_default ? 1 : 0,
-            'status' => $status ? 1 : 0
+            'status' => $status ? 1 : 0,
+            'imap_enabled' => $imap_enabled ? 1 : 0,
+            'imap_host' => $imap_host,
+            'imap_port' => $imap_port ? (int)$imap_port : 993,
+            'imap_encryption' => $imap_encryption ?: 'ssl',
+            'imap_username' => $imap_username
         );
         
         // Only update password if provided
         if(!empty($password)){
             $update_data['password'] = $password;
+        }
+        
+        // Only update IMAP password if provided
+        if(!empty($imap_password)){
+            $update_data['imap_password'] = $imap_password;
         }
         
         if($this->model->update_smtp_config($ids, $update_data)){
@@ -1189,6 +1221,190 @@ HTML;
         ms(array(
             "status" => "success",
             "message" => "Settings saved successfully"
+        ));
+    }
+    
+    // ========================================
+    // SUPPRESSION LIST & BOUNCE DETECTION
+    // ========================================
+    
+    /**
+     * Suppression list management
+     */
+    public function suppression_list($page = 1){
+        $page = max(1, (int)$page);
+        $per_page = 50;
+        $offset = ($page - 1) * $per_page;
+        
+        $suppression_list = $this->model->get_suppression_list($per_page, $offset);
+        $total = $this->model->get_suppression_list();
+        $stats = $this->model->get_bounce_stats();
+        
+        $data = array(
+            "module" => $this->module,
+            "suppression_list" => $suppression_list,
+            "total" => $total,
+            "page" => $page,
+            "per_page" => $per_page,
+            "stats" => $stats
+        );
+        $this->template->build("suppression/index", $data);
+    }
+    
+    /**
+     * Add email to suppression list manually
+     */
+    public function ajax_add_to_suppression(){
+        _is_ajax($this->module);
+        
+        $email = post("email");
+        $reason = post("reason");
+        $notes = post("notes");
+        
+        // Validate email
+        if(empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)){
+            ms(array(
+                "status" => "error",
+                "message" => "Please enter a valid email address"
+            ));
+        }
+        
+        // Valid reasons
+        $valid_reasons = ['manual', 'bounced', 'invalid', 'complaint', 'unsubscribed'];
+        if(!in_array($reason, $valid_reasons)){
+            $reason = 'manual';
+        }
+        
+        if($this->model->add_to_suppression_list($email, $reason, $notes)){
+            ms(array(
+                "status" => "success",
+                "message" => "Email added to suppression list successfully"
+            ));
+        } else {
+            ms(array(
+                "status" => "error",
+                "message" => "Email is already in suppression list"
+            ));
+        }
+    }
+    
+    /**
+     * Remove email from suppression list
+     */
+    public function ajax_remove_from_suppression(){
+        _is_ajax($this->module);
+        
+        $ids = post("ids");
+        
+        if($this->model->remove_from_suppression_list($ids)){
+            ms(array(
+                "status" => "success",
+                "message" => "Email removed from suppression list successfully"
+            ));
+        }
+    }
+    
+    /**
+     * Bounce logs page
+     */
+    public function bounce_logs($page = 1){
+        $page = max(1, (int)$page);
+        $per_page = 50;
+        $offset = ($page - 1) * $per_page;
+        
+        $bounce_logs = $this->model->get_bounce_logs($per_page, $offset);
+        $total = $this->model->get_bounce_logs();
+        $stats = $this->model->get_bounce_stats();
+        
+        $data = array(
+            "module" => $this->module,
+            "bounce_logs" => $bounce_logs,
+            "total" => $total,
+            "page" => $page,
+            "per_page" => $per_page,
+            "stats" => $stats
+        );
+        $this->template->build("bounces/index", $data);
+    }
+    
+    /**
+     * Run bounce detection manually from admin panel
+     */
+    public function ajax_run_bounce_detection(){
+        _is_ajax($this->module);
+        
+        $smtp_id = post("smtp_id"); // Optional specific SMTP
+        
+        // Load bounce detector
+        $this->load->library('ImapBounceDetector');
+        
+        // Get SMTP configs with IMAP enabled
+        $this->model->db->where('status', 1);
+        $this->model->db->where('imap_enabled', 1);
+        
+        if($smtp_id){
+            $this->model->db->where('id', $smtp_id);
+        }
+        
+        $smtp_configs = $this->model->db->get('email_smtp_configs')->result();
+        
+        if(empty($smtp_configs)){
+            ms(array(
+                "status" => "error",
+                "message" => "No SMTP configurations with IMAP enabled found"
+            ));
+        }
+        
+        $total_bounces = 0;
+        $total_suppressed = 0;
+        $results = [];
+        
+        foreach($smtp_configs as $smtp){
+            // Connect to IMAP
+            if(!$this->imapbouncedetector->connect($smtp)){
+                $results[] = [
+                    'smtp_name' => $smtp->name,
+                    'success' => false,
+                    'error' => 'Failed to connect to IMAP server'
+                ];
+                continue;
+            }
+            
+            // Check for bounces
+            $max_emails = (int)$this->model->get_setting('imap_max_emails_per_check', 50);
+            $bounce_result = $this->imapbouncedetector->check_bounces($max_emails);
+            
+            // Disconnect
+            $this->imapbouncedetector->disconnect();
+            
+            if($bounce_result['success']){
+                $total_bounces += $bounce_result['bounces_found'];
+                $total_suppressed += $bounce_result['emails_suppressed'];
+                
+                $results[] = [
+                    'smtp_name' => $smtp->name,
+                    'success' => true,
+                    'processed' => $bounce_result['processed'],
+                    'bounces_found' => $bounce_result['bounces_found'],
+                    'emails_suppressed' => $bounce_result['emails_suppressed']
+                ];
+            } else {
+                $results[] = [
+                    'smtp_name' => $smtp->name,
+                    'success' => false,
+                    'error' => $bounce_result['error'] ?? 'Unknown error'
+                ];
+            }
+        }
+        
+        ms(array(
+            "status" => "success",
+            "message" => sprintf(
+                "Bounce detection completed. Found %d bounce(s), suppressed %d email(s)",
+                $total_bounces,
+                $total_suppressed
+            ),
+            "results" => $results
         ));
     }
 }

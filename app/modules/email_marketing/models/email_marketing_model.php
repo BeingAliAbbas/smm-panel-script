@@ -955,4 +955,197 @@ class Email_marketing_model extends MY_Model {
         
         return null;
     }
+    
+    // ========================================
+    // SUPPRESSION LIST METHODS
+    // ========================================
+    
+    /**
+     * Check if email is in suppression list
+     * 
+     * @param string $email Email address to check
+     * @return bool True if suppressed
+     */
+    public function is_email_suppressed($email) {
+        $this->db->where('email', strtolower(trim($email)));
+        $this->db->where('status', 'active');
+        $count = $this->db->count_all_results('email_suppression_list');
+        return $count > 0;
+    }
+    
+    /**
+     * Get suppression list with pagination
+     * 
+     * @param int $limit Limit
+     * @param int $offset Offset
+     * @param string $reason Filter by reason
+     * @return array|int Array of records or count
+     */
+    public function get_suppression_list($limit = -1, $offset = 0, $reason = null) {
+        if ($limit == -1) {
+            $this->db->select('count(*) as sum');
+        } else {
+            $this->db->select('s.*, sc.name as smtp_name');
+            $this->db->from('email_suppression_list s');
+            $this->db->join('email_smtp_configs sc', 's.smtp_config_id = sc.id', 'left');
+        }
+        
+        if ($limit == -1) {
+            $this->db->from('email_suppression_list');
+        }
+        
+        $this->db->where('status', 'active');
+        
+        if ($reason) {
+            $this->db->where('reason', $reason);
+        }
+        
+        if ($limit != -1) {
+            $this->db->limit($limit, $offset);
+            $this->db->order_by('created_at', 'DESC');
+        }
+        
+        $query = $this->db->get();
+        
+        if ($query->num_rows() > 0) {
+            if ($limit == -1) {
+                return $query->row()->sum;
+            } else {
+                return $query->result();
+            }
+        }
+        
+        return ($limit == -1) ? 0 : [];
+    }
+    
+    /**
+     * Add email to suppression list manually
+     * 
+     * @param string $email Email to suppress
+     * @param string $reason Reason
+     * @param string $notes Admin notes
+     * @return bool Success
+     */
+    public function add_to_suppression_list($email, $reason = 'manual', $notes = null) {
+        // Check if already exists
+        if ($this->is_email_suppressed($email)) {
+            return false;
+        }
+        
+        $data = [
+            'ids' => ids(),
+            'email' => strtolower(trim($email)),
+            'reason' => $reason,
+            'reason_detail' => 'Added manually by admin',
+            'bounce_count' => 0,
+            'first_bounce_date' => null,
+            'last_bounce_date' => null,
+            'smtp_config_id' => null,
+            'bounce_log_id' => null,
+            'added_by' => 'manual',
+            'notes' => $notes,
+            'status' => 'active',
+            'created_at' => NOW,
+            'updated_at' => NOW
+        ];
+        
+        $result = $this->db->insert('email_suppression_list', $data);
+        
+        if ($result) {
+            // Mark all pending recipients with this email as suppressed
+            $this->db->where('email', $email);
+            $this->db->where_in('status', ['pending', 'failed']);
+            $this->db->update('email_recipients', [
+                'is_suppressed' => 1,
+                'suppression_reason' => 'Manually suppressed by admin',
+                'status' => 'bounced',
+                'updated_at' => NOW
+            ]);
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Remove email from suppression list
+     * 
+     * @param string $ids Suppression list IDS
+     * @return bool Success
+     */
+    public function remove_from_suppression_list($ids) {
+        $this->db->where('ids', $ids);
+        return $this->db->update('email_suppression_list', [
+            'status' => 'removed',
+            'updated_at' => NOW
+        ]);
+    }
+    
+    /**
+     * Get bounce logs with pagination
+     * 
+     * @param int $limit Limit
+     * @param int $offset Offset
+     * @return array|int Array of logs or count
+     */
+    public function get_bounce_logs($limit = -1, $offset = 0) {
+        if ($limit == -1) {
+            $this->db->select('count(*) as sum');
+            $this->db->from('email_bounce_logs');
+        } else {
+            $this->db->select('b.*, s.name as smtp_name');
+            $this->db->from('email_bounce_logs b');
+            $this->db->join('email_smtp_configs s', 'b.smtp_config_id = s.id', 'left');
+            $this->db->limit($limit, $offset);
+            $this->db->order_by('b.detected_at', 'DESC');
+        }
+        
+        $query = $this->db->get();
+        
+        if ($query->num_rows() > 0) {
+            if ($limit == -1) {
+                return $query->row()->sum;
+            } else {
+                return $query->result();
+            }
+        }
+        
+        return ($limit == -1) ? 0 : [];
+    }
+    
+    /**
+     * Get bounce statistics
+     * 
+     * @return object Bounce stats
+     */
+    public function get_bounce_stats() {
+        // Get suppression list stats
+        $this->db->select("
+            COUNT(*) as total_suppressed,
+            SUM(CASE WHEN reason = 'bounced' THEN 1 ELSE 0 END) as bounced,
+            SUM(CASE WHEN reason = 'invalid' THEN 1 ELSE 0 END) as invalid,
+            SUM(CASE WHEN reason = 'complaint' THEN 1 ELSE 0 END) as complaints,
+            SUM(CASE WHEN reason = 'manual' THEN 1 ELSE 0 END) as manual
+        ");
+        $this->db->where('status', 'active');
+        $suppression_stats = $this->db->get('email_suppression_list')->row();
+        
+        // Get bounce logs stats
+        $this->db->select("
+            COUNT(*) as total_bounces,
+            SUM(CASE WHEN bounce_type = 'hard' THEN 1 ELSE 0 END) as hard_bounces,
+            SUM(CASE WHEN bounce_type = 'soft' THEN 1 ELSE 0 END) as soft_bounces
+        ");
+        $bounce_stats = $this->db->get('email_bounce_logs')->row();
+        
+        return (object) [
+            'total_suppressed' => $suppression_stats->total_suppressed ?: 0,
+            'bounced' => $suppression_stats->bounced ?: 0,
+            'invalid' => $suppression_stats->invalid ?: 0,
+            'complaints' => $suppression_stats->complaints ?: 0,
+            'manual' => $suppression_stats->manual ?: 0,
+            'total_bounces' => $bounce_stats->total_bounces ?: 0,
+            'hard_bounces' => $bounce_stats->hard_bounces ?: 0,
+            'soft_bounces' => $bounce_stats->soft_bounces ?: 0
+        ];
+    }
 }
