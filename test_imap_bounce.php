@@ -175,4 +175,4 @@ echo "3. Set up cron job to run bounce detection automatically\n";
 echo "4. Or run manually from Email Marketing → Bounce Logs\n\n";
 
 echo "Cron Job Example:\n";
-echo "*/30 * * * * curl -X GET \"https://yourdomain.com/bounce_cron/run?token=YOUR_TOKEN\"\n\n";
+echo "*/30 * * * * curl -X GET \"https://yourdomain.com/cron/bounce_detection?token=YOUR_TOKEN\"\n\n";

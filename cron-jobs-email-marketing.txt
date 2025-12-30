@@ -23,10 +23,10 @@
 # Checks SMTP inboxes for bounced emails via IMAP
 # Runs every 30 minutes (adjust as needed)
 # ------------------------------------------------------
-*/30 * * * * curl -X GET "https://yourdomain.com/bounce_cron/run?token=YOUR_BOUNCE_CRON_TOKEN" >/dev/null 2>&1
+*/30 * * * * curl -X GET "https://yourdomain.com/cron/bounce_detection?token=YOUR_BOUNCE_CRON_TOKEN" >/dev/null 2>&1
 
 # Alternative with wget:
-# */30 * * * * wget -q -O- "https://yourdomain.com/bounce_cron/run?token=YOUR_BOUNCE_CRON_TOKEN" >/dev/null 2>&1
+# */30 * * * * wget -q -O- "https://yourdomain.com/cron/bounce_detection?token=YOUR_BOUNCE_CRON_TOKEN" >/dev/null 2>&1
 
 # Alternative intervals:
 # Every hour:    0 * * * *

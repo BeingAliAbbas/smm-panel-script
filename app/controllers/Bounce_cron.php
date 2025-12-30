@@ -25,7 +25,7 @@ class Bounce_cron extends CI_Controller {
     
     /**
      * Main cron entry point
-     * URL: /bounce_cron/run?token=YOUR_TOKEN&smtp_id=SMTP_ID (optional)
+     * URL: /cron/bounce_detection?token=YOUR_TOKEN&smtp_id=SMTP_ID (optional)
      */
     public function run(){
         $log_id = $this->cron_logger->start('cron/bounce_detection');

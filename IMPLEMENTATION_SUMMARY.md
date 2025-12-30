@@ -57,7 +57,7 @@ This implementation adds comprehensive IMAP-based bounce detection to the email_
 
 **Endpoint:**
 ```
-GET /bounce_cron/run?token=YOUR_TOKEN&smtp_id=OPTIONAL_SMTP_ID
+GET /cron/bounce_detection?token=YOUR_TOKEN&smtp_id=OPTIONAL_SMTP_ID
 ```
 
 ### 4. Model Extensions (`app/modules/email_marketing/models/email_marketing_model.php`)
@@ -146,7 +146,7 @@ This prevents wasting resources on known-bad emails.
 ### Bounce Detection Flow
 
 ```
-1. Cron triggers bounce_cron/run
+1. Cron triggers /cron/bounce_detection
    ↓
 2. Connect to IMAP server(s) with enabled bounce detection
    ↓
@@ -264,7 +264,7 @@ php test_imap_bounce.php
 ### 5. Setup Cron Jobs
 ```bash
 # Add to crontab (crontab -e)
-*/30 * * * * curl -X GET "https://yourdomain.com/bounce_cron/run?token=YOUR_TOKEN"
+*/30 * * * * curl -X GET "https://yourdomain.com/cron/bounce_detection?token=YOUR_TOKEN"
 ```
 
 ### 6. Test & Monitor
@@ -277,7 +277,7 @@ php test_imap_bounce.php
 ### Manual Bounce Detection
 ```bash
 # Via curl
-curl -X GET "https://yourdomain.com/bounce_cron/run?token=YOUR_TOKEN"
+curl -X GET "https://yourdomain.com/cron/bounce_detection?token=YOUR_TOKEN"
 
 # Via browser (admin only)
 https://yourdomain.com/email_marketing/bounce_logs

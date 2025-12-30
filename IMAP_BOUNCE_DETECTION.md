@@ -53,7 +53,7 @@ php -m | grep imap
 Add this cron job to run bounce detection every 30 minutes:
 
 ```bash
-*/30 * * * * curl -X GET "https://yourdomain.com/bounce_cron/run?token=YOUR_TOKEN" >/dev/null 2>&1
+*/30 * * * * curl -X GET "https://yourdomain.com/cron/bounce_detection?token=YOUR_TOKEN" >/dev/null 2>&1
 ```
 
 Replace:
@@ -253,7 +253,7 @@ Check IMAP health in SMTP configuration:
 
 ### Cron Endpoint
 ```
-GET /bounce_cron/run?token=YOUR_TOKEN&smtp_id=SMTP_ID
+GET /cron/bounce_detection?token=YOUR_TOKEN&smtp_id=SMTP_ID
 ```
 
 Parameters:
