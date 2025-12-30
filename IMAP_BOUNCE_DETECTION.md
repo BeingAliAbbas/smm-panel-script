@@ -76,7 +76,7 @@ Add the following cron job to run bounce detection automatically:
 
 ```bash
 # Run every 30 minutes
-*/30 * * * * wget --spider -q -O - "https://yourdomain.com/email_bounce_cron/run?token=YOUR_TOKEN" >/dev/null 2>&1
+*/30 * * * * wget --spider -q -O - "https://yourdomain.com/cron/email_bounce?token=YOUR_TOKEN" >/dev/null 2>&1
 ```
 
 Replace:
@@ -259,7 +259,7 @@ Will retry for 23 more hours.
 ### Cron Endpoint
 
 ```
-GET /email_bounce_cron/run?token=YOUR_TOKEN
+GET /cron/email_bounce?token=YOUR_TOKEN
 ```
 
 **Response**:
