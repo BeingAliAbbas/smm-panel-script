@@ -438,6 +438,12 @@ class Email_marketing_model extends MY_Model {
     }
     
     public function add_recipient($campaign_id, $email, $name = null, $user_id = null, $custom_data = null, $priority = 100) {
+        // Check if email is in suppression list
+        if($this->is_email_suppressed($email)){
+            log_message('info', "Email Marketing: Skipped adding suppressed email {$email} to campaign {$campaign_id}");
+            return false;
+        }
+        
         // Check if recipient already exists to prevent duplicates
         $this->db->where('campaign_id', $campaign_id);
         $this->db->where('email', $email);
@@ -458,6 +464,7 @@ class Email_marketing_model extends MY_Model {
             'priority' => $priority,
             'tracking_token' => md5($campaign_id . $email . time() . rand(1000, 9999)),
             'status' => 'pending',
+            'is_suppressed' => 0,
             'created_at' => NOW,
             'updated_at' => NOW
         ];
@@ -624,6 +631,7 @@ class Email_marketing_model extends MY_Model {
     public function get_next_pending_recipient($campaign_id) {
         $this->db->where('campaign_id', $campaign_id);
         $this->db->where('status', 'pending');
+        $this->db->where('is_suppressed', 0); // Skip suppressed emails
         // Order by priority first (lower = higher priority), then by id
         // Manual emails have priority=1, imported have priority=100
         $this->db->order_by('priority', 'ASC');
@@ -954,5 +962,50 @@ class Email_marketing_model extends MY_Model {
         }
         
         return null;
+    }
+    
+    // ========================================
+    // BOUNCE/SUPPRESSION METHODS
+    // ========================================
+    
+    /**
+     * Check if email is in suppression list
+     * @param string $email Email address to check
+     * @return bool True if suppressed, false otherwise
+     */
+    public function is_email_suppressed($email) {
+        $this->db->where('email', $email);
+        $this->db->where_in('status', ['active', 'temporary']);
+        $bounce = $this->db->get('email_bounces')->row();
+        
+        if (!$bounce) {
+            return false;
+        }
+        
+        // Check if temporary bounce has expired
+        if ($bounce->status === 'temporary' && $bounce->expires_at) {
+            if (strtotime($bounce->expires_at) < time()) {
+                // Expired, remove from suppression
+                $this->db->where('id', $bounce->id);
+                $this->db->update('email_bounces', [
+                    'status' => 'removed',
+                    'updated_at' => NOW
+                ]);
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Get bounce record for email
+     * @param string $email Email address
+     * @return object|null Bounce record or null
+     */
+    public function get_bounce_by_email($email) {
+        $this->db->where('email', $email);
+        $query = $this->db->get('email_bounces');
+        return $query->num_rows() > 0 ? $query->row() : null;
     }
 }
