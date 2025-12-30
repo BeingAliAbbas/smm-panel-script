@@ -122,6 +122,7 @@ $route['cron/completion_time']          = 'order_completion_cron/calculate_avg_c
 $route['cron/email_marketing'] = 'email_cron/run';
 
 // Bounce Detection cron (IMAP bounce monitoring)
+$route['cron/bounce_detection/debug'] = 'bounce_cron/debug';
 $route['cron/bounce_detection/test'] = 'bounce_cron/test';
 $route['cron/bounce_detection'] = 'bounce_cron/run';
 

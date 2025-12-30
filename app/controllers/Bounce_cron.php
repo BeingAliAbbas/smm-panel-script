@@ -14,13 +14,28 @@ class Bounce_cron extends CI_Controller {
     
     public function __construct(){
         parent::__construct();
-        $this->load->model('email_marketing/email_marketing_model', 'email_model');
-        $this->load->library('ImapBounceDetector');
-        $this->load->library('cron_logger');
         
-        // Security token for cron access
-        $this->requiredToken = get_option('bounce_cron_token', md5('bounce_detection_cron_' . ENCRYPTION_KEY));
-        $this->lockFile = APPPATH.'cache/bounce_cron_last_run.lock';
+        try {
+            $this->load->model('email_marketing/email_marketing_model', 'email_model');
+            $this->load->library('ImapBounceDetector');
+            $this->load->library('cron_logger');
+            
+            // Security token for cron access
+            $this->requiredToken = get_option('bounce_cron_token', md5('bounce_detection_cron_' . ENCRYPTION_KEY));
+            $this->lockFile = APPPATH.'cache/bounce_cron_last_run.lock';
+        } catch (Exception $e) {
+            // If there's an error in constructor, output it
+            $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(500)
+                ->set_output(json_encode([
+                    'status' => 'error',
+                    'message' => 'Controller initialization failed',
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ], JSON_PRETTY_PRINT));
+            die();
+        }
     }
     
     /**
@@ -28,78 +43,103 @@ class Bounce_cron extends CI_Controller {
      * URL: /cron/bounce_detection?token=YOUR_TOKEN&smtp_id=SMTP_ID (optional)
      */
     public function run(){
-        // Start logging
-        $log_id = $this->cron_logger->start('cron/bounce_detection');
-        
-        // Verify token
-        $token = $this->input->get('token', true);
-        
-        // Debug: Check if we have a token
-        if(!$token){
-            $error_response = [
-                'status' => 'error',
-                'message' => 'No token provided. Please add ?token=YOUR_ACTUAL_TOKEN to the URL',
-                'example' => base_url('cron/bounce_detection?token=YOUR_ACTUAL_TOKEN'),
-                'help' => 'The token is generated from your ENCRYPTION_KEY. Check your settings or use the token from admin panel.',
-                'time' => date('c')
-            ];
-            $this->cron_logger->end($log_id, 'Failed', 401, 'No token provided');
-            $this->respond($error_response);
-            return;
-        }
-        
-        // Check if token matches
-        if(!hash_equals($this->requiredToken, $token)){
-            $error_response = [
-                'status' => 'error',
-                'message' => 'Invalid token provided. The token does not match.',
-                'provided_token_length' => strlen($token),
-                'expected_token_length' => strlen($this->requiredToken),
-                'help' => 'Make sure you are using the correct token from your system settings. Do not use "YOUR_TOKEN" literally.',
-                'time' => date('c')
-            ];
-            $this->cron_logger->end($log_id, 'Failed', 403, 'Invalid token');
-            $this->respond($error_response);
-            return;
-        }
-        
-        // Get optional smtp_id for specific SMTP checking
-        $smtp_id = $this->input->get('smtp_id', true);
-        
-        // Rate limiting - prevent running too frequently
-        $minInterval = 300; // 5 minutes minimum between runs (bounces don't need to be instant)
-        if(file_exists($this->lockFile)){
-            $lastRun = (int)@file_get_contents($this->lockFile);
-            $now = time();
-            if($lastRun && ($now - $lastRun) < $minInterval){
-                $result = [
-                    'status' => 'rate_limited',
-                    'message' => 'Bounce detection is rate limited. Please wait.',
-                    'retry_after_sec' => $minInterval - ($now - $lastRun),
+        try {
+            // Start logging
+            $log_id = $this->cron_logger->start('cron/bounce_detection');
+            
+            // Verify token
+            $token = $this->input->get('token', true);
+            
+            // Debug: Check if we have a token
+            if(!$token){
+                $error_response = [
+                    'status' => 'error',
+                    'message' => 'No token provided. Please add ?token=YOUR_ACTUAL_TOKEN to the URL',
+                    'example' => base_url('cron/bounce_detection?token=YOUR_ACTUAL_TOKEN'),
+                    'help' => 'The token is generated from your ENCRYPTION_KEY. Check your settings or use the token from admin panel.',
                     'time' => date('c')
                 ];
-                $this->cron_logger->end($log_id, 'Rate Limited', 429, $result['message']);
-                $this->respond($result);
+                $this->cron_logger->end($log_id, 'Failed', 401, 'No token provided');
+                $this->respond($error_response);
                 return;
             }
+            
+            // Check if token matches
+            if(!hash_equals($this->requiredToken, $token)){
+                $error_response = [
+                    'status' => 'error',
+                    'message' => 'Invalid token provided. The token does not match.',
+                    'provided_token_length' => strlen($token),
+                    'expected_token_length' => strlen($this->requiredToken),
+                    'help' => 'Make sure you are using the correct token from your system settings. Do not use "YOUR_TOKEN" literally.',
+                    'time' => date('c')
+                ];
+                $this->cron_logger->end($log_id, 'Failed', 403, 'Invalid token');
+                $this->respond($error_response);
+                return;
+            }
+            
+            // Get optional smtp_id for specific SMTP checking
+            $smtp_id = $this->input->get('smtp_id', true);
+        
+            // Rate limiting - prevent running too frequently
+            $minInterval = 300; // 5 minutes minimum between runs (bounces don't need to be instant)
+            if(file_exists($this->lockFile)){
+                $lastRun = (int)@file_get_contents($this->lockFile);
+                $now = time();
+                if($lastRun && ($now - $lastRun) < $minInterval){
+                    $result = [
+                        'status' => 'rate_limited',
+                        'message' => 'Bounce detection is rate limited. Please wait.',
+                        'retry_after_sec' => $minInterval - ($now - $lastRun),
+                        'time' => date('c')
+                    ];
+                    $this->cron_logger->end($log_id, 'Rate Limited', 429, $result['message']);
+                    $this->respond($result);
+                    return;
+                }
+            }
+            
+            // Update lock file
+            @file_put_contents($this->lockFile, time());
+            
+            // Process bounce detection
+            $result = $this->process_bounce_detection($smtp_id);
+            
+            // Log the result
+            $status = ($result['status'] == 'success') ? 'Success' : 'Failed';
+            $response_code = ($status == 'Success') ? 200 : 500;
+            $message = $result['message'] . ' (Bounces: ' . ($result['total_bounces'] ?? 0) . ')';
+            $this->cron_logger->end($log_id, $status, $response_code, $message);
+            
+            // Update last global check time
+            $this->email_model->update_setting('imap_last_global_check', date('Y-m-d H:i:s'));
+            
+            $this->respond($result);
+            
+        } catch (Exception $e) {
+            // Catch any errors and return them as JSON
+            $error_response = [
+                'status' => 'error',
+                'message' => 'An error occurred during bounce detection',
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'time' => date('c')
+            ];
+            
+            // Try to log if logger is available
+            if(isset($log_id) && isset($this->cron_logger)){
+                try {
+                    $this->cron_logger->end($log_id, 'Error', 500, $e->getMessage());
+                } catch (Exception $le) {
+                    // Ignore logger errors
+                }
+            }
+            
+            $this->respond($error_response);
         }
-        
-        // Update lock file
-        @file_put_contents($this->lockFile, time());
-        
-        // Process bounce detection
-        $result = $this->process_bounce_detection($smtp_id);
-        
-        // Log the result
-        $status = ($result['status'] == 'success') ? 'Success' : 'Failed';
-        $response_code = ($status == 'Success') ? 200 : 500;
-        $message = $result['message'] . ' (Bounces: ' . ($result['total_bounces'] ?? 0) . ')';
-        $this->cron_logger->end($log_id, $status, $response_code, $message);
-        
-        // Update last global check time
-        $this->email_model->update_setting('imap_last_global_check', date('Y-m-d H:i:s'));
-        
-        $this->respond($result);
     }
     
     /**
@@ -205,6 +245,46 @@ class Bounce_cron extends CI_Controller {
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($data, JSON_PRETTY_PRINT));
+    }
+    
+    /**
+     * Default index method - redirects to test
+     */
+    public function index(){
+        $this->test();
+    }
+    
+    /**
+     * Debug endpoint to check configuration
+     * URL: /cron/bounce_detection/debug
+     */
+    public function debug(){
+        $response = [
+            'status' => 'debug',
+            'message' => 'Bounce detection debug information',
+            'controller_loaded' => true,
+            'encryption_key_defined' => defined('ENCRYPTION_KEY'),
+            'encryption_key_length' => defined('ENCRYPTION_KEY') ? strlen(ENCRYPTION_KEY) : 0,
+            'token_generated' => !empty($this->requiredToken),
+            'token_length' => strlen($this->requiredToken),
+            'token_sample' => substr($this->requiredToken, 0, 8) . '...' . substr($this->requiredToken, -8),
+            'libraries' => [
+                'email_model_loaded' => isset($this->email_model),
+                'imapbouncedetector_loaded' => isset($this->imapbouncedetector),
+                'cron_logger_loaded' => isset($this->cron_logger)
+            ],
+            'request_info' => [
+                'method' => $_SERVER['REQUEST_METHOD'] ?? 'unknown',
+                'uri' => $_SERVER['REQUEST_URI'] ?? 'unknown',
+                'has_token_param' => !empty($_GET['token']),
+                'token_param_length' => !empty($_GET['token']) ? strlen($_GET['token']) : 0
+            ],
+            'time' => date('c')
+        ];
+        
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($response, JSON_PRETTY_PRINT));
     }
     
     /**
