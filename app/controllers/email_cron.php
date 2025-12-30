@@ -193,6 +193,26 @@ class Email_cron extends CI_Controller {
         
         try {
             // ========================================
+            // STEP 0: CHECK SUPPRESSION LIST
+            // ========================================
+            
+            // Check if email is in suppression list (bounced/blocked emails)
+            if($this->email_model->is_email_suppressed($recipient->email)){
+                $this->log_failed($campaign, $recipient, 'Email is in suppression list (bounced/blocked)', null);
+                
+                // Mark recipient as suppressed if not already marked
+                $this->email_model->db->where('id', $recipient->id);
+                $this->email_model->db->update('email_recipients', [
+                    'is_suppressed' => 1,
+                    'suppression_reason' => 'Found in suppression list',
+                    'status' => 'bounced',
+                    'updated_at' => NOW
+                ]);
+                
+                return false;
+            }
+            
+            // ========================================
             // STEP 1: EMAIL VALIDATION
             // ========================================
             

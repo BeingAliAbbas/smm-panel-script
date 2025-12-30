@@ -121,6 +121,10 @@ $route['cron/completion_time']          = 'order_completion_cron/calculate_avg_c
 // Email Marketing cron
 $route['cron/email_marketing'] = 'email_cron/run';
 
+// Bounce Detection cron (IMAP bounce monitoring)
+$route['cron/bounce_detection/test'] = 'bounce_cron/test';
+$route['cron/bounce_detection'] = 'bounce_cron/run';
+
 // WhatsApp notification queue cron
 $route['cron/whatsapp_notifications'] = 'whatsapp_notification_cron/process';
 $route['cron/whatsapp_notifications_cleanup'] = 'whatsapp_notification_cron/cleanup';
