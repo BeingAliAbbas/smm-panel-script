@@ -54,7 +54,12 @@ class order extends MX_Controller {
 	// ADD - Refactored to pass data through controller
 	public function add(){
 		$this->load->model("services/services_model", 'services_model');
+		$this->load->model("services/platform_model", 'platform_model');
+		
 		$categories = $this->services_model->get_active_categories();
+		
+		// Get active platforms for filter bar (database-driven)
+		$platforms = $this->platform_model->get_active_platforms();
 		
 		// Get dashboard data from model
 		$dashboard_data = $this->model->get_dashboard_data(session('uid'));
@@ -73,6 +78,7 @@ class order extends MX_Controller {
 			"module"                  => get_class($this),
 			'categories'              => $categories,
 			'services'                => "",
+			'platforms'               => $platforms,
 			'dashboard_data'          => $dashboard_data,
 			'user_role'               => $user_role,
 			'whatsapp_number_exists'  => $whatsapp_data['exists'],
@@ -1843,4 +1849,48 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 		curl_close($ch);
 		return $result;
 	}
+	
+	/**
+	 * API endpoint: Get platform keywords for JavaScript
+	 * Returns all platform keywords for client-side category detection
+	 */
+	public function get_platform_keywords(){
+		$this->load->model("services/platform_model", 'platform_model');
+		
+		header('Content-Type: application/json');
+		$keywords = $this->platform_model->get_platform_keywords();
+		
+		echo json_encode([
+			'status' => 'success',
+			'data' => $keywords
+		]);
+	}
+	
+	/**
+	 * API endpoint: Get icon by text
+	 * Returns icon data for a given text (category/service name)
+	 */
+	public function get_icon_by_text(){
+		$this->load->model("services/platform_model", 'platform_model');
+		
+		$text = $this->input->post('text') ?: $this->input->get('text');
+		
+		if (empty($text)) {
+			header('Content-Type: application/json');
+			echo json_encode([
+				'status' => 'error',
+				'message' => 'Text parameter required'
+			]);
+			return;
+		}
+		
+		$icon = $this->platform_model->get_icon_by_text($text);
+		
+		header('Content-Type: application/json');
+		echo json_encode([
+			'status' => 'success',
+			'data' => $icon
+		]);
+	}
+}
 }

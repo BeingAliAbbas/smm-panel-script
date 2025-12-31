@@ -450,41 +450,36 @@ if (!empty($announcement_text)):
                       <div class="form-group">
                         
 
-                        <!-- Platform Filter Bar -->
+                        <!-- Platform Filter Bar - Database Driven -->
                         <div id="category-icon-filters" class="cat-icon-filter-bar">
-                          <button type="button" class="catf-btn active" data-platform="all">
-                            <i class="fas fa-bars"></i><span>All</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="tiktok">
-                            <i class="fa-brands fa-tiktok"></i><span>TikTok</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="youtube">
-                            <i class="fa-brands fa-youtube"></i><span>Youtube</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="instagram">
-                            <i class="fa-brands fa-instagram"></i><span>Instagram</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="telegram">
-                            <i class="fa-brands fa-telegram"></i><span>Telegram</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="facebook">
-                            <i class="fa-brands fa-facebook"></i><span>Facebook</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="twitter">
-                            <i class="fa-brands fa-x-twitter"></i><span>Twitter</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="whatsapp">
-                            <i class="fa-brands fa-whatsapp"></i><span>Whatsapp</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="snapchat">
-                            <i class="fa-brands fa-snapchat"></i><span>Snapchat</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="linkedin">
-                            <i class="fa-brands fa-linkedin"></i><span>Linkedin</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="other">
-                            <i class="fas fa-plus"></i><span>Other</span>
-                          </button>
+                          <?php 
+                          // Load platforms from database instead of hardcoding
+                          if (!empty($platforms)) {
+                            $first = true;
+                            foreach ($platforms as $platform): 
+                              $active_class = $first ? 'active' : '';
+                              $first = false;
+                              
+                              // Render icon (Font Awesome or GIF/Image)
+                              $icon_html = '';
+                              if (!empty($platform->icon_url)) {
+                                // Use GIF/image icon
+                                $icon_html = '<img src="' . htmlspecialchars($platform->icon_url) . '" alt="' . htmlspecialchars($platform->name) . '" style="width:18px;height:18px;vertical-align:middle;margin-right:4px;border-radius:3px;">';
+                              } else if (!empty($platform->icon_class)) {
+                                // Use Font Awesome icon
+                                $icon_html = '<i class="' . htmlspecialchars($platform->icon_class) . '"></i>';
+                              }
+                          ?>
+                            <button type="button" class="catf-btn <?=$active_class?>" data-platform="<?=htmlspecialchars($platform->slug)?>">
+                              <?=$icon_html?><span><?=htmlspecialchars($platform->name)?></span>
+                            </button>
+                          <?php 
+                            endforeach;
+                          } else {
+                            // Fallback if no platforms in DB
+                            echo '<button type="button" class="catf-btn active" data-platform="all"><i class="fas fa-bars"></i><span>All</span></button>';
+                          }
+                          ?>
                         </div>
 
                         <!-- Global Search Field -->
@@ -1337,68 +1332,103 @@ $vertical_image_modal_url = get_option('vertical_image_modal_url', 'https://i.ib
 <script>
 (function($){
   /* Platform Icon Helper */
-  function pickPlatformIcon(text){
+  /* =========================================================
+     DATABASE-DRIVEN PLATFORM ICONS & KEYWORDS
+     Loads icon mappings and keywords from backend
+  ========================================================== */
+  var platformKeywordsCache = null; // Cache for keywords from DB
+  var platformIconsCache = {}; // Cache for icons by platform slug
+
+  // Load platform keywords from server on page load
+  function loadPlatformKeywords(callback) {
+    if (platformKeywordsCache !== null) {
+      if (callback) callback(platformKeywordsCache);
+      return;
+    }
+
+    $.ajax({
+      url: '<?=cn($module."/get_platform_keywords")?>',
+      type: 'GET',
+      dataType: 'json',
+      success: function(response) {
+        if (response.status === 'success' && response.data) {
+          platformKeywordsCache = response.data;
+          if (callback) callback(platformKeywordsCache);
+        }
+      },
+      error: function() {
+        // Fallback to empty array if load fails
+        platformKeywordsCache = [];
+        if (callback) callback(platformKeywordsCache);
+      }
+    });
+  }
+
+  // Detect platform from text using database keywords
+  function detectPlatformFromDB(text) {
+    if (!text || !platformKeywordsCache) return 'other';
+    
+    var textLower = text.toLowerCase();
+    
+    // Sort by priority and check each keyword
+    for (var i = 0; i < platformKeywordsCache.length; i++) {
+      var kw = platformKeywordsCache[i];
+      if (textLower.indexOf(kw.keyword.toLowerCase()) !== -1) {
+        return kw.platform_slug;
+      }
+    }
+    
+    return 'other';
+  }
+
+  // Get icon data from platform keywords cache
+  function getIconFromCache(platformSlug) {
+    // Check if we have cached icon data
+    if (platformIconsCache[platformSlug]) {
+      return platformIconsCache[platformSlug];
+    }
+
+    // Find platform in the filter buttons to get icon
+    var $btn = $('#category-icon-filters button[data-platform="' + platformSlug + '"]');
+    if ($btn.length > 0) {
+      var $img = $btn.find('img');
+      var $icon = $btn.find('i');
+      
+      if ($img.length > 0) {
+        // GIF/Image icon
+        platformIconsCache[platformSlug] = {
+          type: 'img',
+          value: $img.attr('src')
+        };
+      } else if ($icon.length > 0) {
+        // Font Awesome icon
+        platformIconsCache[platformSlug] = {
+          type: 'class',
+          value: $icon.attr('class')
+        };
+      } else {
+        platformIconsCache[platformSlug] = { type: 'none', value: '' };
+      }
+      
+      return platformIconsCache[platformSlug];
+    }
+    
+    return { type: 'none', value: '' };
+  }
+
+  // Pick platform icon using database-driven detection
+  function pickPlatformIcon(text) {
     if (!text) return '';
-    var t = text.toLowerCase();
-
-    if (t.includes('facebook'))  return 'img:https://storage.perfectcdn.com/etopvh/xk5ab1173935x41z.gif';
-    if (t.includes('instagram')) return 'img:https://storage.perfectcdn.com/etopvh/r2726iff1gsgb78r.gif';
-    if (t.includes('whatsapp'))  return 'img:https://i.ibb.co/846d9Whj/372108180-WHATSAPP-ICON-400.gif';
-    if (t.includes('tiktok'))    return 'img:https://storage.perfectcdn.com/etopvh/p7pol1se08k6yc2x.gif';
-    if (t.includes('youtube'))   return 'img:https://storage.perfectcdn.com/etopvh/duea6r011zfl9fo8.gif';
-    if (t.includes('twitter') || t.match(/\bx\b/)) return 'img:https://storage.perfectcdn.com/etopvh/8d1btd44mgx8geie.gif';
-    if (t.includes('snack'))     return 'img:https://i.ibb.co/rRzSFYtC/unnamed.png';
-    if (t.includes('likee'))     return 'img:https://i.ibb.co/rRzSFYtC/unnamed.png';
-    if (t.includes('linkedin'))  return 'img:https://i.ibb.co/KcX4v9Fb/372102050-LINKEDIN-ICON-TRANSPARENT-1080.gif';
-    if (t.includes('snapchat'))  return 'img:https://i.ibb.co/23F0G4BY/images-7.jpg';
-
-    if (t.includes('youtube'))   return 'fa-brands fa-youtube';
-    if (t.includes('tiktok'))    return 'fa-brands fa-tiktok';
-    if (t.includes('twitch'))    return 'fa-brands fa-twitch';
-    if (t.includes('vimeo'))     return 'fa-brands fa-vimeo';
-    if (t.includes('instagram')) return 'fa-brands fa-instagram';
-    if (t.includes('twitter') || t.match(/\bx\b/)) return 'fa-brands fa-x-twitter';
-    if (t.includes('linkedin'))  return 'fa-brands fa-linkedin';
-    if (t.includes('snapchat'))  return 'fa-brands fa-snapchat';
-    if (t.includes('pinterest')) return 'fa-brands fa-pinterest';
-    if (t.includes('reddit'))    return 'fa-brands fa-reddit';
-    if (t.includes('tumblr'))    return 'fa-brands fa-tumblr';
-    if (t.includes('discord'))   return 'fa-brands fa-discord';
-    if (t.includes('telegram'))  return 'fa-brands fa-telegram';
-    if (t.includes('whatsapp')) return 'fa-brands fa-whatsapp';
-    if (t.includes('messenger')) return 'fa-brands fa-facebook-messenger';
-    if (t.includes('skype'))     return 'fa-brands fa-skype';
-    if (t.includes('viber'))     return 'fa-brands fa-viber';
-    if (t.includes('line'))      return 'fa-solid fa-comment';
-    if (t.includes('slack'))     return 'fa-brands fa-slack';
-    if (t.includes('teams'))     return 'fa-brands fa-microsoft';
-    if (t.includes('zoom'))      return 'fa-solid fa-video';
-    if (t.includes('wechat'))    return 'fa-brands fa-weixin';
-    if (t.includes('weibo'))     return 'fa-brands fa-weibo';
-    if (t.includes('qq'))        return 'fa-brands fa-qq';
-    if (t.includes('spotify'))   return 'fa-brands fa-spotify';
-    if (t.includes('soundcloud')) return 'fa-brands fa-soundcloud';
-    if (t.includes('github'))    return 'fa-brands fa-github';
-    if (t.includes('behance'))   return 'fa-brands fa-behance';
-    if (t.includes('dribbble'))  return 'fa-brands fa-dribbble';
-    if (t.includes('medium'))    return 'fa-brands fa-medium';
-    if (t.includes('quora'))     return 'fa-brands fa-quora';
-    if (t.includes('flickr'))    return 'fa-brands fa-flickr';
-    if (t.includes('foursquare')) return 'fa-brands fa-foursquare';
-    if (t.includes('tinder') || t.includes('bumble')) return 'fa-solid fa-heart';
-    if (t.includes('vk') || t.includes('vkontakte')) return 'fa-brands fa-vk';
-    if (t.includes('odnoklassniki')) return 'fa-brands fa-odnoklassniki';
-    if (t.includes('xing'))      return 'fa-brands fa-xing';
-    if (t.includes('live') || t.includes('stream')) return 'fa-solid fa-broadcast-tower';
-    if (t.includes('video'))     return 'fa-solid fa-video';
-    if (t.includes('photo') || t.includes('image')) return 'fa-solid fa-image';
-    if (t.includes('music') || t.includes('audio')) return 'fa-solid fa-music';
-    if (t.includes('podcast'))   return 'fa-solid fa-podcast';
-    if (t.includes('blog'))      return 'fa-solid fa-blog';
-    if (t.includes('news'))      return 'fa-solid fa-newspaper';
-    if (t.includes('shopping') || t.includes('store')) return 'fa-solid fa-shopping-cart';
-    if (t.includes('game') || t.includes('gaming')) return 'fa-solid fa-gamepad';
-
+    
+    var platformSlug = detectPlatformFromDB(text);
+    var iconData = getIconFromCache(platformSlug);
+    
+    if (iconData.type === 'img') {
+      return 'img:' + iconData.value;
+    } else if (iconData.type === 'class') {
+      return iconData.value;
+    }
+    
     return '';
   }
 
@@ -1608,24 +1638,14 @@ $vertical_image_modal_url = get_option('vertical_image_modal_url', 'https://i.ib
   }
 
   /* =========================================================
-     CATEGORY ICON FILTER BAR
+     CATEGORY ICON FILTER BAR - Database-Driven
   ========================================================== */
   var originalCategoryOptions = [];
   var categoryIndexed = false;
 
+  // Use database-driven platform detection
   function detectPlatform(txt){
-    if(!txt) return 'other';
-    var t = txt.toLowerCase();
-    if (t.includes('tiktok')) return 'tiktok';
-    if (t.includes('youtube') || t.includes('yt ')) return 'youtube';
-    if (t.includes('insta')) return 'instagram';
-    if (t.includes('telegram') || t.includes('tg ')) return 'telegram';
-    if (t.includes('facebook') || t.includes('fb ')) return 'facebook';
-    if (t.includes('twitter') || t.includes(' x ') || /\bx\b/.test(t)) return 'twitter';
-    if (t.includes('whatsapp') || t.includes('wa ')) return 'whatsapp';
-    if (t.includes('snap')) return 'snapchat';
-    if (t.includes('linked')) return 'linkedin';
-    return 'other';
+    return detectPlatformFromDB(txt);
   }
 
   function indexCategories(){
@@ -1889,6 +1909,11 @@ $vertical_image_modal_url = get_option('vertical_image_modal_url', 'https://i.ib
      BOOT
   ========================================================== */
   $(function(){
+    // Load platform keywords from database first (critical for icon and filter logic)
+    loadPlatformKeywords(function() {
+      console.log('Platform keywords loaded from database');
+    });
+    
     initCategorySelect();
     initServiceSelect();
     initGlobalSearch(); // Initialize global search
