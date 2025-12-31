@@ -235,50 +235,49 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="platformModalTitle">Add Platform</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="platformForm">
                     <input type="hidden" id="platform_id" name="id">
                     
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label for="platform_name">Platform Name *</label>
                         <input type="text" class="form-control" id="platform_name" name="name" required>
                     </div>
                     
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label for="platform_slug">Slug * (lowercase, no spaces)</label>
                         <input type="text" class="form-control" id="platform_slug" name="slug" required>
                     </div>
                     
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label for="platform_icon_class">Font Awesome Icon Class</label>
                         <input type="text" class="form-control" id="platform_icon_class" name="icon_class" placeholder="e.g., fa-brands fa-facebook">
                         <small class="form-text text-muted">Leave empty if using URL</small>
                     </div>
                     
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label for="platform_icon_url">Icon URL (GIF/Image)</label>
                         <input type="text" class="form-control" id="platform_icon_url" name="icon_url" placeholder="https://example.com/icon.gif">
                         <small class="form-text text-muted">URL takes priority over Font Awesome</small>
                     </div>
                     
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label for="platform_sort_order">Sort Order</label>
                         <input type="number" class="form-control" id="platform_sort_order" name="sort_order" value="0">
                     </div>
                     
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="platform_status" name="status" checked> Active
-                        </label>
+                    <div class="form-group mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="platform_status" name="status" checked>
+                            <label class="form-check-label" for="platform_status">Active</label>
+                        </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary" onclick="savePlatform()">Save Platform</button>
             </div>
         </div>
@@ -291,21 +290,19 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Add Keyword</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="keywordForm">
                     <input type="hidden" id="keyword_platform_id" name="platform_id">
                     
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label for="keyword_keyword">Keyword *</label>
                         <input type="text" class="form-control" id="keyword_keyword" name="keyword" required>
                         <small class="form-text text-muted">Used to detect platform from category/service names</small>
                     </div>
                     
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label for="keyword_priority">Priority</label>
                         <input type="number" class="form-control" id="keyword_priority" name="priority" value="10">
                         <small class="form-text text-muted">Higher priority = checked first</small>
@@ -313,7 +310,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary" onclick="saveKeyword()">Save Keyword</button>
             </div>
         </div>
@@ -322,13 +319,29 @@
 
 <script>
 var platformData = <?=json_encode($platforms)?>;
+var platformModal, keywordModal;
+
+// Initialize Bootstrap 5 modals on page load
+document.addEventListener('DOMContentLoaded', function() {
+    var platformModalEl = document.getElementById('platformModal');
+    var keywordModalEl = document.getElementById('keywordModal');
+    
+    if (platformModalEl) {
+        platformModal = new bootstrap.Modal(platformModalEl);
+    }
+    if (keywordModalEl) {
+        keywordModal = new bootstrap.Modal(keywordModalEl);
+    }
+});
 
 function showAddPlatformModal() {
     $('#platformModalTitle').text('Add Platform');
     $('#platformForm')[0].reset();
     $('#platform_id').val('');
     $('#platform_status').prop('checked', true);
-    $('#platformModal').modal('show');
+    if (platformModal) {
+        platformModal.show();
+    }
 }
 
 function editPlatform(id) {
@@ -343,20 +356,40 @@ function editPlatform(id) {
     $('#platform_icon_url').val(platform.icon_url || '');
     $('#platform_sort_order').val(platform.sort_order);
     $('#platform_status').prop('checked', platform.status == 1);
-    $('#platformModal').modal('show');
+    if (platformModal) {
+        platformModal.show();
+    }
 }
 
 function savePlatform() {
-    var formData = $('#platformForm').serialize();
+    // Build form data manually to handle checkbox correctly
+    var formData = {
+        id: $('#platform_id').val(),
+        name: $('#platform_name').val(),
+        slug: $('#platform_slug').val(),
+        icon_class: $('#platform_icon_class').val(),
+        icon_url: $('#platform_icon_url').val(),
+        sort_order: $('#platform_sort_order').val(),
+        status: $('#platform_status').is(':checked') ? 1 : 0
+    };
+    
+    console.log('Saving platform with data:', formData);
     
     $.ajax({
         url: '<?=cn("services/ajax_save_platform")?>',
         type: 'POST',
         data: formData,
         dataType: 'json',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
         success: function(response) {
+            console.log('Save platform response:', response);
             if (response.status === 'success') {
                 show_message(response.message, 'success');
+                if (platformModal) {
+                    platformModal.hide();
+                }
                 setTimeout(function() {
                     location.reload();
                 }, 1000);
@@ -364,8 +397,10 @@ function savePlatform() {
                 show_message(response.message, 'error');
             }
         },
-        error: function() {
-            show_message('Failed to save platform', 'error');
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', status, error);
+            console.error('Response:', xhr.responseText);
+            show_message('Failed to save platform. Check console for details.', 'error');
         }
     });
 }
@@ -375,12 +410,18 @@ function deletePlatform(id) {
         return;
     }
     
+    console.log('Deleting platform:', id);
+    
     $.ajax({
         url: '<?=cn("services/ajax_delete_platform")?>',
         type: 'POST',
         data: { id: id },
         dataType: 'json',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
         success: function(response) {
+            console.log('Delete platform response:', response);
             if (response.status === 'success') {
                 show_message(response.message, 'success');
                 $('#platform-' + id).fadeOut(function() {
@@ -390,8 +431,10 @@ function deletePlatform(id) {
                 show_message(response.message, 'error');
             }
         },
-        error: function() {
-            show_message('Failed to delete platform', 'error');
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', status, error);
+            console.error('Response:', xhr.responseText);
+            show_message('Failed to delete platform. Check console for details.', 'error');
         }
     });
 }
@@ -400,20 +443,35 @@ function addKeyword(platformId) {
     $('#keyword_platform_id').val(platformId);
     $('#keyword_keyword').val('');
     $('#keyword_priority').val('10');
-    $('#keywordModal').modal('show');
+    if (keywordModal) {
+        keywordModal.show();
+    }
 }
 
 function saveKeyword() {
-    var formData = $('#keywordForm').serialize();
+    var formData = {
+        platform_id: $('#keyword_platform_id').val(),
+        keyword: $('#keyword_keyword').val(),
+        priority: $('#keyword_priority').val()
+    };
+    
+    console.log('Saving keyword with data:', formData);
     
     $.ajax({
         url: '<?=cn("services/ajax_save_keyword")?>',
         type: 'POST',
         data: formData,
         dataType: 'json',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
         success: function(response) {
+            console.log('Save keyword response:', response);
             if (response.status === 'success') {
                 show_message(response.message, 'success');
+                if (keywordModal) {
+                    keywordModal.hide();
+                }
                 setTimeout(function() {
                     location.reload();
                 }, 1000);
@@ -421,8 +479,10 @@ function saveKeyword() {
                 show_message(response.message, 'error');
             }
         },
-        error: function() {
-            show_message('Failed to save keyword', 'error');
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', status, error);
+            console.error('Response:', xhr.responseText);
+            show_message('Failed to save keyword. Check console for details.', 'error');
         }
     });
 }
@@ -432,12 +492,18 @@ function deleteKeyword(id) {
         return;
     }
     
+    console.log('Deleting keyword:', id);
+    
     $.ajax({
         url: '<?=cn("services/ajax_delete_keyword")?>',
         type: 'POST',
         data: { id: id },
         dataType: 'json',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
         success: function(response) {
+            console.log('Delete keyword response:', response);
             if (response.status === 'success') {
                 show_message(response.message, 'success');
                 setTimeout(function() {
@@ -447,26 +513,36 @@ function deleteKeyword(id) {
                 show_message(response.message, 'error');
             }
         },
-        error: function() {
-            show_message('Failed to delete keyword', 'error');
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', status, error);
+            console.error('Response:', xhr.responseText);
+            show_message('Failed to delete keyword. Check console for details.', 'error');
         }
     });
 }
 
 function clearPlatformCache() {
+    console.log('Clearing platform cache');
+    
     $.ajax({
         url: '<?=cn("services/ajax_clear_platform_cache")?>',
         type: 'POST',
         dataType: 'json',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
         success: function(response) {
+            console.log('Clear cache response:', response);
             if (response.status === 'success') {
                 show_message(response.message, 'success');
             } else {
                 show_message(response.message, 'error');
             }
         },
-        error: function() {
-            show_message('Failed to clear cache', 'error');
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', status, error);
+            console.error('Response:', xhr.responseText);
+            show_message('Failed to clear cache. Check console for details.', 'error');
         }
     });
 }
@@ -476,19 +552,27 @@ function autoAssignPlatforms() {
         return;
     }
     
+    console.log('Auto-assigning platforms');
+    
     $.ajax({
         url: '<?=cn("services/ajax_auto_assign_platforms")?>',
         type: 'POST',
         dataType: 'json',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
         success: function(response) {
+            console.log('Auto-assign response:', response);
             if (response.status === 'success') {
                 show_message(response.message, 'success');
             } else {
                 show_message(response.message, 'error');
             }
         },
-        error: function() {
-            show_message('Failed to auto-assign platforms', 'error');
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', status, error);
+            console.error('Response:', xhr.responseText);
+            show_message('Failed to auto-assign platforms. Check console for details.', 'error');
         }
     });
 }
@@ -497,7 +581,7 @@ function show_message(message, type) {
     var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
     var html = '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
                '<i class="fas fa-' + (type === 'success' ? 'check' : 'times') + '-circle"></i> ' + message +
-               '<button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>' +
+               '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
                '</div>';
     
     $('.header-actions').after(html);
