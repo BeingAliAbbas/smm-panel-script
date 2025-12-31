@@ -113,6 +113,11 @@ if (get_role("admin")) {
           <div class="card-header" style="border: 0.1px solid #003a75; border-radius: 3.5px 3.5px 0px 0px; background: #003a75 !important;">
               <h3 class="card-title" style="color: #ffffffff !important;"><?=lang("Your Orders")?></h3>
               <div class="card-options">
+                  <!-- Download Orders (HTML) Button -->
+                  <a href="<?=cn($module."/download_html/".$order_status)?>" class="btn btn-success me-2" style="background-color: #27ae60; border: none;">
+                      <i class="fas fa-download me-2"></i> <?=lang("Download Orders (HTML)")?>
+                  </a>
+                  
                   <?php if (get_role("admin")) { ?>
                   <div class="dropdown">
                       <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown" style="background-color: #06324e; color: #fff; border: none;">

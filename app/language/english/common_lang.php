@@ -1081,3 +1081,4 @@ $lang["displays_account_activation_link"] = "Displays the account activation lin
 
 
 
+$lang["Download Orders (HTML)"] = "Download Orders (HTML)";
