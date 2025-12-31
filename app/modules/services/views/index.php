@@ -608,6 +608,9 @@
         
         <?php if (get_role("admin")): ?>
         <div class="d-inline-block">
+          <a href="<?=cn('services/platform_settings')?>" class="btn btn-info me-1">
+            <i class="fe fe-settings me-1"></i><?=lang("Platform Settings")?>
+          </a>
           <a href="<?=cn('api_provider/services')?>" class="btn btn-secondary me-1">
             <i class="fe fe-download me-1"></i><?=lang("import_services")?>
           </a>
