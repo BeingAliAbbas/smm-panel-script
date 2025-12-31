@@ -889,6 +889,392 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 		$this->template->build('logs/logs', $data);
 	}
 	
+	/**
+	 * Download all orders as HTML file
+	 */
+	public function download_html($order_status = ""){
+		// Validate session
+		if (!session('uid')) {
+			redirect(cn('auth/login'));
+			return;
+		}
+		
+		if ($order_status == "") {
+			$order_status = "all";
+		}
+		
+		// Security: Users can only download their own orders
+		if (get_role('user') && in_array($order_status, ['fail', 'error'])) {
+			redirect(cn('order/log/all'));
+			return;
+		}
+		
+		// Get all orders (without pagination)
+		// Note: Limited to 10,000 orders to prevent memory issues
+		// For larger datasets, consider implementing pagination or chunked downloads
+		$max_orders = get_option('max_orders_download', 10000);
+		$order_logs = $this->model->get_order_logs_list(false, $order_status, $max_orders, 0);
+		
+		if (empty($order_logs)) {
+			redirect(cn($this->module.'/log/'.$order_status));
+			return;
+		}
+		
+		// Get user information
+		$user = $this->model->get("*", $this->tb_users, ['id' => session('uid')]);
+		
+		// Get website information
+		$website_name = get_option('website_name', 'SMM Panel');
+		$website_logo = get_option('website_logo', BASE."assets/images/logo.png");
+		
+		// Get currency settings
+		$current_currency = get_current_currency();
+		$currency_symbol = $current_currency ? $current_currency->symbol : get_option("currency_symbol","$");
+		$decimal_places = get_option('currency_decimal', 2);
+		$decimalpoint = get_option('currency_decimal_separator', 'dot') == 'comma' ? ',' : '.';
+		$separator = get_option('currency_thousand_separator', 'space') == 'space' ? ' ' : (get_option('currency_thousand_separator', 'comma') == 'comma' ? ',' : '.');
+		
+		// Generate HTML content
+		$html = $this->generate_html_template($order_logs, $user, $website_name, $website_logo, $currency_symbol, $decimal_places, $decimalpoint, $separator, $order_status);
+		
+		// Set filename
+		$filename = 'orders_' . $order_status . '_' . date('Y-m-d_H-i-s') . '.html';
+		
+		// Clear any output buffers to prevent header issues
+		if (ob_get_level()) {
+			ob_end_clean();
+		}
+		
+		// Force download with proper headers
+		$this->output
+			->set_status_header(200)
+			->set_content_type('text/html', 'utf-8')
+			->set_header('Content-Disposition: attachment; filename="' . $filename . '"')
+			->set_header('Content-Length: ' . strlen($html))
+			->set_header('Cache-Control: no-cache, no-store, must-revalidate')
+			->set_header('Pragma: no-cache')
+			->set_header('Expires: 0')
+			->set_output($html);
+	}
+	
+	/**
+	 * Generate HTML template for orders download
+	 */
+	private function generate_html_template($order_logs, $user, $website_name, $website_logo, $currency_symbol, $decimal_places, $decimalpoint, $separator, $order_status){
+		$download_datetime = date('F d, Y h:i A');
+		$user_email = $user ? $user->email : 'N/A';
+		$user_role = $user ? ucfirst($user->role) : 'N/A';
+		
+		// Panel branding colors
+		$primary_color = '#003a75';
+		$success_color = '#27ae60';
+		$warning_color = '#f39c12';
+		$danger_color = '#e74c3c';
+		$text_color = '#2c3e50';
+		$border_color = '#bdc3c7';
+		
+		$html = '<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>' . htmlspecialchars($website_name) . ' - Orders Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: ' . $text_color . ';
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 3px solid ' . $primary_color . ';
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            max-width: 200px;
+            max-height: 80px;
+            margin-bottom: 15px;
+        }
+        
+        .header h1 {
+            color: ' . $primary_color . ';
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .info-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .info-item {
+            padding: 10px;
+        }
+        
+        .info-item label {
+            font-weight: 600;
+            color: ' . $primary_color . ';
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .info-item span {
+            font-size: 16px;
+            color: ' . $text_color . ';
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        thead {
+            background: ' . $primary_color . ';
+            color: white;
+        }
+        
+        th {
+            padding: 15px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid ' . $border_color . ';
+            font-size: 14px;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        tbody tr:nth-child(even) {
+            background: #fafbfc;
+        }
+        
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+        
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-processing { background: #cce5ff; color: #004085; }
+        .status-inprogress { background: #d1ecf1; color: #0c5460; }
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-partial { background: #f8d7da; color: #721c24; }
+        .status-canceled { background: #e2e3e5; color: #383d41; }
+        .status-error { background: #f8d7da; color: #721c24; }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid ' . $border_color . ';
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 13px;
+        }
+        
+        .footer p {
+            margin: 5px 0;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 8px 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="' . htmlspecialchars($website_logo) . '" alt="' . htmlspecialchars($website_name) . '" class="logo">
+            <h1>' . htmlspecialchars($website_name) . '</h1>
+            <p>Orders Report - ' . ucfirst($order_status) . '</p>
+        </div>
+        
+        <div class="info-section">
+            <div class="info-item">
+                <label>Downloaded By:</label>
+                <span>' . htmlspecialchars($user_email) . '</span>
+            </div>
+            <div class="info-item">
+                <label>User Role:</label>
+                <span>' . htmlspecialchars($user_role) . '</span>
+            </div>
+            <div class="info-item">
+                <label>Download Date:</label>
+                <span>' . $download_datetime . '</span>
+            </div>
+            <div class="info-item">
+                <label>Total Orders:</label>
+                <span>' . count($order_logs) . '</span>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>';
+		
+		// Admin columns
+		if (get_role("admin") || get_role("supporter")) {
+			$html .= '
+                        <th>API Order ID</th>
+                        <th>User Email</th>';
+		}
+		
+		$html .= '
+                        <th>Service</th>
+                        <th>Link/Username</th>
+                        <th>Quantity</th>
+                        <th>Start Count</th>
+                        <th>Remains</th>
+                        <th>Charge</th>';
+		
+		if (get_role("admin") || get_role("supporter")) {
+			$html .= '
+                        <th>Profit</th>';
+		}
+		
+		$html .= '
+                        <th>Created</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>';
+		
+		foreach ($order_logs as $row) {
+			$charge_display = $currency_symbol . number_format($row->charge, $decimal_places, $decimalpoint, $separator);
+			
+			// Calculate profit for admin
+			// Note: Both charge and formal_charge should be in the same currency for accurate profit calculation
+			$profit_display = '';
+			if (get_role("admin") || get_role("supporter")) {
+				if (is_numeric($row->charge) && is_numeric($row->formal_charge) && $row->charge > 0 && $row->formal_charge > 0) {
+					// Calculate profit (assuming both values are in same currency)
+					$profit = $row->charge - $row->formal_charge;
+					$profit_display = $currency_symbol . number_format($profit, $decimal_places, $decimalpoint, $separator);
+				} else {
+					$profit_display = $currency_symbol . '0' . $decimalpoint . '00';
+				}
+			}
+			
+			// Status badge class
+			$status_class = 'status-' . str_replace(' ', '-', strtolower($row->status));
+			
+			$html .= '
+                    <tr>
+                        <td>' . htmlspecialchars($row->id) . '</td>';
+			
+			if (get_role("admin") || get_role("supporter")) {
+				$api_order_id = ($row->api_order_id == 0 || $row->api_order_id == -1) ? '-' : htmlspecialchars($row->api_order_id);
+				$html .= '
+                        <td>' . $api_order_id . '</td>
+                        <td>' . htmlspecialchars($row->user_email) . '</td>';
+			}
+			
+			$html .= '
+                        <td>' . htmlspecialchars($row->service_id . ' - ' . $row->service_name) . '</td>
+                        <td style="word-break: break-all;">' . htmlspecialchars($row->link) . '</td>
+                        <td>' . number_format($row->quantity, 0, $decimalpoint, $separator) . '</td>
+                        <td>' . number_format($row->start_counter, 0, $decimalpoint, $separator) . '</td>
+                        <td>' . number_format($row->remain, 0, $decimalpoint, $separator) . '</td>
+                        <td>' . $charge_display . '</td>';
+			
+			if (get_role("admin") || get_role("supporter")) {
+				$html .= '
+                        <td>' . $profit_display . '</td>';
+			}
+			
+			$html .= '
+                        <td>' . htmlspecialchars(date('M d, Y H:i', strtotime($row->created))) . '</td>
+                        <td><span class="status-badge ' . $status_class . '">' . htmlspecialchars(ucfirst($row->status)) . '</span></td>
+                    </tr>';
+		}
+		
+		$html .= '
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="footer">
+            <p><strong>' . htmlspecialchars($website_name) . '</strong></p>
+            <p>This is a computer-generated document. No signature is required.</p>
+            <p>Downloaded on ' . $download_datetime . '</p>
+        </div>
+    </div>
+</body>
+</html>';
+		
+		return $html;
+	}
 
 	/*----------  Order details for Dripfeed and Subscription  ----------*/
 	public function log_details($id = ""){
