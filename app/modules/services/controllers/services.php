@@ -821,4 +821,225 @@ class services extends MX_Controller {
 		);
 		$this->load->view('ajax/duplicates_content', $data);
 	}
+	
+	/**
+	 * Platform Management - Admin only
+	 * Manage platforms, keywords, and icons
+	 */
+	public function platform_settings(){
+		if (!get_role('admin')) {
+			redirect(cn());
+		}
+		
+		$this->load->model('platform_model');
+		
+		$platforms = $this->platform_model->get_platforms_with_keywords();
+		
+		$data = array(
+			"module"    => get_class($this),
+			"platforms" => $platforms,
+		);
+		
+		$this->template->build("platform_settings", $data);
+	}
+	
+	/**
+	 * Save platform (AJAX)
+	 */
+	public function ajax_save_platform(){
+		_is_ajax($this->module);
+		if (!get_role('admin')) _validation('error', "Permission Denied!");
+		
+		$this->load->model('platform_model');
+		
+		$id = post('id');
+		$name = post('name');
+		$slug = post('slug');
+		$icon_class = post('icon_class');
+		$icon_url = post('icon_url');
+		$sort_order = post('sort_order');
+		$status = post('status');
+		
+		if (empty($name) || empty($slug)) {
+			ms(array(
+				"status"  => "error",
+				"message" => "Name and slug are required"
+			));
+		}
+		
+		$data = array(
+			'name' => $name,
+			'slug' => $slug,
+			'icon_class' => $icon_class,
+			'icon_url' => $icon_url,
+			'sort_order' => $sort_order ? $sort_order : 0,
+			'status' => $status ? 1 : 0,
+		);
+		
+		if (!empty($id)) {
+			$data['id'] = $id;
+		}
+		
+		$result = $this->platform_model->save_platform($data);
+		
+		if ($result) {
+			ms(array(
+				"status"  => "success",
+				"message" => "Platform saved successfully",
+				"id" => $result
+			));
+		} else {
+			ms(array(
+				"status"  => "error",
+				"message" => "Failed to save platform"
+			));
+		}
+	}
+	
+	/**
+	 * Delete platform (AJAX)
+	 */
+	public function ajax_delete_platform(){
+		_is_ajax($this->module);
+		if (!get_role('admin')) _validation('error', "Permission Denied!");
+		
+		$this->load->model('platform_model');
+		
+		$id = post('id');
+		
+		if (empty($id)) {
+			ms(array(
+				"status"  => "error",
+				"message" => "Platform ID required"
+			));
+		}
+		
+		$result = $this->platform_model->delete_platform($id);
+		
+		if ($result) {
+			ms(array(
+				"status"  => "success",
+				"message" => "Platform deleted successfully"
+			));
+		} else {
+			ms(array(
+				"status"  => "error",
+				"message" => "Failed to delete platform"
+			));
+		}
+	}
+	
+	/**
+	 * Save keyword (AJAX)
+	 */
+	public function ajax_save_keyword(){
+		_is_ajax($this->module);
+		if (!get_role('admin')) _validation('error', "Permission Denied!");
+		
+		$this->load->model('platform_model');
+		
+		$id = post('id');
+		$platform_id = post('platform_id');
+		$keyword = post('keyword');
+		$priority = post('priority');
+		
+		if (empty($platform_id) || empty($keyword)) {
+			ms(array(
+				"status"  => "error",
+				"message" => "Platform and keyword are required"
+			));
+		}
+		
+		$data = array(
+			'platform_id' => $platform_id,
+			'keyword' => $keyword,
+			'priority' => $priority ? $priority : 0,
+		);
+		
+		if (!empty($id)) {
+			$data['id'] = $id;
+		}
+		
+		$result = $this->platform_model->save_keyword($data);
+		
+		if ($result) {
+			ms(array(
+				"status"  => "success",
+				"message" => "Keyword saved successfully",
+				"id" => $result
+			));
+		} else {
+			ms(array(
+				"status"  => "error",
+				"message" => "Failed to save keyword"
+			));
+		}
+	}
+	
+	/**
+	 * Delete keyword (AJAX)
+	 */
+	public function ajax_delete_keyword(){
+		_is_ajax($this->module);
+		if (!get_role('admin')) _validation('error', "Permission Denied!");
+		
+		$this->load->model('platform_model');
+		
+		$id = post('id');
+		
+		if (empty($id)) {
+			ms(array(
+				"status"  => "error",
+				"message" => "Keyword ID required"
+			));
+		}
+		
+		$result = $this->platform_model->delete_keyword($id);
+		
+		if ($result) {
+			ms(array(
+				"status"  => "success",
+				"message" => "Keyword deleted successfully"
+			));
+		} else {
+			ms(array(
+				"status"  => "error",
+				"message" => "Failed to delete keyword"
+			));
+		}
+	}
+	
+	/**
+	 * Clear cache (AJAX)
+	 */
+	public function ajax_clear_platform_cache(){
+		_is_ajax($this->module);
+		if (!get_role('admin')) _validation('error', "Permission Denied!");
+		
+		$this->load->model('platform_model');
+		
+		$this->platform_model->clear_all_cache();
+		
+		ms(array(
+			"status"  => "success",
+			"message" => "Cache cleared successfully"
+		));
+	}
+	
+	/**
+	 * Auto-assign platforms to categories (AJAX)
+	 */
+	public function ajax_auto_assign_platforms(){
+		_is_ajax($this->module);
+		if (!get_role('admin')) _validation('error', "Permission Denied!");
+		
+		$this->load->model('platform_model');
+		
+		$updated = $this->platform_model->auto_assign_platforms();
+		
+		ms(array(
+			"status"  => "success",
+			"message" => "Updated {$updated} categories"
+		));
+	}
 }
