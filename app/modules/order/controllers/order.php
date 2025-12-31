@@ -940,16 +940,21 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 		// Set filename
 		$filename = 'orders_' . $order_status . '_' . date('Y-m-d_H-i-s') . '.html';
 		
-		// Force download
-		header('Content-Type: text/html; charset=utf-8');
-		header('Content-Disposition: attachment; filename="' . $filename . '"');
-		header('Content-Length: ' . strlen($html));
-		header('Cache-Control: no-cache, no-store, must-revalidate');
-		header('Pragma: no-cache');
-		header('Expires: 0');
+		// Clear any output buffers to prevent header issues
+		if (ob_get_level()) {
+			ob_end_clean();
+		}
 		
-		echo $html;
-		exit;
+		// Force download with proper headers
+		$this->output
+			->set_status_header(200)
+			->set_content_type('text/html', 'utf-8')
+			->set_header('Content-Disposition: attachment; filename="' . $filename . '"')
+			->set_header('Content-Length: ' . strlen($html))
+			->set_header('Cache-Control: no-cache, no-store, must-revalidate')
+			->set_header('Pragma: no-cache')
+			->set_header('Expires: 0')
+			->set_output($html);
 	}
 	
 	/**
