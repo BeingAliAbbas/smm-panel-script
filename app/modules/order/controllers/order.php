@@ -910,7 +910,10 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 		}
 		
 		// Get all orders (without pagination)
-		$order_logs = $this->model->get_order_logs_list(false, $order_status, 10000, 0);
+		// Note: Limited to 10,000 orders to prevent memory issues
+		// For larger datasets, consider implementing pagination or chunked downloads
+		$max_orders = get_option('max_orders_download', 10000);
+		$order_logs = $this->model->get_order_logs_list(false, $order_status, $max_orders, 0);
 		
 		if (empty($order_logs)) {
 			redirect(cn($this->module.'/log/'.$order_status));
@@ -1202,18 +1205,16 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
                 </thead>
                 <tbody>';
 		
-		// USD to PKR conversion rate (for admin profit calculation)
-		$usd_to_pkr_rate = 280;
-		
 		foreach ($order_logs as $row) {
 			$charge_display = $currency_symbol . number_format($row->charge, $decimal_places, $decimalpoint, $separator);
 			
 			// Calculate profit for admin
+			// Note: Both charge and formal_charge should be in the same currency for accurate profit calculation
 			$profit_display = '';
 			if (get_role("admin") || get_role("supporter")) {
-				$provider_charge_in_pkr = isset($row->formal_charge) ? $row->formal_charge * $usd_to_pkr_rate : 0;
 				if (is_numeric($row->charge) && is_numeric($row->formal_charge) && $row->charge > 0 && $row->formal_charge > 0) {
-					$profit = $row->charge - $provider_charge_in_pkr;
+					// Calculate profit (assuming both values are in same currency)
+					$profit = $row->charge - $row->formal_charge;
 					$profit_display = $currency_symbol . number_format($profit, $decimal_places, $decimalpoint, $separator);
 				} else {
 					$profit_display = $currency_symbol . '0' . $decimalpoint . '00';
