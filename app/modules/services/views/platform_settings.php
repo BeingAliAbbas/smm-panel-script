@@ -380,9 +380,6 @@ function savePlatform() {
         type: 'POST',
         data: formData,
         dataType: 'json',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
         success: function(response) {
             console.log('Save platform response:', response);
             if (response.status === 'success') {
@@ -400,6 +397,7 @@ function savePlatform() {
         error: function(xhr, status, error) {
             console.error('AJAX Error:', status, error);
             console.error('Response:', xhr.responseText);
+            console.error('Status Code:', xhr.status);
             show_message('Failed to save platform. Check console for details.', 'error');
         }
     });
@@ -417,9 +415,6 @@ function deletePlatform(id) {
         type: 'POST',
         data: { id: id },
         dataType: 'json',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
         success: function(response) {
             console.log('Delete platform response:', response);
             if (response.status === 'success') {
@@ -434,6 +429,7 @@ function deletePlatform(id) {
         error: function(xhr, status, error) {
             console.error('AJAX Error:', status, error);
             console.error('Response:', xhr.responseText);
+            console.error('Status Code:', xhr.status);
             show_message('Failed to delete platform. Check console for details.', 'error');
         }
     });
@@ -462,9 +458,6 @@ function saveKeyword() {
         type: 'POST',
         data: formData,
         dataType: 'json',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
         success: function(response) {
             console.log('Save keyword response:', response);
             if (response.status === 'success') {
@@ -482,6 +475,7 @@ function saveKeyword() {
         error: function(xhr, status, error) {
             console.error('AJAX Error:', status, error);
             console.error('Response:', xhr.responseText);
+            console.error('Status Code:', xhr.status);
             show_message('Failed to save keyword. Check console for details.', 'error');
         }
     });
@@ -499,9 +493,6 @@ function deleteKeyword(id) {
         type: 'POST',
         data: { id: id },
         dataType: 'json',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
         success: function(response) {
             console.log('Delete keyword response:', response);
             if (response.status === 'success') {
@@ -516,6 +507,7 @@ function deleteKeyword(id) {
         error: function(xhr, status, error) {
             console.error('AJAX Error:', status, error);
             console.error('Response:', xhr.responseText);
+            console.error('Status Code:', xhr.status);
             show_message('Failed to delete keyword. Check console for details.', 'error');
         }
     });
@@ -528,9 +520,6 @@ function clearPlatformCache() {
         url: '<?=cn("services/ajax_clear_platform_cache")?>',
         type: 'POST',
         dataType: 'json',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
         success: function(response) {
             console.log('Clear cache response:', response);
             if (response.status === 'success') {
@@ -542,6 +531,7 @@ function clearPlatformCache() {
         error: function(xhr, status, error) {
             console.error('AJAX Error:', status, error);
             console.error('Response:', xhr.responseText);
+            console.error('Status Code:', xhr.status);
             show_message('Failed to clear cache. Check console for details.', 'error');
         }
     });
@@ -558,9 +548,6 @@ function autoAssignPlatforms() {
         url: '<?=cn("services/ajax_auto_assign_platforms")?>',
         type: 'POST',
         dataType: 'json',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
         success: function(response) {
             console.log('Auto-assign response:', response);
             if (response.status === 'success') {
@@ -572,6 +559,7 @@ function autoAssignPlatforms() {
         error: function(xhr, status, error) {
             console.error('AJAX Error:', status, error);
             console.error('Response:', xhr.responseText);
+            console.error('Status Code:', xhr.status);
             show_message('Failed to auto-assign platforms. Check console for details.', 'error');
         }
     });
