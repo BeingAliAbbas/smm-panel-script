@@ -1,26 +1,39 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<!-- Include responsive CSS -->
+<link rel="stylesheet" href="<?php echo BASE; ?>assets/css/whatsapp_marketing-responsive.css">
+
 <div class="row justify-content-md-center">
   <div class="col-md-12">
     <div class="page-header">
       <h1 class="page-title">
         <i class="fe fe-message-square"></i> <?php echo htmlspecialchars($campaign->name); ?>
       </h1>
-      <div class="page-subtitle">
+      <div class="page-subtitle campaign-controls">
         <a href="<?php echo cn($module . '/campaigns'); ?>" class="btn btn-sm btn-secondary">
           <i class="fe fe-arrow-left"></i> Back to Campaigns
         </a>
         <a href="<?php echo cn($module . '/export_campaign_report/' . $campaign->ids); ?>" class="btn btn-sm btn-success">
           <i class="fe fe-download"></i> Export Report
         </a>
+        <?php if($campaign->status == 'running' || $campaign->status == 'paused'){ ?>
+        <button type="button" 
+                class="btn btn-sm campaign-toggle-status campaign-toggle-btn <?php echo ($campaign->status == 'running') ? 'btn-warning' : 'btn-success'; ?>"
+                data-campaign-id="<?php echo $campaign->ids; ?>"
+                data-current-status="<?php echo $campaign->status; ?>"
+                data-endpoint="<?php echo cn($module . '/ajax_campaign_' . ($campaign->status == 'running' ? 'pause' : 'resume')); ?>"
+                data-bs-toggle="tooltip"
+                title="<?php echo ($campaign->status == 'running') ? 'Pause this campaign' : 'Resume this campaign'; ?>">
+          <i class="fe fe-<?php echo ($campaign->status == 'running') ? 'pause' : 'play'; ?> me-1"></i><?php echo ($campaign->status == 'running') ? 'Pause Campaign' : 'Run Campaign'; ?>
+        </button>
+        <?php } ?>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Campaign Stats -->
-<div class="row">
+<div class="row whatsapp-marketing-stats">
   <div class="col-lg-3 col-sm-6">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col">
@@ -36,7 +49,7 @@
   </div>
   
   <div class="col-lg-3 col-sm-6">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col">
@@ -52,7 +65,7 @@
   </div>
   
   <div class="col-lg-3 col-sm-6">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col">
@@ -68,7 +81,7 @@
   </div>
   
   <div class="col-lg-3 col-sm-6">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col">
@@ -87,9 +100,9 @@
 <!-- Campaign Info & Progress -->
 <div class="row">
   <div class="col-md-6">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title">Campaign Information</h3>
+        <h3 class="card-title" style="color:#fff !important;">Campaign Information</h3>
       </div>
       <div class="card-body">
         <table class="table table-sm">
@@ -162,9 +175,9 @@
   </div>
   
   <div class="col-md-6">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title">Progress</h3>
+        <h3 class="card-title" style="color:#fff !important;">Progress</h3>
       </div>
       <div class="card-body">
         <?php 
@@ -222,9 +235,9 @@
 <!-- Recent Logs -->
 <div class="row mt-3">
   <div class="col-md-12">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title">Recent Activity (Last 50)</h3>
+        <h3 class="card-title" style="color:#fff !important;">Recent Activity (Last 50)</h3>
       </div>
       <div class="table-responsive">
         <table class="table table-hover table-vcenter card-table table-sm">
@@ -337,6 +350,68 @@ $(document).ready(function(){
         } else {
           showToast('An error occurred: ' + error, 'error');
         }
+      }
+    });
+  });
+  
+  // Campaign toggle status (pause/resume)
+  $('.campaign-toggle-status').on('click', function(e){
+    e.preventDefault();
+    var $btn = $(this);
+    var campaignId = $btn.data('campaign-id');
+    var currentStatus = $btn.data('current-status');
+    var endpoint = $btn.data('endpoint');
+    
+    var originalHTML = $btn.html();
+    $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...');
+    
+    // Get CSRF token dynamically
+    var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>';
+    var csrfHash = $('input[name="' + csrfName + '"]').val();
+    
+    var postData = {ids: campaignId};
+    postData[csrfName] = csrfHash;
+    
+    $.ajax({
+      url: endpoint,
+      type: 'POST',
+      dataType: 'json',
+      data: postData,
+      success: function(response){
+        if(response.status == 'success' && response.success){
+          showToast(response.message, 'success');
+          
+          // Update button based on new status
+          var newStatus = response.campaign_status;
+          
+          if(newStatus == 'paused'){
+            $btn.removeClass('btn-warning').addClass('btn-success');
+            $btn.html('<i class="fe fe-play me-1"></i>Run Campaign');
+            $btn.data('current-status', 'paused');
+            $btn.data('endpoint', '<?php echo cn($module . '/ajax_campaign_resume'); ?>');
+            $btn.attr('title', 'Resume this campaign');
+          } else if(newStatus == 'running'){
+            $btn.removeClass('btn-success').addClass('btn-warning');
+            $btn.html('<i class="fe fe-pause me-1"></i>Pause Campaign');
+            $btn.data('current-status', 'running');
+            $btn.data('endpoint', '<?php echo cn($module . '/ajax_campaign_pause'); ?>');
+            $btn.attr('title', 'Pause this campaign');
+          }
+          
+          $btn.prop('disabled', false);
+          
+          // Reload page after a short delay to show updated status
+          setTimeout(function(){
+            location.reload();
+          }, 1500);
+        } else {
+          showToast(response.message || 'Failed to update campaign status', 'error');
+          $btn.prop('disabled', false).html(originalHTML);
+        }
+      },
+      error: function(xhr, status, error){
+        showToast('An error occurred while updating campaign status', 'error');
+        $btn.prop('disabled', false).html(originalHTML);
       }
     });
   });
