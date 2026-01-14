@@ -98,6 +98,10 @@ class sadapay extends MX_Controller
             $user_email = is_array($user_info) ? ($user_info['email'] ?? 'N/A') : 'N/A';
             $this->sendWhatsAppNotification($TXN_AMOUNT, $ORDER_ID, $user_email, 'new', $pay_token);
 
+            // Send email notification to admin about payment submission
+            $this->load->model('add_funds/add_funds_model');
+            Modules::run('add_funds/send_payment_submission_notification', $data_tnx_log, $this->payment_type);
+
             $this->load->view("sadapay/redirect", $data);
         } else {
             ms(array(

@@ -135,6 +135,10 @@ class easypaisa extends MX_Controller {
             $this->load->library('Transactional_email');
             $this->transactional_email->send_payment_submitted_email($tx_orderID, $user_email, round($converted, 4), $this->payment_type);
 
+            // Send email notification to admin about payment submission
+            $this->load->model('add_funds/add_funds_model');
+            Modules::run('add_funds/send_payment_submission_notification', $data_log, $this->payment_type);
+
             $this->load->view('easypaisa/redirect', [
                 'status'    => 'pending',
                 'auto'      => false,

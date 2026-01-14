@@ -97,6 +97,10 @@ class faysalbank extends MX_Controller
             $this->sendTransactionEmail($TXN_AMOUNT, $ORDER_ID, 'Faysal Bank');
             $this->sendWhatsAppNotification($TXN_AMOUNT, $ORDER_ID, 'new', $pay_token);
 
+            // Send email notification to admin about payment submission
+            $this->load->model('add_funds/add_funds_model');
+            Modules::run('add_funds/send_payment_submission_notification', $data_tnx_log, $this->payment_type);
+
             $this->load->view("faysalbank/redirect", $data);
         } else {
             ms(array(

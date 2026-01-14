@@ -12751,12 +12751,12 @@ a.icon:hover {
 
 .btn-loading:after {
   content: '';
-  -webkit-animation: loader 500ms infinite linear;
-  animation: loader 500ms infinite linear;
-  border: 2px solid #fff;
+  -webkit-animation: loader 600ms infinite linear;
+  animation: loader 600ms infinite linear;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
-  border-right-color: transparent !important;
-  border-top-color: transparent !important;
+  border-top-color: #fff !important;
+  border-right-color: #fff !important;
   display: block;
   height: 1.4em;
   width: 1.4em;
@@ -12766,6 +12766,7 @@ a.icon:hover {
   -webkit-transform-origin: center;
   transform-origin: center;
   position: absolute !important;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
 }
 
 .btn-loading.btn-sm:after, .btn-group-sm > .btn-loading.btn:after {
@@ -12773,10 +12774,37 @@ a.icon:hover {
   width: 1em;
   left: calc(50% - (1em / 2));
   top: calc(50% - (1em / 2));
+  border-width: 2px;
 }
 
 .btn-loading.btn-secondary:after {
-  border-color: #495057;
+  border-color: rgba(73, 80, 87, 0.3);
+  border-top-color: #495057 !important;
+  border-right-color: #495057 !important;
+}
+
+.btn-loading.btn-info:after {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: #fff !important;
+  border-right-color: #fff !important;
+}
+
+.btn-loading.btn-success:after {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: #fff !important;
+  border-right-color: #fff !important;
+}
+
+.btn-loading.btn-warning:after {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: #fff !important;
+  border-right-color: #fff !important;
+}
+
+.btn-loading.btn-danger:after {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: #fff !important;
+  border-right-color: #fff !important;
 }
 
 .alert {

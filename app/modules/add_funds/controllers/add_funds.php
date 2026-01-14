@@ -236,4 +236,62 @@ class add_funds extends MX_Controller {
         $this->send_mail_payment_notification($data_pm_mail);
         return true;
     }
+
+    /**
+     * Send email notification to admin when user submits a payment
+     */
+    public function send_payment_submission_notification($transaction_data, $payment_method_name = "") {
+        if (!$transaction_data) {
+            return false;
+        }
+
+        // Get user information
+        $user = $this->model->get('id, first_name, last_name, email', $this->tb_users, ["id" => $transaction_data['uid']]);
+        if (!$user) {
+            return false;
+        }
+
+        // Get payment method info if available
+        if (!$payment_method_name && isset($transaction_data['type'])) {
+            $payment_method_name = $transaction_data['type'];
+        }
+
+        // Get admin email
+        $admin = $this->model->get("id, email", $this->tb_users, "role = 'admin'", "id", "ASC");
+        if (!$admin) {
+            return false;
+        }
+
+        // Get email template
+        $subject = getEmailTemplate("payment_submission")->subject;
+        $email_content = getEmailTemplate("payment_submission")->content;
+
+        // Get current currency
+        $current_currency = get_current_currency();
+        $currency_symbol = $current_currency ? $current_currency->symbol : get_option("currency_symbol", "$");
+
+        // Format created time
+        $created_time = isset($transaction_data['created']) ? $transaction_data['created'] : NOW;
+        
+        // Status text
+        $status_text = isset($transaction_data['status']) && $transaction_data['status'] == 1 ? 'Completed' : 'Pending Review';
+
+        // Replace template variables
+        $subject = str_replace("{{website_name}}", get_option("website_name", "SmartPanel"), $subject);
+        $email_content = str_replace("{{website_name}}", get_option("website_name", "SmartPanel"), $email_content);
+        $email_content = str_replace("{{user_email}}", $user->email, $email_content);
+        $email_content = str_replace("{{user_firstname}}", $user->first_name, $email_content);
+        $email_content = str_replace("{{user_lastname}}", $user->last_name, $email_content);
+        $email_content = str_replace("{{payment_method}}", $payment_method_name, $email_content);
+        $email_content = str_replace("{{currency_symbol}}", $currency_symbol, $email_content);
+        $email_content = str_replace("{{amount}}", $transaction_data['amount'], $email_content);
+        $email_content = str_replace("{{transaction_id}}", isset($transaction_data['transaction_id']) ? $transaction_data['transaction_id'] : 'N/A', $email_content);
+        $email_content = str_replace("{{status}}", $status_text, $email_content);
+        $email_content = str_replace("{{created_time}}", $created_time, $email_content);
+
+        // Send email to admin
+        $check_send_email = $this->model->send_email($subject, $email_content, $admin->id, false);
+        
+        return !$check_send_email; // Returns true if no error
+    }
 }
